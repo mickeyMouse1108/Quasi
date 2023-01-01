@@ -2,7 +2,6 @@
 #include "BlockMesh.h"
 #include "Graphics/Graphicals/GraphicsDevice.h"
 #include "MeshObject.h"
-#include "TriMesh.h"
 
 namespace Game
 {

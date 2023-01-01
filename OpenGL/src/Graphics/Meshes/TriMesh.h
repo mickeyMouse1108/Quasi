@@ -16,9 +16,10 @@ namespace Graphics
         ~TriMesh() override;
 
         void GetData(unsigned int* vertexSize, TVertex** vertices, unsigned int* indexSize, unsigned int** indices) override;
-        
         // friend void AddTo(DynamicVertexBuffer<TVertex>& vb, DynamicIndexBuffer& ib);
         void AddTo(DynamicVertexBuffer<TVertex>& vb, DynamicIndexBuffer& ib) override;
+        
+        void Clone(Mesh<TVertex>*& other) const override;
         
         void Transform(const Maths::Matrix3D& transform) override;
 
@@ -64,6 +65,11 @@ namespace Graphics
         vb.AddData(points, 3);
         unsigned i[3] = {0,1,2};
         ib.AddData(i, 3, 3);
+    }
+
+    template <typename TVertex>
+    void TriMesh<TVertex>::Clone(Mesh<TVertex>*& other) const {
+        other = new TriMesh<TVertex>(*this);
     }
 
     template <typename TVertex>

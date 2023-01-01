@@ -34,12 +34,10 @@ class BlockMesh
     };
     unsigned enabledFlags = BLOCK_FACE_ALL; // 2 ^ 6 - 1 => 111111
     static Graphics::MeshUtils::Vertex BLOCK_VERTICES[8];
-public:
     Graphics::MeshObject meshObj;
-    
+public:
     BlockMesh();
     ~BlockMesh();
 
     Graphics::MeshObject& GetMeshObjectForm();
-    
 };

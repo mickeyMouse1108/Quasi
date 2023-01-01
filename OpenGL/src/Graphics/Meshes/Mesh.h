@@ -13,8 +13,9 @@ namespace Graphics
         virtual ~Mesh() = default;
 
         virtual void GetData(unsigned int* vertexSize, TVertex** vertices, unsigned int* indexSize, unsigned int** indices) = 0;
-        
         virtual void AddTo(DynamicVertexBuffer<TVertex>& vb, DynamicIndexBuffer& ib) = 0;
+
+        virtual void Clone(Mesh<TVertex>*& other) const = 0;
         
         virtual void Transform(const Maths::Matrix3D& transform) = 0;
     };

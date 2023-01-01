@@ -24,7 +24,7 @@ Graphics::MeshObject& BlockMesh::GetMeshObjectForm()
         if (enabledFlags >> i & 1) {
             faces.emplace_back(_blockFaces[faces.size()].get());
         }
-    
-    meshObj = Graphics::MeshObject::Make<Graphics::QuadMesh>(faces);
+
+    Graphics::MeshObject::MakeAt<Graphics::QuadMesh>(faces.data(), faces.size(), &meshObj);
     return meshObj;
 }

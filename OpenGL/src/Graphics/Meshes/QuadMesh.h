@@ -16,9 +16,10 @@ namespace Graphics
         ~QuadMesh() override = default;
 
         void GetData(unsigned int* vertexSize, TVertex** vertices, unsigned int* indexSize, unsigned int** indices) override;
-        
         // friend void AddTo(DynamicVertexBuffer<TVertex>& vb, DynamicIndexBuffer& ib);
         void AddTo(DynamicVertexBuffer<TVertex>& vb, DynamicIndexBuffer& ib) override;
+
+        void Clone(Mesh<TVertex>*& other) const override;
 
         void Transform(const Maths::Matrix3D& transform) override;
 
@@ -61,6 +62,11 @@ namespace Graphics
         vb.AddData(points, 4);
         unsigned i[6] = {0,1,2,1,2,3};
         ib.AddData(i, 6, 4);
+    }
+
+    template <typename TVertex>
+    void QuadMesh<TVertex>::Clone(Mesh<TVertex>*& other) const {
+        other = new QuadMesh<TVertex>(*this);
     }
 
     template <typename TVertex>

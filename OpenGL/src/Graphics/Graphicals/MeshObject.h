@@ -15,7 +15,8 @@ namespace Graphics
     {
         using Vertex = VertexColor3D;
         using MeshPtr = std::unique_ptr<Mesh<Vertex>>;
-        std::vector<std::shared_ptr<Mesh<Vertex>>> _meshes;
+        using MeshPtrRaw = Mesh<Vertex>*;
+        std::vector<MeshPtr> _meshes;
 
         Maths::Matrix3D modelTransform;
 
@@ -23,26 +24,36 @@ namespace Graphics
         unsigned int deviceIndex = 0;
     public:
         MeshObject() {}
-        MeshObject(Mesh<Vertex>* meshes[], unsigned int meshCount);
+        MeshObject(MeshPtrRaw meshes[], unsigned int meshCount);
+        MeshObject(const MeshObject& copy);
+        MeshObject& operator= (const MeshObject&);
+        
         template<template<class> class TMesh>
-                               //WTF?? (passing vector instead of arr because c++ is stupid)
-        static MeshObject Make(const std::vector<TMesh<Vertex>*>& meshes)
+        static MeshObject Make(TMesh<Vertex>* meshes[], unsigned int meshCount)
         {
-            std::vector<Mesh<Vertex>*> meshPtrs(meshes.size());
-            for (unsigned i = 0; i < meshes.size(); ++i) meshPtrs[i] = meshes[i];
-            return MeshObject{ meshPtrs.data(), meshes.size() };
+            std::vector<MeshPtrRaw> meshPtrs(meshCount);
+            for (unsigned i = 0; i < meshCount; ++i) meshPtrs[i] = meshes[i];
+            return MeshObject( meshPtrs.data(), meshCount );
+        }
+        
+        template<template<class> class TMesh>
+        static void MakeAt(TMesh<Vertex>* meshes[], unsigned int meshCount, MeshObject* out)
+        {
+            out->_meshes.clear();
+            out->_meshes.reserve(meshCount);
+            out->_meshes.insert(out->_meshes.begin(), meshes, meshes + meshCount);
         }
 
         ~MeshObject();
 
         void SetTransform(const Maths::Matrix3D& model);
         void AddTo       (DynamicVertexBuffer<Vertex>& vbuffer, DynamicIndexBuffer& ibuffer) const;
-
+        
         bool IsBound() const { return device; }
-
+        
         void Transform(const Maths::Matrix3D& transform);
-
-        void AddMesh(Mesh<Vertex>* meshes[], unsigned int count);
+        
+        void AddMesh(MeshPtrRaw meshes[], unsigned int count);
 
         void Bind(GraphicsDevice& gdevice);
         void Unbind();

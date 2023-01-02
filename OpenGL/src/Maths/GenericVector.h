@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Vector.h"
 
 namespace Maths
 {
@@ -14,6 +15,9 @@ namespace Maths
         Vec2(T x, T y = 0) : x(x), y(y) {}
         Vec2(T val) : x(val), y(val) {}
         Vec2(const Vec3<T>& vec3);
+
+        template <class TOther> Vec2<TOther> Cast () { return {(TOther)x, (TOther)y}; }
+                                Vector2      CastF() { return {(float) x, (float) y}; }
 
         T operator[] (unsigned int i) const { return ((const T*)this)[i]; }
         operator T*() { return (T*)this; }
@@ -39,6 +43,9 @@ namespace Maths
         Vec3(const Vec2<T>& vec2, T z) : x(vec2.x), y(vec2.y), z(z) {}
         Vec3(const Vec4<T>& vec4);
 
+        template <class TOther> Vec3<TOther> Cast () { return {(TOther)x, (TOther)y, (TOther)z}; }
+                                Vector3      CastF() { return {(float) x, (float) y, (float) z}; }
+
         T operator[] (unsigned int i) const { return ((const T*)this)[i]; }
         operator T*() { return (T*)this; }
     };
@@ -61,6 +68,9 @@ namespace Maths
         Vec4(T x, T y, T z, T w = 0) : x(x), y(y), z(z), w(w) {}
         Vec4(T val) : x(val), y(val), z(val), w(val) {}
         Vec4(const Vec3<T>& vec3, T w = 0) : x(vec3.x), y(vec3.y), z(vec3.z), w(w) {}
+
+        template <class TOther> Vec2<TOther> Cast () { return {(TOther)x, (TOther)y, (TOther)z, (TOther)w}; }
+                                Vector2      CastF() { return {(float) x, (float) y, (float) z, (float) w}; }
 
         T operator[] (unsigned int i) const { return ((const T*)this)[i]; }
         operator T*() { return (T*)this; }

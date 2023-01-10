@@ -10,7 +10,10 @@
 namespace Graphics
 {
     class GraphicsDevice;
-
+    
+    /**
+     * \brief A class to store meshes in bulk.
+     */
     class MeshObject
     {
         using Vertex = VertexColor3D;

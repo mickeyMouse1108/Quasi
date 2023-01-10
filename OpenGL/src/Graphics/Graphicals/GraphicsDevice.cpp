@@ -88,6 +88,21 @@ namespace Graphics
         }
     }
 
+    void GraphicsDevice::Delete(int index) {
+        _meshObjs.erase(_meshObjs.begin() + index);
+        UpdateMeshIndices();
+    }
+
+    void GraphicsDevice::Delete(int indexStart, int indexEnd) {
+        _meshObjs.erase(_meshObjs.begin() + indexStart, _meshObjs.begin() + indexEnd);
+        UpdateMeshIndices();
+    }
+
+    void GraphicsDevice::UpdateMeshIndices() const {
+        for (unsigned i = 0; i < _meshObjs.size(); ++i)
+            _meshObjs[i].get().deviceIndex = i;
+    }
+
     void GraphicsDevice::ClearColor(const Maths::Vector3& color)
     {
         glClearColor(color.x, color.y, color.z, 1.0f);

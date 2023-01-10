@@ -25,6 +25,8 @@ namespace Graphics
             mesh->Clone(newMesh);
             _meshes.emplace_back(newMesh);
         }
+        modelTransform = other.modelTransform;
+        
         return *this;
     }
 
@@ -61,7 +63,7 @@ namespace Graphics
     void MeshObject::Unbind()
     {
         if (device)
-            device->_meshObjs.erase(device->_meshObjs.begin() + (int)deviceIndex);
+            device->Delete((int)deviceIndex);
         device = nullptr;
     }
 

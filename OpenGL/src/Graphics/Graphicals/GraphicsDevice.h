@@ -46,6 +46,9 @@ namespace Graphics
         void RegisterNewElements(MeshObject* meshObjs, unsigned int objCount) const;
         void RenderRegistered() const;
         void AddMeshObject(MeshObject* meshObjs, unsigned int objCount);
+        void Delete(int index);
+        void Delete(int indexStart, int indexEnd);
+        void UpdateMeshIndices() const;
 
         void ClearColor(const Maths::Vector3& color);
         

@@ -4,7 +4,7 @@
 
 namespace Graphics
 {
-    Texture::Texture(const std::string& filePath)
+    Texture::Texture(const std::string& filePath, bool useLinear)
         : rendererID(0), filePath(filePath), localTexture(nullptr), width(0), height(0), BPPixel(0)
     {
         //flips texture
@@ -14,8 +14,8 @@ namespace Graphics
         GLCALL(glGenTextures(1, &rendererID));
         GLCALL(glBindTexture(GL_TEXTURE_2D, rendererID));
 
-        GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-        GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+        GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, useLinear ? GL_LINEAR : GL_NEAREST));
+        GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, useLinear ? GL_LINEAR : GL_NEAREST));
         GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
         GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
 

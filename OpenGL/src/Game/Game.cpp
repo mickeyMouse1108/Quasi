@@ -15,7 +15,12 @@ namespace Game
                                                                          */
         constexpr float ISO_Z_ROT = 1.57079632679489661923132169163980f; // rotate 90°. ( 2π / 4 )
         GraphicsDevice->SetCamera(Maths::Matrix3D::Transform({0, 0, 0}, {50.0f, 50.0f, 50.0f}, {ISO_X_ROT, ISO_Y_ROT, ISO_Z_ROT}));
-        block.GetMeshObjectForm().Bind(*GraphicsDevice);
+        for (int x = -1; x <= 1; ++x)
+            for (int y = -1; y <= 1; ++y)
+                for (int z = -1; z <= 1; ++z) 
+                    blocks.emplace_back(Maths::Vec3Int{x, y, z});
+
+        for (auto& block : blocks) block.GetMeshObjectForm().Bind(*GraphicsDevice);
         // cube.Bind(*GraphicsDevice);
         // LOG(cube.IsBound());
         GraphicsDevice->RegisterElements();

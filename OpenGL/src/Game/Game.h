@@ -1,4 +1,6 @@
 ﻿#pragma once
+#include <array>
+
 #include "BlockMesh.h"
 #include "Graphics/Graphicals/GraphicsDevice.h"
 #include "MeshObject.h"
@@ -8,7 +10,7 @@ namespace Game
     class Game
     {
     private:
-        BlockMesh block;
+        std::vector<BlockMesh> blocks = {};
         // Graphics::MeshObject cube;
         // Graphics::TriMesh<Graphics::MeshUtils::Vertex> vtx;
     public:

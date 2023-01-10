@@ -11,8 +11,19 @@ Graphics::MeshUtils::Vertex BlockMesh::BLOCK_VERTICES[8] = {
     { Maths::Vector3(+0.5f, +0.5f, +0.5f), { 1.0f, 1.0f, 1.0f, 1.0f } }, 
 };
 
-BlockMesh::BlockMesh() {
+std::unique_ptr<Graphics::QuadMesh<Graphics::MeshUtils::Vertex>> BlockMesh::BLOCK_FACES[6] = {
+    std::make_unique<Graphics::QuadMesh<Graphics::MeshUtils::Vertex>>( BLOCK_VERTICES[0], BLOCK_VERTICES[1], BLOCK_VERTICES[2], BLOCK_VERTICES[3] ),
+    std::make_unique<Graphics::QuadMesh<Graphics::MeshUtils::Vertex>>( BLOCK_VERTICES[4], BLOCK_VERTICES[5], BLOCK_VERTICES[6], BLOCK_VERTICES[7] ),
+    std::make_unique<Graphics::QuadMesh<Graphics::MeshUtils::Vertex>>( BLOCK_VERTICES[0], BLOCK_VERTICES[1], BLOCK_VERTICES[4], BLOCK_VERTICES[5] ),
+    std::make_unique<Graphics::QuadMesh<Graphics::MeshUtils::Vertex>>( BLOCK_VERTICES[2], BLOCK_VERTICES[3], BLOCK_VERTICES[6], BLOCK_VERTICES[7] ),
+    std::make_unique<Graphics::QuadMesh<Graphics::MeshUtils::Vertex>>( BLOCK_VERTICES[0], BLOCK_VERTICES[2], BLOCK_VERTICES[4], BLOCK_VERTICES[6] ),
+    std::make_unique<Graphics::QuadMesh<Graphics::MeshUtils::Vertex>>( BLOCK_VERTICES[1], BLOCK_VERTICES[3], BLOCK_VERTICES[5], BLOCK_VERTICES[7] ),
+};
+
+BlockMesh::BlockMesh(const Maths::Vec3Int& position) : position(position) {
 }
+
+BlockMesh::BlockMesh(const BlockMesh& copy) : enabledFlags(copy.enabledFlags), position(copy.position) {}
 
 BlockMesh::~BlockMesh() {}
 
@@ -22,9 +33,10 @@ Graphics::MeshObject& BlockMesh::GetMeshObjectForm()
     
     for (int i = 0; i < 6; ++i)
         if (enabledFlags >> i & 1) {
-            faces.emplace_back(_blockFaces[faces.size()].get());
+            faces.emplace_back(new Graphics::QuadMesh<Graphics::MeshUtils::Vertex>(*BLOCK_FACES[faces.size()]));
         }
 
     Graphics::MeshObject::MakeAt<Graphics::QuadMesh>(faces.data(), faces.size(), &meshObj);
+    meshObj.Transform(Maths::Matrix3D::TranslateMat(position.CastF()));
     return meshObj;
 }

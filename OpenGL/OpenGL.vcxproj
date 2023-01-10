@@ -216,6 +216,7 @@
     <ClInclude Include="src\Graphics\Meshes\QuadMesh.h" />
     <ClInclude Include="src\Graphics\Meshes\TriMesh.h" />
     <ClInclude Include="src\Graphics\Utils\Textures\Texture.h" />
+    <ClInclude Include="src\Maths\GenericVector.h" />
     <ClInclude Include="src\Maths\Maths.h" />
     <ClInclude Include="src\Maths\Matrix.h" />
     <ClInclude Include="src\Maths\Vector.h" />

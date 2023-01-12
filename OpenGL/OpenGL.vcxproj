@@ -242,6 +242,7 @@
     <ClInclude Include="src\vendor\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include=".gitignore" />
     <Content Include="res\backup.txt" />
     <Content Include="res\game_planning.txt" />
     <Content Include="res\textures\UV.png" />

@@ -29,7 +29,9 @@ namespace Graphics
         MeshObject() {}
         MeshObject(MeshPtrRaw meshes[], unsigned int meshCount);
         MeshObject(const MeshObject& copy);
+        MeshObject(MeshObject&& copy) noexcept;
         MeshObject& operator= (const MeshObject&);
+        MeshObject& operator= (MeshObject&&) noexcept;
         
         template<template<class> class TMesh>
         static MeshObject Make(TMesh<Vertex>* meshes[], unsigned int meshCount)
@@ -39,13 +41,13 @@ namespace Graphics
             return MeshObject( meshPtrs.data(), meshCount );
         }
         
-        template<template<class> class TMesh>
-        static void MakeAt(TMesh<Vertex>* meshes[], unsigned int meshCount, MeshObject* out)
-        {
-            out->_meshes.clear();
-            out->_meshes.reserve(meshCount);
-            out->_meshes.insert(out->_meshes.begin(), meshes, meshes + meshCount);
-        }
+        // template<template<class> class TMesh>
+        // static void MakeAt(TMesh<Vertex>* meshes[], unsigned int meshCount, MeshObject* out)
+        // {
+        //     out->_meshes.clear();
+        //     out->_meshes.reserve(meshCount);
+        //     out->_meshes.insert(out->_meshes.begin(), meshes, meshes + meshCount);
+        // }
 
         ~MeshObject();
 

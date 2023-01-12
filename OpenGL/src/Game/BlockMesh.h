@@ -34,6 +34,7 @@ class BlockMesh
 public:
     BlockMesh(const Maths::Vec3Int& position = {});
     BlockMesh(const BlockMesh& copy);
+    BlockMesh(BlockMesh&& copy) noexcept;
     ~BlockMesh();
 
     Graphics::MeshObject& GetMeshObjectForm();

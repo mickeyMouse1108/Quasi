@@ -20,10 +20,15 @@ std::unique_ptr<Graphics::QuadMesh<Graphics::MeshUtils::Vertex>> BlockMesh::BLOC
     std::make_unique<Graphics::QuadMesh<Graphics::MeshUtils::Vertex>>( BLOCK_VERTICES[1], BLOCK_VERTICES[3], BLOCK_VERTICES[5], BLOCK_VERTICES[7] ),
 };
 
-BlockMesh::BlockMesh(const Maths::Vec3Int& position) : position(position) {
-}
+BlockMesh::BlockMesh(const Maths::Vec3Int& position) : position(position) {}
 
 BlockMesh::BlockMesh(const BlockMesh& copy) : enabledFlags(copy.enabledFlags), position(copy.position) {}
+
+BlockMesh::BlockMesh(BlockMesh&& copy) noexcept {
+    enabledFlags = copy.enabledFlags;
+    position     = copy.position    ;
+    meshObj      = std::move(copy.meshObj);
+}
 
 BlockMesh::~BlockMesh() {}
 
@@ -36,7 +41,7 @@ Graphics::MeshObject& BlockMesh::GetMeshObjectForm()
             faces.emplace_back(new Graphics::QuadMesh<Graphics::MeshUtils::Vertex>(*BLOCK_FACES[faces.size()]));
         }
 
-    Graphics::MeshObject::MakeAt<Graphics::QuadMesh>(faces.data(), faces.size(), &meshObj);
+    meshObj = Graphics::MeshObject::Make<Graphics::QuadMesh>(faces.data(), faces.size());
     meshObj.Transform(Maths::Matrix3D::TranslateMat(position.CastF()));
     return meshObj;
 }

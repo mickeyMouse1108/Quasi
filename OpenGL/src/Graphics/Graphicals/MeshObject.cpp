@@ -11,22 +11,52 @@ namespace Graphics
     }
 
     MeshObject::MeshObject(const MeshObject& copy) {
-        *this = copy;
-    }
-
-    MeshObject& MeshObject::operator=(const MeshObject& other) {
-        if (this == &other) return *this;
-        
-        _meshes.clear();
-        _meshes.reserve(other._meshes.size());
-        for (const auto& mesh : other._meshes) {
+        _meshes.reserve(copy._meshes.size());
+        for (const auto& mesh : copy._meshes) {
             // create new copy so unique_ptr doesnt delete memory multiple times
             Mesh<Vertex>* newMesh;
             mesh->Clone(newMesh);
             _meshes.emplace_back(newMesh);
         }
-        modelTransform = other.modelTransform;
+        modelTransform = copy.modelTransform;
+    }
+
+    MeshObject::MeshObject(MeshObject&& copy) noexcept {
+        _meshes.clear();
+        _meshes.reserve(copy._meshes.size());
+        for (auto& mesh : copy._meshes) {
+            _meshes.push_back(std::move(mesh));
+        }
+        modelTransform = copy.modelTransform;
         
+        copy._meshes.clear();
+    }
+
+    MeshObject& MeshObject::operator=(const MeshObject& copy) {
+        if (this == &copy) return *this;
+        
+        _meshes.clear();
+        _meshes.reserve(copy._meshes.size());
+        for (const auto& mesh : copy._meshes) {
+            // create new copy so unique_ptr doesnt delete memory multiple times
+            Mesh<Vertex>* newMesh;
+            mesh->Clone(newMesh);
+            _meshes.emplace_back(newMesh);
+        }
+        modelTransform = copy.modelTransform;
+        
+        return *this;
+    }
+
+    MeshObject& MeshObject::operator=(MeshObject&& copy) noexcept {
+        _meshes.clear();
+        _meshes.reserve(copy._meshes.size());
+        for (auto& mesh : copy._meshes) {
+            _meshes.push_back(std::move(mesh));
+        }
+        modelTransform = copy.modelTransform;
+        
+        copy._meshes.clear();
         return *this;
     }
 

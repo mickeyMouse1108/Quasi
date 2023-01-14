@@ -10,6 +10,11 @@ namespace Maths
 #pragma region Vec2 Declaration
     template <class T> struct Vec2
     {
+        static const Vec2<T> RIGHT;
+        static const Vec2<T> LEFT ;
+        static const Vec2<T> UP   ;
+        static const Vec2<T> DOWN ;
+        
         T x, y;
         Vec2() : x(0), y(0) {}
         Vec2(T x, T y = 0) : x(x), y(y) {}
@@ -36,6 +41,13 @@ namespace Maths
 #pragma region Vec3 Declaration
     template <class T> struct Vec3
     {
+        static const Vec3<T> RIGHT;
+        static const Vec3<T> LEFT ;
+        static const Vec3<T> UP   ;
+        static const Vec3<T> DOWN ;
+        static const Vec3<T> FRONT;
+        static const Vec3<T> BACK ;
+        
         T x, y, z;
         Vec3() : x(0), y(0), z(0) {}
         Vec3(T x, T y, T z = 0) : x(x), y(y), z(z) {}
@@ -63,6 +75,17 @@ namespace Maths
 #pragma region Vec4 Declaration
     template <class T> struct Vec4
     {
+        static const Vec4<T> RIGHT;
+        static const Vec4<T> LEFT ;
+        static const Vec4<T> UP   ;
+        static const Vec4<T> DOWN ;
+        static const Vec4<T> FRONT;
+        static const Vec4<T> BACK ;
+        static const Vec4<T> IN   ;
+        static const Vec4<T> OUT  ;
+        static constexpr Vec4<T> ANA  = IN;
+        static constexpr Vec4<T> KATA = OUT;
+        
         T x, y, z, w;
         Vec4() : x(0), y(0), z(0), w(0) {}
         Vec4(T x, T y, T z, T w = 0) : x(x), y(y), z(z), w(w) {}
@@ -87,6 +110,11 @@ namespace Maths
 #pragma endregion
 
 #pragma region Vec2 Definition
+    template <class T> Vec2<T> const Vec2<T>::RIGHT = {  1,  0 };
+    template <class T> Vec2<T> const Vec2<T>::LEFT  = { -1,  0 };
+    template <class T> Vec2<T> const Vec2<T>::UP    = {  0,  1 };
+    template <class T> Vec2<T> const Vec2<T>::DOWN  = {  0, -1 };
+    
     template <class T> Vec2<T>::Vec2(const Vec3<T>& vec3) : x(vec3.x), y(vec3.y) {}
 
     template <class T> Vec2<T> operator+(const Vec2<T>& a, const Vec2<T>& b) { return {a.x + b.x, a.y + b.y}; }
@@ -100,6 +128,13 @@ namespace Maths
 #pragma endregion
 
 #pragma region Vec3 Definition
+    template <class T> Vec3<T> const Vec3<T>::RIGHT = {  1,  0,  0 };
+    template <class T> Vec3<T> const Vec3<T>::LEFT  = { -1,  0,  0 };
+    template <class T> Vec3<T> const Vec3<T>::UP    = {  0,  1,  0 };
+    template <class T> Vec3<T> const Vec3<T>::DOWN  = {  0, -1,  0 };
+    template <class T> Vec3<T> const Vec3<T>::FRONT = {  0,  0,  1 };
+    template <class T> Vec3<T> const Vec3<T>::BACK  = {  0,  0, -1 };
+    
     template <class T> Vec3<T>::Vec3(const Vec4<T>& vec4) : x(vec4.x), y(vec4.y), z(vec4.z) {}
 
     template <class T> Vec3<T> operator+(const Vec3<T>& a, const Vec3<T>& b) { return {a.x + b.x, a.y + b.y, a.z + b.z}; }
@@ -113,6 +148,15 @@ namespace Maths
 #pragma endregion
 
 #pragma region Vec4 Definition
+    template <class T> Vec4<T> const Vec4<T>::RIGHT = {  1,  0,  0,  0 };
+    template <class T> Vec4<T> const Vec4<T>::LEFT  = { -1,  0,  0,  0 };
+    template <class T> Vec4<T> const Vec4<T>::UP    = {  0,  1,  0,  0 };
+    template <class T> Vec4<T> const Vec4<T>::DOWN  = {  0, -1,  0,  0 };
+    template <class T> Vec4<T> const Vec4<T>::FRONT = {  0,  0,  1,  0 };
+    template <class T> Vec4<T> const Vec4<T>::BACK  = {  0,  0, -1,  0 };
+    template <class T> Vec4<T> const Vec4<T>::IN    = {  0,  0,  0,  1 };
+    template <class T> Vec4<T> const Vec4<T>::OUT   = {  0,  0,  0, -1 };
+    
     template <class T> Vec4<T> operator+(const Vec4<T>& a, const Vec4<T>& b) { return {a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w}; }
     template <class T> Vec4<T> operator-(const Vec4<T>& a, const Vec4<T>& b) { return {a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w}; }
     template <class T> Vec4<T> operator*(const Vec4<T>& a, const Vec4<T>& b) { return {a.x * b.x, a.y * b.y, a.z * b.z, a.w * b.w}; }

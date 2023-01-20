@@ -1,16 +1,18 @@
 ﻿#pragma once
-#include <array>
 
-#include "BlockMesh.h"
-#include "Graphics/Graphicals/GraphicsDevice.h"
-#include "MeshObject.h"
+#include "GraphicsDevice.h"
+#include "World.h"
 
 namespace Game
 {
     class Game
     {
     private:
-        std::vector<BlockMesh> blocks = {};
+        World world;
+
+        Maths::Vector3 rot;
+        Maths::Vector3 scale = {40, 40, 40};
+        Maths::Vector3 trans;
         // Graphics::MeshObject cube;
         // Graphics::TriMesh<Graphics::MeshUtils::Vertex> vtx;
     public:

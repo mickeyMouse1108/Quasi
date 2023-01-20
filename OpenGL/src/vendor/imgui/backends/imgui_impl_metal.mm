@@ -28,7 +28,7 @@
 
 #include "imgui.h"
 #include "imgui_impl_metal.h"
-#import <time.h>
+#import <GameTime.h>
 #import <Metal/Metal.h>
 
 #pragma mark - Support classes

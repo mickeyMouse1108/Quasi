@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$" />
+  <component name="CidrRootsConfiguration">
+    <libraryRoots>
+      <file path="$PROJECT_DIR$/Dependencies" />
+    </libraryRoots>
+    <excludeRoots>
+      <file path="$PROJECT_DIR$/OpenGL/src/vendor/imgui-1.60/imgui-1.60/examples" />
+      <file path="$PROJECT_DIR$/OpenGL/src/vendor/imgui-1.60/imgui-1.60/misc" />
+      <file path="$PROJECT_DIR$/OpenGL/src/vendor/imgui/backends" />
+      <file path="$PROJECT_DIR$/OpenGL/src/vendor/imgui/examples" />
+      <file path="$PROJECT_DIR$/OpenGL/src/vendor/imgui/misc" />
+    </excludeRoots>
+  </component>
+</project>

@@ -84,8 +84,6 @@ namespace Maths
         static const Vector4 BACK ;
         static const Vector4 IN   ;
         static const Vector4 OUT  ;
-        static constexpr Vector4 ANA  = IN;
-        static constexpr Vector4 KATA = OUT;
         
         float x, y, z, w;
         Vector4() : x(0), y(0), z(0), w(0) {}

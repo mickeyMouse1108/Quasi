@@ -1,4 +1,4 @@
-﻿#include "Time.h"
+﻿#include "GameTime.h"
 
 #include "imgui.h"
 
@@ -40,7 +40,6 @@ namespace Game
 
         currentMs += deltaTime;
     }
-
-    // clever naming hack ;)
-    class GameTime GameTime = {};
+    
+    GameTime GameTime = {};
 }

@@ -10,10 +10,10 @@ namespace Maths
 #pragma region Vec2 Declaration
     template <class T> struct Vec2
     {
-        static const Vec2<T> RIGHT;
-        static const Vec2<T> LEFT ;
-        static const Vec2<T> UP   ;
-        static const Vec2<T> DOWN ;
+        static const Vec2 RIGHT;
+        static const Vec2 LEFT ;
+        static const Vec2 UP   ;
+        static const Vec2 DOWN ;
         
         T x, y;
         Vec2() : x(0), y(0) {}
@@ -25,7 +25,7 @@ namespace Maths
                                 Vector2      CastF() { return {(float) x, (float) y}; }
 
         T operator[] (unsigned int i) const { return ((const T*)this)[i]; }
-        operator T*() { return (T*)this; }
+        explicit operator T*() { return (T*)this; }
     };
     
     template <class T> Vec2<T> operator+ (const Vec2<T>&a, const Vec2<T>& b);
@@ -41,25 +41,26 @@ namespace Maths
 #pragma region Vec3 Declaration
     template <class T> struct Vec3
     {
-        static const Vec3<T> RIGHT;
-        static const Vec3<T> LEFT ;
-        static const Vec3<T> UP   ;
-        static const Vec3<T> DOWN ;
-        static const Vec3<T> FRONT;
-        static const Vec3<T> BACK ;
+        static const Vec3 RIGHT;
+        static const Vec3 LEFT ;
+        static const Vec3 UP   ;
+        static const Vec3 DOWN ;
+        static const Vec3 FRONT;
+        static const Vec3 BACK ;
         
         T x, y, z;
         Vec3() : x(0), y(0), z(0) {}
         Vec3(T x, T y, T z = 0) : x(x), y(y), z(z) {}
         Vec3(T val) : x(val), y(val), z(val) {}
         Vec3(const Vec2<T>& vec2, T z) : x(vec2.x), y(vec2.y), z(z) {}
+        Vec3(const Vec3<T>& vec3) : x(vec3.x), y(vec3.y), z(vec3.z) {}
         Vec3(const Vec4<T>& vec4);
 
         template <class TOther> Vec3<TOther> Cast () { return {(TOther)x, (TOther)y, (TOther)z}; }
                                 Vector3      CastF() { return {(float) x, (float) y, (float) z}; }
 
         T operator[] (unsigned int i) const { return ((const T*)this)[i]; }
-        operator T*() { return (T*)this; }
+        explicit operator T*() { return (T*)this; }
     };
 
     template <class T> Vec3<T> operator+ (const Vec3<T>&a, const Vec3<T>& b);
@@ -75,16 +76,14 @@ namespace Maths
 #pragma region Vec4 Declaration
     template <class T> struct Vec4
     {
-        static const Vec4<T> RIGHT;
-        static const Vec4<T> LEFT ;
-        static const Vec4<T> UP   ;
-        static const Vec4<T> DOWN ;
-        static const Vec4<T> FRONT;
-        static const Vec4<T> BACK ;
-        static const Vec4<T> IN   ;
-        static const Vec4<T> OUT  ;
-        static constexpr Vec4<T> ANA  = IN;
-        static constexpr Vec4<T> KATA = OUT;
+        static const Vec4 RIGHT;
+        static const Vec4 LEFT ;
+        static const Vec4 UP   ;
+        static const Vec4 DOWN ;
+        static const Vec4 FRONT;
+        static const Vec4 BACK ;
+        static const Vec4 IN   ;
+        static const Vec4 OUT  ;
         
         T x, y, z, w;
         Vec4() : x(0), y(0), z(0), w(0) {}
@@ -92,11 +91,11 @@ namespace Maths
         Vec4(T val) : x(val), y(val), z(val), w(val) {}
         Vec4(const Vec3<T>& vec3, T w = 0) : x(vec3.x), y(vec3.y), z(vec3.z), w(w) {}
 
-        template <class TOther> Vec2<TOther> Cast () { return {(TOther)x, (TOther)y, (TOther)z, (TOther)w}; }
-                                Vector2      CastF() { return {(float) x, (float) y, (float) z, (float) w}; }
+        template <class TOther> Vec4<TOther> Cast () { return {(TOther)x, (TOther)y, (TOther)z, (TOther)w}; }
+                                Vector4      CastF() { return {(float) x, (float) y, (float) z, (float) w}; }
 
         T operator[] (unsigned int i) const { return ((const T*)this)[i]; }
-        operator T*() { return (T*)this; }
+        explicit operator T*() { return (T*)this; }
     };
 
     template <class T> Vec4<T> operator+ (const Vec4<T>&a, const Vec4<T>& b);

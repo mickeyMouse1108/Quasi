@@ -22,14 +22,8 @@ namespace Graphics
     }
 
     MeshObject::MeshObject(MeshObject&& copy) noexcept {
-        _meshes.clear();
-        _meshes.reserve(copy._meshes.size());
-        for (auto& mesh : copy._meshes) {
-            _meshes.push_back(std::move(mesh));
-        }
+        _meshes = std::move(copy._meshes);
         modelTransform = copy.modelTransform;
-        
-        copy._meshes.clear();
     }
 
     MeshObject& MeshObject::operator=(const MeshObject& copy) {
@@ -49,14 +43,8 @@ namespace Graphics
     }
 
     MeshObject& MeshObject::operator=(MeshObject&& copy) noexcept {
-        _meshes.clear();
-        _meshes.reserve(copy._meshes.size());
-        for (auto& mesh : copy._meshes) {
-            _meshes.push_back(std::move(mesh));
-        }
+        _meshes = std::move(copy._meshes);
         modelTransform = copy.modelTransform;
-        
-        copy._meshes.clear();
         return *this;
     }
 
@@ -118,12 +106,12 @@ namespace Graphics
 
             QuadMesh<Vertex>* cubeMeshes[6] = 
             {
-                new QuadMesh<Vertex>( vertices[0], vertices[1], vertices[2], vertices[3] ), // left
-                new QuadMesh<Vertex>( vertices[4], vertices[5], vertices[6], vertices[7] ), // right
-                new QuadMesh<Vertex>( vertices[0], vertices[1], vertices[4], vertices[5] ), // down
-                new QuadMesh<Vertex>( vertices[2], vertices[3], vertices[6], vertices[7] ), // up
-                new QuadMesh<Vertex>( vertices[0], vertices[2], vertices[4], vertices[6] ), // front
-                new QuadMesh<Vertex>( vertices[1], vertices[3], vertices[5], vertices[7] ), // back
+                new QuadMesh( vertices[0], vertices[1], vertices[2], vertices[3] ), // left
+                new QuadMesh( vertices[4], vertices[5], vertices[6], vertices[7] ), // right
+                new QuadMesh( vertices[0], vertices[1], vertices[4], vertices[5] ), // down
+                new QuadMesh( vertices[2], vertices[3], vertices[6], vertices[7] ), // up
+                new QuadMesh( vertices[0], vertices[2], vertices[4], vertices[6] ), // front
+                new QuadMesh( vertices[1], vertices[3], vertices[5], vertices[7] ), // back
             };
             
             return MeshObject::Make<QuadMesh>(cubeMeshes, 6);

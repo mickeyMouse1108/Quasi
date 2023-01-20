@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="CMakePresetLoader">{
+  &quot;useNewFormat&quot;: true
+}</component>
+  <component name="CMakeReloadState">
+    <option name="reloaded" value="true" />
+  </component>
+  <component name="CMakeRunConfigurationManager">
+    <generated />
+  </component>
+  <component name="CMakeSettings" AUTO_RELOAD="true">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="3cbccb01-c926-478d-92a9-1670cfa7d2c8" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/OpenGL/OpenGL.vcxproj" beforeDir="false" afterPath="$PROJECT_DIR$/OpenGL/OpenGL.vcxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OpenGL/src/Game/Block.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/OpenGL/src/Game/Block.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OpenGL/src/Game/Block.h" beforeDir="false" afterPath="$PROJECT_DIR$/OpenGL/src/Game/Block.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OpenGL/src/Game/Game.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/OpenGL/src/Game/Game.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OpenGL/src/Game/Game.h" beforeDir="false" afterPath="$PROJECT_DIR$/OpenGL/src/Game/Game.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OpenGL/src/Game/Time.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/OpenGL/src/Game/GameTime.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OpenGL/src/Game/Time.h" beforeDir="false" afterPath="$PROJECT_DIR$/OpenGL/src/Game/GameTime.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OpenGL/src/Game/World.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/OpenGL/src/Game/World.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OpenGL/src/Game/World.h" beforeDir="false" afterPath="$PROJECT_DIR$/OpenGL/src/Game/World.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OpenGL/src/Graphics/Graphicals/MeshObject.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/OpenGL/src/Graphics/Graphicals/MeshObject.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OpenGL/src/Maths/GenericVector.h" beforeDir="false" afterPath="$PROJECT_DIR$/OpenGL/src/Maths/GenericVector.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OpenGL/src/Maths/Vector.h" beforeDir="false" afterPath="$PROJECT_DIR$/OpenGL/src/Maths/Vector.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OpenGL/src/utils/sorted_vector.h" beforeDir="false" afterPath="$PROJECT_DIR$/OpenGL/src/utils/sorted_vector.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OpenGL/src/vendor/imgui/backends/imgui_impl_android.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/OpenGL/src/vendor/imgui/backends/imgui_impl_android.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OpenGL/src/vendor/imgui/backends/imgui_impl_metal.mm" beforeDir="false" afterPath="$PROJECT_DIR$/OpenGL/src/vendor/imgui/backends/imgui_impl_metal.mm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OpenGL/src/vendor/imgui/backends/imgui_impl_osx.mm" beforeDir="false" afterPath="$PROJECT_DIR$/OpenGL/src/vendor/imgui/backends/imgui_impl_osx.mm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Win32/Debug/OpenGL.exe" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Win32/Debug/OpenGL.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Win32/Debug/OpenGL.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Win32/Debug/OpenGL.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/Application.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/Application.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/DynamicIndexBuffer.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/DynamicIndexBuffer.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/Game.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/Game.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/GraphicsDevice.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/GraphicsDevice.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/IndexBuffer.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/IndexBuffer.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/Matrix.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/Matrix.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/MeshObject.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/MeshObject.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/OpenGL.ilk" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/OpenGL.ilk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/OpenGL.tlog/CL.command.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/OpenGL.tlog/CL.command.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/OpenGL.tlog/CL.read.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/OpenGL.tlog/CL.read.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/OpenGL.tlog/CL.write.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/OpenGL.tlog/CL.write.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/OpenGL.tlog/link.command.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/OpenGL.tlog/link.command.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/OpenGL.tlog/link.read.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/OpenGL.tlog/link.read.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/OpenGL.tlog/link.write.1.tlog" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/OpenGL.tlog/link.write.1.tlog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/Renderer.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/Renderer.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/Shader.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/Shader.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/TestBatchedColored.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/TestBatchedColored.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/TestBatchedTextured.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/TestBatchedTextured.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/TestClearColor.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/TestClearColor.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/TestCubeRender.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/TestCubeRender.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/TestDynamicQuadGeometry.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/TestDynamicQuadGeometry.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/TestDynamicTris.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/TestDynamicTris.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/TestDynamicVertexGeometry.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/TestDynamicVertexGeometry.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/TestMenu.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/TestMenu.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/TestTexturedSquare.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/TestTexturedSquare.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/Texture.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/Texture.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/Time.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/Time.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/Vector.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/Vector.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/VertexArray.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/VertexArray.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/VertexBuffer.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/VertexBuffer.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/VertexBufferLayout.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/VertexBufferLayout.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/imgui.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/imgui.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/imgui_demo.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/imgui_demo.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/imgui_draw.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/imgui_draw.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/imgui_impl_glfw.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/imgui_impl_glfw.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/imgui_impl_opengl3.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/imgui_impl_opengl3.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/imgui_tables.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/imgui_tables.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/imgui_widgets.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/imgui_widgets.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/stb_image.obj" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/stb_image.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/vc143.idb" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/vc143.idb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/vc143.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/bin/intermediates/Win32/Debug/vc143.pdb" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="CMakeLists.txt" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectApplicationVersion">
+    <option name="ide" value="CLion" />
+    <option name="majorVersion" value="2022" />
+    <option name="minorVersion" value="3.1" />
+  </component>
+  <component name="ProjectId" id="2KLCoZGbiISFVbwG0y51UnbIZld" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/User/RiderProjects/OpenGL&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;CPPToolchains&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\User\RiderProjects\OpenGL" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3cbccb01-c926-478d-92a9-1670cfa7d2c8" name="Changes" comment="" />
+      <created>1673744652668</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1673744652668</updated>
+      <workItem from="1673744654152" duration="98000" />
+      <workItem from="1673744763189" duration="1922000" />
+      <workItem from="1673746713110" duration="1044000" />
+      <workItem from="1673747779624" duration="4840000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

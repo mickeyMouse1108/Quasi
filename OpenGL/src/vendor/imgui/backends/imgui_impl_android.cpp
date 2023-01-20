@@ -26,7 +26,7 @@
 
 #include "imgui.h"
 #include "imgui_impl_android.h"
-#include <time.h>
+#include <GameTime.h>
 #include <android/native_window.h>
 #include <android/input.h>
 #include <android/keycodes.h>

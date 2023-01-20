@@ -1,5 +1,7 @@
 ﻿#include "Game.h"
 
+#include "imgui.h"
+
 namespace Game
 {
     Game::Game()
@@ -14,13 +16,9 @@ namespace Game
                                                                         sinθ / cosθ = tanθ = 1 / √2. θ = atan1/√2.
                                                                          */
         constexpr float ISO_Z_ROT = 1.57079632679489661923132169163980f; // rotate 90°. ( 2π / 4 )
-        GraphicsDevice->SetCamera(Maths::Matrix3D::Transform({0, 0, 0}, {50.0f, 50.0f, 50.0f}, {ISO_X_ROT, ISO_Y_ROT, ISO_Z_ROT}));
-        for (int x = -1; x <= 1; ++x)
-            for (int y = -1; y <= 1; ++y)
-                for (int z = -1; z <= 1; ++z) 
-                    blocks.emplace_back(Maths::Vec3Int{x, y, z});
+        rot = {ISO_X_ROT, ISO_Y_ROT, ISO_Z_ROT};
 
-        for (auto& block : blocks) block.GetMeshObjectForm().Bind(*GraphicsDevice);
+        world.DisplayTo(*GraphicsDevice);
         // cube.Bind(*GraphicsDevice);
         // LOG(cube.IsBound());
         GraphicsDevice->RegisterElements();
@@ -39,6 +37,11 @@ namespace Game
         GraphicsDevice->RegisterElements();
         GraphicsDevice->EnableShader();
         GraphicsDevice->RenderRegistered();
+
+        GraphicsDevice->SetCamera(Maths::Matrix3D::Transform(trans, scale, rot));
+        ImGui::SliderFloat3("Rot", (float*)&rot, 0, 5);
+        ImGui::SliderFloat3("Sca", (float*)&scale, 0, 200);
+        ImGui::SliderFloat3("Tra", (float*)&trans, -100, 100);
         
         GraphicsDevice->DebugMenu();
         

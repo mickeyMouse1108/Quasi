@@ -5,8 +5,11 @@
 
 namespace Game
 {
-    class BlockMesh
+    class Block
     {
+        using Vertex = Graphics::MeshUtils::Vertex;
+        using Quad = Graphics::QuadMesh<Vertex>;
+        
         static constexpr unsigned BLOCK_FACE_LEFT  = 1 ;
         static constexpr unsigned BLOCK_FACE_RIGHT = 2 ;
         static constexpr unsigned BLOCK_FACE_UP    = 4 ;
@@ -26,18 +29,25 @@ namespace Game
         };
 
         //this is really bloated
-        static Graphics::MeshUtils::Vertex BLOCK_VERTICES[8];
-        static std::unique_ptr<Graphics::QuadMesh<Graphics::MeshUtils::Vertex>> BLOCK_FACES[6];
+        static Maths::Vector3 BLOCK_VERTICES[8];
+        static Quad BLOCK_FACES[6];
         
         unsigned enabledFlags = BLOCK_FACE_ALL; // 2 ^ 6 - 1 => 111111
         Graphics::MeshObject meshObj;
 
         Maths::Vec3Int position;
     public:
-        BlockMesh(const Maths::Vec3Int& position = {}, unsigned enabledFlags);
-        BlockMesh(const BlockMesh& copy);
-        BlockMesh(BlockMesh&& copy) noexcept;
-        ~BlockMesh();
+        Block(const Maths::Vec3Int& position = {}, unsigned enabledFlags = BLOCK_FACE_ALL);
+        Block(const Block& copy);
+        Block(Block&& copy) noexcept;
+        Block& operator=(const Block& copy);
+        Block& operator=(Block&& copy) noexcept;
+        ~Block();
+
+        Maths::Vec3Int& GetPosition() { return position; }
+        [[nodiscard]] const Maths::Vec3Int& GetPosition() const { return position; }
+
+        void CullFaces(unsigned faces) { enabledFlags = faces; }
 
         Graphics::MeshObject& GetMeshObjectForm();
     };

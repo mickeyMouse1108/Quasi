@@ -19,7 +19,7 @@
 #import <Cocoa/Cocoa.h>
 #import <Carbon/Carbon.h>
 #import <GameController/GameController.h>
-#import <time.h>
+#import <GameTime.h>
 
 // CHANGELOG
 // (minor and older changes stripped away, please see git history for details)

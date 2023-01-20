@@ -10,7 +10,7 @@ namespace Game
         Frame
     };
     
-    class Time
+    class GameTime
     {
         int currentFrame = 0;
         float currentMs = 0;
@@ -18,8 +18,8 @@ namespace Game
         float frameRate;
 
     public:
-        Time();
-        ~Time();
+        GameTime();
+        ~GameTime();
 
         float TotalDuration(TimeUnit unit = Second) const;
         float DeltaTime    (TimeUnit unit = Second) const;
@@ -29,6 +29,6 @@ namespace Game
         void Update();
     };
     
-    extern Time Time;
+    extern GameTime Time;
 }
 

@@ -1,16 +1,14 @@
 ﻿#include "Time.h"
 
-#include <Windows.h>
-
 #include "imgui.h"
 
 namespace Game
 {
-    Time::Time() : deltaTime(0), frameRate(0) {}
+    GameTime::GameTime() : deltaTime(0), frameRate(0) {}
     
-    Time::~Time() {}
+    GameTime::~GameTime() {}
 
-    float Time::TotalDuration(TimeUnit unit) const
+    float GameTime::TotalDuration(TimeUnit unit) const
     {
         switch (unit)
         {
@@ -22,7 +20,7 @@ namespace Game
         return -1;
     }
 
-    float Time::DeltaTime(TimeUnit unit) const
+    float GameTime::DeltaTime(TimeUnit unit) const
     {
         switch (unit)
         {
@@ -34,7 +32,7 @@ namespace Game
         return -1;
     }
 
-    void Time::Update()
+    void GameTime::Update()
     {
         ++currentFrame;
         frameRate = ImGui::GetIO().Framerate;
@@ -44,5 +42,5 @@ namespace Game
     }
 
     // clever naming hack ;)
-    class Time Time = {};
+    class GameTime GameTime = {};
 }

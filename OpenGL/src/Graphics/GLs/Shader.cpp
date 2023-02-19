@@ -17,48 +17,15 @@ namespace Graphics
         GLCALL(glDeleteProgram(rendererID));
     }
 
-    void Shader::Bind() const
-    {
+    void Shader::Bind() const {
         GLCALL(glUseProgram(rendererID));
     }
 
-    void Shader::Unbind() const
-    {
+    void Shader::Unbind() const {
         GLCALL(glUseProgram(0));
     }
 
-    void Shader::SetUniform1I(const std::string& name, int val)
-    {
-        GLCALL(glUniform1i(GetUniformLocation(name), val));
-    }
-
-    void Shader::SetUniform1I_Arr(const std::string& name, int* val, unsigned count)
-    {
-        GLCALL(glUniform1iv(GetUniformLocation(name), count, val));
-    }
-
-    void Shader::SetUniform1F(const std::string& name, float val)
-    {
-        GLCALL(glUniform1f(GetUniformLocation(name), val));
-    }
-
-    void Shader::SetUniform4F(const std::string& name, float v0, float v1, float v2, float v3)
-    {
-        GLCALL(glUniform4f(GetUniformLocation(name), v0, v1, v2, v3));
-    }
-
-    void Shader::SetUniform4F(const std::string& name, float* vals)
-    {
-        GLCALL(glUniform4f(GetUniformLocation(name), vals[0], vals[1], vals[2], vals[3]));
-    }
-
-    void Shader::SetUniformMatrix4x4(const std::string& name, const Maths::Matrix3D& mat)
-    {
-        GLCALL(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, mat.GetInCol()));
-    }
-
-    unsigned Shader::GetUniformLocation(const std::string& name)
-    {
+    unsigned Shader::GetUniformLocation(const std::string& name) {
         if (uniformCache.find(name) != uniformCache.end())
             return uniformCache[name];
     

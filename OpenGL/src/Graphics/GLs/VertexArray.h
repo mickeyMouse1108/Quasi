@@ -23,6 +23,8 @@ namespace Graphics
         template <>
         void AddBuffer<VertexColorTexture3D>(const DynamicVertexBuffer<VertexColorTexture3D>& vb);
         template <>
+        void AddBuffer<VertexColorTextureAtlas3D>(const DynamicVertexBuffer<VertexColorTextureAtlas3D>& vb);
+        template <>
         void AddBuffer<VertexColor3D>(const DynamicVertexBuffer<VertexColor3D>& vb);
         
         void Bind() const;

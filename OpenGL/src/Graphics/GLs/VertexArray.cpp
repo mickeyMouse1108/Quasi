@@ -61,6 +61,26 @@ namespace Graphics
     }
 
     template <>
+    void VertexArray::AddBuffer<VertexColorTextureAtlas3D>(const DynamicVertexBuffer<VertexColorTextureAtlas3D>& vb) {
+        Bind();
+        vb.Bind();
+
+        typedef VertexColorTextureAtlas3D Vertex;
+        
+        GLCALL(glEnableVertexAttribArray(0));
+        GLCALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Position)));
+        
+        GLCALL(glEnableVertexAttribArray(1));
+        GLCALL(glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Color)));
+        
+        GLCALL(glEnableVertexAttribArray(2));
+        GLCALL(glVertexAttribPointer(3, 1, GL_INT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TextureAtlID)));
+
+        GLCALL(glEnableVertexAttribArray(3));
+        GLCALL(glVertexAttribPointer(3, 1, GL_INT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TextureCorner)));
+    }
+
+    template <>
     void VertexArray::AddBuffer<VertexColor3D>(const DynamicVertexBuffer<VertexColor3D>& vb)
     {
         Bind();

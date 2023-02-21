@@ -46,7 +46,7 @@ namespace Test
         
         shader->SetUniformMatrix4x4("u_MVP", projection);
         int ids[2] = { 0, 1 };
-        shader->SetUniform1I_Arr("u_Texture", ids, 2);
+        shader->SetUniform1IVec("u_Texture", ids, 2);
 
         va->Unbind();
         vb->Unbind();

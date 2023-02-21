@@ -28,7 +28,7 @@ int main()
     }
     return 0;
 #else
-    Game::Game game;
+    Game::Game game{};
     /* Loop until the user closes the window */
     while (game.IsWindowOpen())
     {

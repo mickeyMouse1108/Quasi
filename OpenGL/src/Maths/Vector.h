@@ -31,7 +31,7 @@ namespace Maths
                                 Vector2      CastF() { return {(float) x, (float) y}; }
 
         T operator[] (unsigned int i) const { return ((const T*)this)[i]; }
-        explicit operator T*() { return (T*)this; }
+        operator T*() { return (T*)this; }
     };
     
     template <class T> Vec2<T> operator+ (const Vec2<T>& a, const Vec2<T>& b);
@@ -67,7 +67,7 @@ namespace Maths
                                 Vector3      CastF() { return {(float) x, (float) y, (float) z}; }
 
         T operator[] (unsigned int i) const { return ((const T*)this)[i]; }
-        explicit operator T*() { return (T*)this; }
+        operator T*() { return (T*)this; }
     };
 
     template <class T> Vec3<T> operator+ (const Vec3<T>& a, const Vec3<T>& b);
@@ -103,7 +103,7 @@ namespace Maths
                                 Vector4      CastF() { return {(float) x, (float) y, (float) z, (float) w}; }
 
         T operator[] (unsigned int i) const { return ((const T*)this)[i]; }
-        explicit operator T*() { return (T*)this; }
+        operator T*() { return (T*)this; }
     };
 
     template <class T> Vec4<T> operator+ (const Vec4<T>& a, const Vec4<T>& b);

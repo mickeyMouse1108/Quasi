@@ -57,7 +57,7 @@ namespace Graphics
         GLCALL(glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TextureCoordinate)));
         
         GLCALL(glEnableVertexAttribArray(3));
-        GLCALL(glVertexAttribPointer(3, 1, GL_INT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TextureID)));
+        GLCALL(glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TextureID)));
     }
 
     template <>
@@ -74,10 +74,10 @@ namespace Graphics
         GLCALL(glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Color)));
         
         GLCALL(glEnableVertexAttribArray(2));
-        GLCALL(glVertexAttribPointer(3, 1, GL_INT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TextureAtlID)));
+        GLCALL(glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TextureAtlID)));
 
         GLCALL(glEnableVertexAttribArray(3));
-        GLCALL(glVertexAttribPointer(3, 1, GL_INT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TextureCorner)));
+        GLCALL(glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TextureCorner)));
     }
 
     template <>

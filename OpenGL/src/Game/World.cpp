@@ -1,20 +1,16 @@
 ﻿#include "World.h"
 
 namespace Game {
-
-
     World::World() : minX(-1), minY(-1), maxX(1), maxY(1) {
-        for (int x = -1; x <= 1; ++x)
-        for (int y = -1; y <= 1; ++y)
-        for (int z = -1; z <= 1; ++z) 
+        for (int x = 0; x <= 2; ++x)
+        for (int y = 0; y <= 2; ++y)
+        for (int z = 0; z <= 2; ++z) 
                     blocks.insert(Maths::Vec3Int{x, y, z});
 
         BlockUpdate();
     }
     
-    World::~World() {
-        
-    }
+    World::~World() {}
 
     World::opt_ref<Block> World::BlockAt(const Maths::Vec3Int& position, int startIndex) {
         const auto index = blocks.find({position}, startIndex);

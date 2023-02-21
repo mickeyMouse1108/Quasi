@@ -42,6 +42,10 @@ namespace Graphics
     {
         _currentShader->Bind();
         _currentShader->SetUniformMatrix4x4("u_MVP", _projection * _camera);
+    }
+    
+    void GraphicsDevice::DisableShader()
+    {
         _currentShader->Unbind();
     }
 

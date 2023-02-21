@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "GraphicsDevice.h"
+#include "Texture.h"
 #include "World.h"
 
 namespace Game
@@ -13,6 +14,8 @@ namespace Game
         Maths::Vector3 rot;
         Maths::Vector3 scale = {40, 40, 40};
         Maths::Vector3 trans;
+
+        std::unique_ptr<Graphics::Texture> texAtlas;
         // Graphics::MeshObject cube;
         // Graphics::TriMesh<Graphics::MeshUtils::Vertex> vtx;
     public:

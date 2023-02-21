@@ -4,10 +4,7 @@
 
 namespace Game
 {
-    Game::Game()
-    {
-        GraphicsDevice = Graphics::GraphicsDevice::Initialize();
-
+    Game::Game() : GraphicsDevice(Graphics::GraphicsDevice::Initialize()) {
         GraphicsDevice->UseShader("res/shaders/basic.glsl");
         // https://en.wikipedia.org/wiki/Isometric_projection#Overview for calculations
         constexpr float ISO_X_ROT = 0.78539816339744830961566084581988f; // simply 45° ( 2π / 8 )
@@ -17,6 +14,11 @@ namespace Game
                                                                          */
         constexpr float ISO_Z_ROT = 1.57079632679489661923132169163980f; // rotate 90°. ( 2π / 4 )
         rot = {ISO_X_ROT, ISO_Y_ROT, ISO_Z_ROT};
+
+        texAtlas = std::make_unique<Graphics::Texture>("res/textures/test_atlas.png");
+        texAtlas->Bind(0);
+        GraphicsDevice->SetUniform1Int("tex", 0);
+        GraphicsDevice->SetUniform2Int("texSize", { 4, 4 });
 
         world.DisplayTo(*GraphicsDevice);
         // cube.Bind(*GraphicsDevice);

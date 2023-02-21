@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "GenericVector.h"
+#include "Vector.h"
 #include "MeshObject.h"
 
 namespace Game

@@ -16,7 +16,8 @@ namespace Graphics
      */
     class MeshObject
     {
-        using Vertex = VertexColor3D;
+        public: using Vertex = GraphicsDevice::Vertex;
+        private:
         using MeshPtr = std::unique_ptr<Mesh<Vertex>>;
         using MeshPtrRaw = Mesh<Vertex>*;
         std::vector<MeshPtr> _meshes;
@@ -69,7 +70,7 @@ namespace Graphics
     namespace MeshUtils
     {
         using Vec3 = const Maths::Vector3&;
-        using Vertex = VertexColor3D;
+        using Vertex = MeshObject::Vertex;
         MeshObject CubeMesh(Vec3 origin, float x, float y, float z);
         // TODO: MeshObject CubeMesh(Vec3 origin, Vec3 x, Vec3 y, Vec3 z);
     }

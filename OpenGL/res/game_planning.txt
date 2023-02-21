@@ -27,3 +27,9 @@ UIObject
  |-- UIText
  |-- UIButton
  |-- UIGroup
+ 
+@@new(json)
+@@tokenize
+[
+@whitespace
+]

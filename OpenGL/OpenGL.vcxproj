@@ -173,7 +173,6 @@
     <ClCompile Include="src\Graphics\Graphicals\MeshObject.cpp" />
     <ClCompile Include="src\Graphics\Utils\Textures\Texture.cpp" />
     <ClCompile Include="src\Maths\Matrix.cpp" />
-    <ClCompile Include="src\Maths\Vector.cpp" />
     <ClCompile Include="src\test\TestBatchedTextured.cpp" />
     <ClCompile Include="src\test\TestClearColor.cpp" />
     <ClCompile Include="src\test\TestBatchedColored.cpp" />
@@ -219,10 +218,9 @@
     <ClInclude Include="src\Graphics\Meshes\QuadMesh.h" />
     <ClInclude Include="src\Graphics\Meshes\TriMesh.h" />
     <ClInclude Include="src\Graphics\Utils\Textures\Texture.h" />
-    <ClInclude Include="src\Maths\GenericVector.h" />
+    <ClInclude Include="src\Maths\Vector.h" />
     <ClInclude Include="src\Maths\Maths.h" />
     <ClInclude Include="src\Maths\Matrix.h" />
-    <ClInclude Include="src\Maths\Vector.h" />
     <ClInclude Include="src\test\Test.h" />
     <ClInclude Include="src\test\TestBatchedTextured.h" />
     <ClInclude Include="src\test\TestClearColor.h" />
@@ -248,6 +246,7 @@
     <Content Include=".gitignore" />
     <Content Include="res\backup.txt" />
     <Content Include="res\game_planning.txt" />
+    <Content Include="res\textures\test_atlas.png" />
     <Content Include="res\textures\UV.png" />
     <Content Include="src\test\res\standard_colored.glsl" />
     <Content Include="src\test\res\TestBatchedTextured\img1.png" />

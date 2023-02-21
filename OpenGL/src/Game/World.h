@@ -5,7 +5,7 @@
 
 namespace Game {
     class World {
-        // basically std::optional<std::reference_wrapper<T>>but with no overhead 
+        // basically std::optional<std::reference_wrapper<T>> but with no overhead 
         template <class T> using opt_ref = const T*;
         
         private:
@@ -17,7 +17,7 @@ namespace Game {
             }
         };
 
-        opt_ref<Block> BlockAt(const Maths::Vec3Int& position, int startIndex = 0)      ;
+        opt_ref<Block> BlockAt(const Maths::Vec3Int& position, int startIndex = 0);
         
         public:
         World();

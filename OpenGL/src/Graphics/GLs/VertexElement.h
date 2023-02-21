@@ -2,18 +2,20 @@
 #include "Vector.h"
 #include "Matrix.h"
 
+using intf = float;
+
 struct VertexColorTexture3D {
     Maths::Vector3 Position;
     Maths::Vector4 Color;
     Maths::Vector2 TextureCoordinate;
-    int TextureID = 0;
+    intf TextureID = 0;
 };
 
 struct VertexColorTextureAtlas3D {
     Maths::Vector3 Position;
     Maths::Vector4 Color;
-    int TextureAtlID = 0;
-    int TextureCorner = 0;
+    intf TextureAtlID = 0;
+    intf TextureCorner = 0;
 };
 
 struct VertexColor3D {

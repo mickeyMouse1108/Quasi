@@ -1,5 +1,5 @@
-﻿OpenGL/bin/
+﻿bin/
 OpenGL/src/vendor/include/
 OpenGL/src/vendor/imgui-1.60/
-OpenGL/.idea/
-OpenGL/.vs/
+.idea/
+.vs/

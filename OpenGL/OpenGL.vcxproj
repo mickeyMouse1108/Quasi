@@ -92,7 +92,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>src;src\Graphics\GLs;src\Graphics\Graphicals;src\Graphics\Meshes;src\Maths;src\Graphics\Utils\Textures;src/vendor/imgui;src/test;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;src\Graphics\GLs;src\Graphics\Graphicals;src\Graphics\Meshes;src\Maths;src\Graphics\Utils\Textures;src/vendor/imgui;src/vendor/json;src/test;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
@@ -158,7 +158,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp" />
-    <ClCompile Include="src\Game\Block.cpp" />
+    <ClCompile Include="src\Game\BlockRenderer.cpp" />
     <ClCompile Include="src\Game\Game.cpp" />
     <ClCompile Include="src\Game\GameTime.cpp" />
     <ClCompile Include="src\Game\World.cpp" />
@@ -198,7 +198,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Debugging.h" />
-    <ClInclude Include="src\Game\Block.h" />
+    <ClInclude Include="src\Game\BlockRenderer.h" />
     <ClInclude Include="src\Game\Game.h" />
     <ClInclude Include="src\Game\GameTime.h" />
     <ClInclude Include="src\Game\World.h" />
@@ -239,7 +239,8 @@
     <ClInclude Include="src\vendor\imgui\imgui_internal.h" />
     <ClInclude Include="src\vendor\imgui\imstb_rectpack.h" />
     <ClInclude Include="src\vendor\imgui\imstb_textedit.h" />
-    <ClInclude Include="src\vendor\imgui\imstb_truetype.h" /> 
+    <ClInclude Include="src\vendor\imgui\imstb_truetype.h" />
+    <ClInclude Include="src\vendor\json\json.hpp" /> 
     <ClInclude Include="src\vendor\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
@@ -257,6 +258,7 @@
     <Content Include="src\vendor\imgui\.gitignore" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="src\Game\loader" />
     <Folder Include="src\Graphics\Utils" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

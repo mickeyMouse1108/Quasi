@@ -28,8 +28,7 @@ UIObject
  |-- UIButton
  |-- UIGroup
  
-@@new(json)
-@@tokenize
-[
-@whitespace
-]
+
+from_json(const json& j, T t) {
+    j.at("attr").get_to(t.attr)
+}

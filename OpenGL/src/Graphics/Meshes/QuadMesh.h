@@ -15,6 +15,7 @@ namespace Graphics
         QuadMesh(const TVertex& point1, const TVertex& point2, const TVertex& point3, const TVertex& point4);
         ~QuadMesh() override = default;
 
+        TVertex* GetVertices();
         void GetData(unsigned int* vertexSize, TVertex** vertices, unsigned int* indexSize, unsigned int** indices) override;
         // friend void AddTo(DynamicVertexBuffer<TVertex>& vb, DynamicIndexBuffer& ib);
         void AddTo(DynamicVertexBuffer<TVertex>& vb, DynamicIndexBuffer& ib) override;
@@ -44,6 +45,11 @@ namespace Graphics
         points[1] = point2;
         points[2] = point3;
         points[3] = point4;
+    }
+
+    template <typename TVertex>
+    TVertex* QuadMesh<TVertex>::GetVertices() {
+        return points;
     }
 
     template <typename TVertex>

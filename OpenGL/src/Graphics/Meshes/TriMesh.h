@@ -15,6 +15,7 @@ namespace Graphics
         TriMesh(const TVertex& point1, const TVertex& point2, const TVertex& point3);
         ~TriMesh() override;
 
+        TVertex GetVertices();
         void GetData(unsigned int* vertexSize, TVertex** vertices, unsigned int* indexSize, unsigned int** indices) override;
         // friend void AddTo(DynamicVertexBuffer<TVertex>& vb, DynamicIndexBuffer& ib);
         void AddTo(DynamicVertexBuffer<TVertex>& vb, DynamicIndexBuffer& ib) override;
@@ -47,6 +48,11 @@ namespace Graphics
     template <typename TVertex>
     TriMesh<TVertex>::~TriMesh()
     {
+    }
+
+    template <typename TVertex>
+    TVertex TriMesh<TVertex>::GetVertices() {
+        return points;
     }
 
     template <typename TVertex>

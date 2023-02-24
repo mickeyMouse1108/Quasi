@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "Block.h"
+#include "BlockRenderer.h"
 #include "utils/sorted_vector.h"
 
 namespace Game {
@@ -10,14 +10,14 @@ namespace Game {
         
         private:
         int minX, minY, maxX, maxY;
-        stdu::sorted_vector<Block> blocks {
-            [](const Block& b) {
+        stdu::sorted_vector<BlockRenderer> blocks {
+            [](const BlockRenderer& b) {
                 const Maths::Vec3Int& vec = b.GetPosition();
                 return vec.x * 256 + vec.y * 16 + vec.z;
             }
         };
 
-        opt_ref<Block> BlockAt(const Maths::Vec3Int& position, int startIndex = 0);
+        opt_ref<BlockRenderer> BlockAt(const Maths::Vec3Int& position, int startIndex = 0);
         
         public:
         World();

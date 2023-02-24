@@ -2,17 +2,20 @@
 
 namespace Game {
     World::World() : minX(-1), minY(-1), maxX(1), maxY(1) {
+        int i = -1;
         for (int x = 0; x <= 2; ++x)
         for (int y = 0; y <= 2; ++y)
-        for (int z = 0; z <= 2; ++z) 
-                    blocks.insert(Maths::Vec3Int{x, y, z});
+        for (int z = 0; z <= 2; ++z) {
+            BlockRenderer block = BlockRenderer{ { x, y, z } };
+            blocks.insert(block);
+        }
 
         BlockUpdate();
     }
     
     World::~World() {}
 
-    World::opt_ref<Block> World::BlockAt(const Maths::Vec3Int& position, int startIndex) {
+    World::opt_ref<BlockRenderer> World::BlockAt(const Maths::Vec3Int& position, int startIndex) {
         const auto index = blocks.find({position}, startIndex);
         return index.exists ? &blocks[index.index] : nullptr;
     }

@@ -1,11 +1,13 @@
 ﻿#pragma once
 
+#include <array>
+
 #include "Vector.h"
 #include "MeshObject.h"
 
 namespace Game
 {
-    class Block
+    class BlockRenderer
     {
         using Vertex = Graphics::MeshUtils::Vertex;
         using Quad = Graphics::QuadMesh<Vertex>;
@@ -35,19 +37,23 @@ namespace Game
         unsigned enabledFlags = BLOCK_FACE_ALL; // 2 ^ 6 - 1 => 111111
         Graphics::MeshObject meshObj;
 
-        Maths::Vec3Int position;
+        std::array<int, 6> textureID = {0, 1, 2, 3, 4, 5};
     public:
-        Block(const Maths::Vec3Int& position = {}, unsigned enabledFlags = BLOCK_FACE_ALL);
-        Block(const Block& copy);
-        Block(Block&& copy) noexcept;
-        Block& operator=(const Block& copy);
-        Block& operator=(Block&& copy) noexcept;
-        ~Block();
+        Maths::Vec3Int position;
+        
+        BlockRenderer(const Maths::Vec3Int& position = {}, unsigned enabledFlags = BLOCK_FACE_ALL);
+        BlockRenderer(const BlockRenderer& copy);
+        BlockRenderer(BlockRenderer&& copy) noexcept;
+        BlockRenderer& operator=(BlockRenderer&& copy) noexcept;
+        ~BlockRenderer();
 
         Maths::Vec3Int& GetPosition() { return position; }
         [[nodiscard]] const Maths::Vec3Int& GetPosition() const { return position; }
 
+        static void SetTexture(Graphics::QuadMesh<Vertex>& mesh, int textureID);
+
         void CullFaces(unsigned faces) { enabledFlags = faces; }
+        void SetTextures(const std::array<int, 6>& tex) { textureID = tex; }
 
         Graphics::MeshObject& GetMeshObjectForm();
     };

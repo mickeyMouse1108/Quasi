@@ -1,23 +1,24 @@
 ﻿#pragma once
+
 #include "NumTypes.h"
 
 namespace Maths
 {
     template <class TVec>
-    concept Vec = requires (TVec vec) {
+    concept VectorLike = requires (TVec vec) {
         sizeof(TVec) % sizeof(decltype(vec.x)) == 0;
         sizeof(TVec) / sizeof(decltype(vec.x)) > 1;
     };
     
     template <class TBase, class TVec>
     concept VecLessThan = requires () {
-        Vec<TVec>;
+        VectorLike<TVec>;
         sizeof(TVec) < sizeof(TBase);
     };
 
     template <class TBase, class TVec>
     concept VecGreaterThan = requires () {
-        Vec<TVec>;
+        VectorLike<TVec>;
         sizeof(TVec) > sizeof(TBase);
     };
     
@@ -32,9 +33,11 @@ namespace Maths
         (T)-1;
     };
 
-    template <Numeral T> struct Vec2;
-    template <Numeral T> struct Vec3;
-    template <Numeral T> struct Vec4;
+    template <uint TSize, Numeral T> struct Vec;
+    template <Numeral T> using Vec2 = Vec<2, T>;
+    template <Numeral T> using Vec3 = Vec<3, T>;
+    template <Numeral T> using Vec4 = Vec<4, T>;
+    
     using Vector2 = Vec2<float>;
     using Vector3 = Vec3<float>;
     using Vector4 = Vec4<float>;
@@ -49,26 +52,26 @@ namespace Maths
     // TODO: Add math operations like: lerp, length
 
 #pragma region Vec2 Declaration
-    template <Numeral T> struct Vec2
+    template <Numeral T> struct Vec<2, T>
     {
-        static const Vec2 RIGHT;
-        static const Vec2 LEFT ;
-        static const Vec2 UP   ;
-        static const Vec2 DOWN ;
-        static const Vec2 ZERO ;
+        static const Vec2<T> RIGHT;
+        static const Vec2<T> LEFT ;
+        static const Vec2<T> UP   ;
+        static const Vec2<T> DOWN ;
+        static const Vec2<T> ZERO ;
         
         T x, y;
-        Vec2(T x = 0, T y = 0) : x(x), y(y) {}
-        Vec2(T val) : x(val), y(val) {}
-        Vec2(const Vec3<T>& vec);
-        Vec2(const Vec4<T>& vec);
+        Vec(T x = 0, T y = 0) : x(x), y(y) {}
+        Vec(T val) : x(val), y(val) {}
+        Vec(const Vec3<T>& vec);
+        Vec(const Vec4<T>& vec);
 
         T operator[] (unsigned int i) const { return ((const T*)this)[i]; }
         operator T*() { return (T*)this; }
 
-#define DEF_VEC2_OP(OP)     Vec2 operator OP (const Vec2& other) const { return { x OP other.x, y OP other.y }; } \
-                            Vec2 operator OP (T&& other) const { return { x OP other, y OP other }; } \
-                            Vec2 operator OP (const T& other) const { return { x OP other, y OP other }; }
+#define DEF_VEC2_OP(OP)     Vec operator OP (const Vec& other) const { return { x OP other.x, y OP other.y }; } \
+                            Vec operator OP (T&& other) const { return { x OP other, y OP other }; } \
+                            Vec operator OP (const T& other) const { return { x OP other, y OP other }; }
 
         DEF_VEC2_OP(+)
         DEF_VEC2_OP(-)
@@ -85,27 +88,27 @@ namespace Maths
 #pragma endregion 
 
 #pragma region Vec3 Declaration
-    template <Numeral T> struct Vec3
+    template <Numeral T> struct Vec<3, T>
     {
-        static const Vec3 RIGHT;
-        static const Vec3 LEFT ;
-        static const Vec3 UP   ;
-        static const Vec3 DOWN ;
-        static const Vec3 FRONT;
-        static const Vec3 BACK ;
-        static const Vec3 ZERO ;
+        static const Vec3<T> RIGHT;
+        static const Vec3<T> LEFT ;
+        static const Vec3<T> UP   ;
+        static const Vec3<T> DOWN ;
+        static const Vec3<T> FRONT;
+        static const Vec3<T> BACK ;
+        static const Vec3<T> ZERO ;
         
         T x, y, z;
-        Vec3(T x = 0, T y = 0, T z = 0) : x(x), y(y), z(z) {}
-        Vec3(T val) : x(val), y(val), z(val) {}
-        Vec3(const Vec4<T>& vec);
+        Vec(T x = 0, T y = 0, T z = 0) : x(x), y(y), z(z) {}
+        Vec(T val) : x(val), y(val), z(val) {}
+        Vec(const Vec4<T>& vec);
 
         T operator[] (unsigned int i) const { return ((const T*)this)[i]; }
         operator T*() { return (T*)this; }
 
-#define DEF_VEC3_OP(OP) Vec3 operator OP (const Vec3& other) const { return { x OP other.x, y OP other.y, z OP other.z }; } \
-                        Vec3 operator OP (T&& other) const { return { x OP other, y OP other, z OP other }; } \
-                        Vec3 operator OP (const T& other) const { return { x OP other, y OP other, z OP other }; }
+#define DEF_VEC3_OP(OP) Vec operator OP (const Vec& other) const { return { x OP other.x, y OP other.y, z OP other.z }; } \
+                        Vec operator OP (T&& other) const { return { x OP other, y OP other, z OP other }; } \
+                        Vec operator OP (const T& other) const { return { x OP other, y OP other, z OP other }; }
 
         DEF_VEC3_OP(+)
         DEF_VEC3_OP(-)
@@ -121,28 +124,28 @@ namespace Maths
 #pragma endregion
 
 #pragma region Vec4 Declaration
-    template <Numeral T> struct Vec4
+    template <Numeral T> struct Vec<4, T>
     {
-        static const Vec4 RIGHT;
-        static const Vec4 LEFT ;
-        static const Vec4 UP   ;
-        static const Vec4 DOWN ;
-        static const Vec4 FRONT;
-        static const Vec4 BACK ;
-        static const Vec4 IN   ;
-        static const Vec4 OUT  ;
-        static const Vec4 ZERO ;
+        static const Vec4<T> RIGHT;
+        static const Vec4<T> LEFT ;
+        static const Vec4<T> UP   ;
+        static const Vec4<T> DOWN ;
+        static const Vec4<T> FRONT;
+        static const Vec4<T> BACK ;
+        static const Vec4<T> IN   ;
+        static const Vec4<T> OUT  ;
+        static const Vec4<T> ZERO ;
         
         T x, y, z, w;
-        Vec4(T x = 0, T y = 0, T z = 0, T w = 0) : x(x), y(y), z(z), w(w) {}
-        Vec4(T val) : x(val), y(val), z(val), w(val) {}
+        Vec(T x = 0, T y = 0, T z = 0, T w = 0) : x(x), y(y), z(z), w(w) {}
+        Vec(T val) : x(val), y(val), z(val), w(val) {}
 
         T operator[] (unsigned int i) const { return ((const T*)this)[i]; }
         operator T*() { return (T*)this; }
 
-#define DEF_VEC4_OP(OP) Vec4 operator OP (const Vec4& other) const { return { x OP other.x, y OP other.y, z OP other.z, w OP other.w }; } \
-                        Vec4 operator OP (T&& other) const { return { x OP other, y OP other, z OP other, w OP other }; } \
-                        Vec4 operator OP (const T& other) const { return { x OP other, y OP other, z OP other, w OP other }; }
+#define DEF_VEC4_OP(OP) Vec operator OP (const Vec& other) const { return { x OP other.x, y OP other.y, z OP other.z, w OP other.w }; } \
+                        Vec operator OP (T&& other) const { return { x OP other, y OP other, z OP other, w OP other }; } \
+                        Vec operator OP (const T& other) const { return { x OP other, y OP other, z OP other, w OP other }; }
 
         DEF_VEC4_OP(+)
         DEF_VEC4_OP(-)
@@ -158,37 +161,37 @@ namespace Maths
 #pragma endregion
 
 #pragma region Vec2 Definition
-    template <Numeral T> const Vec2<T> Vec2<T>::RIGHT = {  1,  0 };
-    template <Numeral T> const Vec2<T> Vec2<T>::LEFT  = { -1,  0 };
-    template <Numeral T> const Vec2<T> Vec2<T>::UP    = {  0,  1 };
-    template <Numeral T> const Vec2<T> Vec2<T>::DOWN  = {  0, -1 };
-    template <Numeral T> const Vec2<T> Vec2<T>::ZERO  = {  0,  0 };
+    template <Numeral T> const Vec2<T> Vec<2, T>::RIGHT = {  1,  0 };
+    template <Numeral T> const Vec2<T> Vec<2, T>::LEFT  = { -1,  0 };
+    template <Numeral T> const Vec2<T> Vec<2, T>::UP    = {  0,  1 };
+    template <Numeral T> const Vec2<T> Vec<2, T>::DOWN  = {  0, -1 };
+    template <Numeral T> const Vec2<T> Vec<2, T>::ZERO  = {  0,  0 };
 
-    template <Numeral T> Vec2<T>::Vec2(const Vec3<T>& vec) : x(vec.x), y(vec.y) {}
-    template <Numeral T> Vec2<T>::Vec2(const Vec4<T>& vec) : x(vec.x), y(vec.y) {}
+    template <Numeral T> Vec<2, T>::Vec(const Vec3<T>& vec) : x(vec.x), y(vec.y) {}
+    template <Numeral T> Vec<2, T>::Vec(const Vec4<T>& vec) : x(vec.x), y(vec.y) {}
 #pragma endregion
 
 #pragma region Vec3 Definition
-    template <Numeral T> const Vec3<T> Vec3<T>::RIGHT = {  1,  0,  0 };
-    template <Numeral T> const Vec3<T> Vec3<T>::LEFT  = { -1,  0,  0 };
-    template <Numeral T> const Vec3<T> Vec3<T>::UP    = {  0,  1,  0 };
-    template <Numeral T> const Vec3<T> Vec3<T>::DOWN  = {  0, -1,  0 };
-    template <Numeral T> const Vec3<T> Vec3<T>::FRONT = {  0,  0,  1 };
-    template <Numeral T> const Vec3<T> Vec3<T>::BACK  = {  0,  0, -1 };
-    template <Numeral T> const Vec3<T> Vec3<T>::ZERO  = {  0,  0,  0 };
-
-    template <Numeral T> Vec3<T>::Vec3(const Vec4<T>& vec) : x(vec.x), y(vec.y), z(vec.z) {}
+    template <Numeral T> const Vec3<T> Vec<3, T>::RIGHT = {  1,  0,  0 };
+    template <Numeral T> const Vec3<T> Vec<3, T>::LEFT  = { -1,  0,  0 };
+    template <Numeral T> const Vec3<T> Vec<3, T>::UP    = {  0,  1,  0 };
+    template <Numeral T> const Vec3<T> Vec<3, T>::DOWN  = {  0, -1,  0 };
+    template <Numeral T> const Vec3<T> Vec<3, T>::FRONT = {  0,  0,  1 };
+    template <Numeral T> const Vec3<T> Vec<3, T>::BACK  = {  0,  0, -1 };
+    template <Numeral T> const Vec3<T> Vec<3, T>::ZERO  = {  0,  0,  0 };
+    
+    template <Numeral T> Vec<3, T>::Vec(const Vec4<T>& vec) : x(vec.x), y(vec.y), z(vec.z) {}
 #pragma endregion
 
 #pragma region Vec4 Definition
-    template <Numeral T> const Vec4<T> Vec4<T>::RIGHT = {  1,  0,  0,  0 };
-    template <Numeral T> const Vec4<T> Vec4<T>::LEFT  = { -1,  0,  0,  0 };
-    template <Numeral T> const Vec4<T> Vec4<T>::UP    = {  0,  1,  0,  0 };
-    template <Numeral T> const Vec4<T> Vec4<T>::DOWN  = {  0, -1,  0,  0 };
-    template <Numeral T> const Vec4<T> Vec4<T>::FRONT = {  0,  0,  1,  0 };
-    template <Numeral T> const Vec4<T> Vec4<T>::BACK  = {  0,  0, -1,  0 };
-    template <Numeral T> const Vec4<T> Vec4<T>::IN    = {  0,  0,  0,  1 };
-    template <Numeral T> const Vec4<T> Vec4<T>::OUT   = {  0,  0,  0, -1 };
-    template <Numeral T> const Vec4<T> Vec4<T>::ZERO  = {  0,  0,  0,  0 };
+    template <Numeral T> const Vec4<T> Vec<4, T>::RIGHT = {  1,  0,  0,  0 };
+    template <Numeral T> const Vec4<T> Vec<4, T>::LEFT  = { -1,  0,  0,  0 };
+    template <Numeral T> const Vec4<T> Vec<4, T>::UP    = {  0,  1,  0,  0 };
+    template <Numeral T> const Vec4<T> Vec<4, T>::DOWN  = {  0, -1,  0,  0 };
+    template <Numeral T> const Vec4<T> Vec<4, T>::FRONT = {  0,  0,  1,  0 };
+    template <Numeral T> const Vec4<T> Vec<4, T>::BACK  = {  0,  0, -1,  0 };
+    template <Numeral T> const Vec4<T> Vec<4, T>::IN    = {  0,  0,  0,  1 };
+    template <Numeral T> const Vec4<T> Vec<4, T>::OUT   = {  0,  0,  0, -1 };
+    template <Numeral T> const Vec4<T> Vec<4, T>::ZERO  = {  0,  0,  0,  0 };
 #pragma endregion
 }

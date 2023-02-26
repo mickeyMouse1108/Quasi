@@ -65,7 +65,7 @@ namespace Game
             }
 
         meshObj = Graphics::MeshObject::Make<Graphics::QuadMesh>(faces.data(), faces.size());
-        meshObj.Transform(Maths::Matrix3D::TranslateMat(position.CastF()));
+        meshObj.Transform(Maths::Matrix3D::TranslateMat(position));
         return meshObj;
     }
 }

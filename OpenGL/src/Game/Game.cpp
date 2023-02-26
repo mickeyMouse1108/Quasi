@@ -15,10 +15,10 @@ namespace Game
         constexpr float ISO_Z_ROT = 1.57079632679489661923132169163980f; // rotate 90°. ( 2π / 4 )
         rot = {ISO_X_ROT, ISO_Y_ROT, ISO_Z_ROT};
 
-        texAtlas = std::make_unique<Graphics::Texture>("res/textures/test_atlas.png");
+        texAtlas = std::make_unique<Graphics::TextureAtlas>("res/textures/test_atlas.png", 4, 4);
         texAtlas->Bind(0);
         GraphicsDevice->SetUniform1Int("tex", 0);
-        GraphicsDevice->SetUniform2Int("texSize", { 4, 4 });
+        GraphicsDevice->SetUniform2Int("texSize", texAtlas->GetAtlasSize());
 
         world.DisplayTo(*GraphicsDevice);
         // cube.Bind(*GraphicsDevice);

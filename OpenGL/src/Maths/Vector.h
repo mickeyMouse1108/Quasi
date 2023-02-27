@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "NumTypes.h"
+#include <concepts>
 
 namespace Maths
 {
@@ -55,13 +56,14 @@ namespace Maths
         static const Vec2 LEFT ;
         static const Vec2 UP   ;
         static const Vec2 DOWN ;
+        
         static const Vec2 ZERO ;
+        static const Vec2 ONE  ;
         
         T x, y;
         Vec2(T x = 0, T y = 0) : x(x), y(y) {}
-        Vec2(T val) : x(val), y(val) {}
-        Vec2(const Vec3<T>& vec);
-        Vec2(const Vec4<T>& vec);
+        Vec2(const Vec3<T>& xy);
+        Vec2(const Vec4<T>& xy);
 
         T operator[] (unsigned int i) const { return ((const T*)this)[i]; }
         operator T*() { return (T*)this; }
@@ -93,12 +95,14 @@ namespace Maths
         static const Vec3 DOWN ;
         static const Vec3 FRONT;
         static const Vec3 BACK ;
+        
         static const Vec3 ZERO ;
+        static const Vec3 ONE  ;
         
         T x, y, z;
         Vec3(T x = 0, T y = 0, T z = 0) : x(x), y(y), z(z) {}
-        Vec3(T val) : x(val), y(val), z(val) {}
-        Vec3(const Vec4<T>& vec);
+        Vec3(const Vec2<T>& xy, float z);
+        Vec3(const Vec4<T>& xyz);
 
         T operator[] (unsigned int i) const { return ((const T*)this)[i]; }
         operator T*() { return (T*)this; }
@@ -131,11 +135,15 @@ namespace Maths
         static const Vec4 BACK ;
         static const Vec4 IN   ;
         static const Vec4 OUT  ;
+        
         static const Vec4 ZERO ;
+        static const Vec4 ONE  ;
         
         T x, y, z, w;
         Vec4(T x = 0, T y = 0, T z = 0, T w = 0) : x(x), y(y), z(z), w(w) {}
-        Vec4(T val) : x(val), y(val), z(val), w(val) {}
+        Vec4(const Vec2<T>& xy, float z, float w);
+        Vec4(const Vec2<T>& xy, const Vec2<T>& zw);
+        Vec4(const Vec3<T>& xyz, float w);
 
         T operator[] (unsigned int i) const { return ((const T*)this)[i]; }
         operator T*() { return (T*)this; }
@@ -162,10 +170,12 @@ namespace Maths
     template <Numeral T> const Vec2<T> Vec2<T>::LEFT  = { -1,  0 };
     template <Numeral T> const Vec2<T> Vec2<T>::UP    = {  0,  1 };
     template <Numeral T> const Vec2<T> Vec2<T>::DOWN  = {  0, -1 };
+    
     template <Numeral T> const Vec2<T> Vec2<T>::ZERO  = {  0,  0 };
+    template <Numeral T> const Vec2<T> Vec2<T>::ONE   = {  1,  1 };
 
-    template <Numeral T> Vec2<T>::Vec2(const Vec3<T>& vec) : x(vec.x), y(vec.y) {}
-    template <Numeral T> Vec2<T>::Vec2(const Vec4<T>& vec) : x(vec.x), y(vec.y) {}
+    template <Numeral T> Vec2<T>::Vec2(const Vec3<T>& xy) : x(xy.x), y(xy.y) {}
+    template <Numeral T> Vec2<T>::Vec2(const Vec4<T>& xy) : x(xy.x), y(xy.y) {}
 #pragma endregion
 
 #pragma region Vec3 Definition
@@ -175,9 +185,12 @@ namespace Maths
     template <Numeral T> const Vec3<T> Vec3<T>::DOWN  = {  0, -1,  0 };
     template <Numeral T> const Vec3<T> Vec3<T>::FRONT = {  0,  0,  1 };
     template <Numeral T> const Vec3<T> Vec3<T>::BACK  = {  0,  0, -1 };
+    
     template <Numeral T> const Vec3<T> Vec3<T>::ZERO  = {  0,  0,  0 };
+    template <Numeral T> const Vec3<T> Vec3<T>::ONE   = {  1,  1,  1 };
 
-    template <Numeral T> Vec3<T>::Vec3(const Vec4<T>& vec) : x(vec.x), y(vec.y), z(vec.z) {}
+    template <Numeral T> Vec3<T>::Vec3(const Vec4<T>& xyz)         : x(xyz.x), y(xyz.y), z(xyz.z) {}
+    template <Numeral T> Vec3<T>::Vec3(const Vec2<T>& xy, float z) : x(xy.x),  y(xy.y),  z(z) {}
 #pragma endregion
 
 #pragma region Vec4 Definition
@@ -189,6 +202,12 @@ namespace Maths
     template <Numeral T> const Vec4<T> Vec4<T>::BACK  = {  0,  0, -1,  0 };
     template <Numeral T> const Vec4<T> Vec4<T>::IN    = {  0,  0,  0,  1 };
     template <Numeral T> const Vec4<T> Vec4<T>::OUT   = {  0,  0,  0, -1 };
+    
     template <Numeral T> const Vec4<T> Vec4<T>::ZERO  = {  0,  0,  0,  0 };
+    template <Numeral T> const Vec4<T> Vec4<T>::ONE   = {  1,  1,  1,  1 };
+
+    template <Numeral T> Vec4<T>::Vec4(const Vec2<T>& xy, float z, float w)  : x(xy.x),  y(xy.y),  z(z),     w(w) {}
+    template <Numeral T> Vec4<T>::Vec4(const Vec2<T>& xy, const Vec2<T>& zw) : x(xy.x),  y(xy.y),  z(zw.z),  w(zw.w) {}
+    template <Numeral T> Vec4<T>::Vec4(const Vec3<T>& xyz, float w)          : x(xyz.x), y(xyz.y), z(xyz.z), w(w) {}
 #pragma endregion
 }

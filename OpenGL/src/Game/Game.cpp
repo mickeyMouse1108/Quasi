@@ -20,6 +20,7 @@ namespace Game
         GraphicsDevice->SetUniform1Int("tex", 0);
         GraphicsDevice->SetUniform2Int("texSize", texAtlas->GetAtlasSize());
 
+        world.Load("res/levels/level_test.json");
         world.DisplayTo(*GraphicsDevice);
         // cube.Bind(*GraphicsDevice);
         // LOG(cube.IsBound());

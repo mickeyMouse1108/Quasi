@@ -1,0 +1,28 @@
+﻿{
+  "LevelName": "lvl_1-1",
+  "Description": "simple beginnings",
+  "BoundMin": [-1, -2, -1],
+  "BoundMax": [4, -1, 1],
+  "Tiles": [
+    { "Position": [-2, -1, -1], "Type": 1 },
+    { "Position": [-2, 0, -1], "Type": 1 },
+    { "Position": [-2, 1, -1], "Type": 1 },
+    { "Position": [-2, -1, 0], "Type": 1 },
+    { "Position": [-2, 0, 0], "Type": 1 },
+    { "Position": [-2, 1, 0], "Type": 1 },
+    { "Position": [-1, 0, 0], "Type": 2 },
+    { "Position": [-2, -1, 1], "Type": 1 },
+    { "Position": [-2, 0, 1], "Type": 1 },
+    { "Position": [-2, 1, 1], "Type": 1 },
+    { "Position": [-2, -1, 2], "Type": 1 },
+    { "Position": [-2, 0, 2], "Type": 1 },
+    { "Position": [-2, 1, 2], "Type": 1 },
+    { "Position": [-2, -1, 3], "Type": 1 },
+    { "Position": [-2, 0, 3], "Type": 1 },
+    { "Position": [-2, 1, 3], "Type": 1 },
+    { "Position": [-1, 0, 3], "Type": 4 },
+    { "Position": [-2, -1, 4], "Type": 1 },
+    { "Position": [-2, 0, 4], "Type": 1 },
+    { "Position": [-2, 1, 4], "Type": 1 }
+  ]
+}

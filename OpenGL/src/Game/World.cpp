@@ -1,8 +1,12 @@
 ﻿#include "World.h"
 
 namespace Game {
-    World::World() : minX(-1), minY(-1), maxX(1), maxY(1) {
-        int i = -1;
+    std::function<int(BlockRenderer)> World::DefaultBlockComparison = [](const BlockRenderer& b) {
+        const Maths::Vec3Int& vec = b.GetPosition();
+        return vec.x * 256 + vec.y * 16 + vec.z;
+    };
+    
+    World::World() : boundsMin { 0, 0, 0 }, boundsMax { 0, 0, 0 } {
         for (int x = 0; x <= 2; ++x)
         for (int y = 0; y <= 2; ++y)
         for (int z = 0; z <= 2; ++z) {
@@ -12,7 +16,11 @@ namespace Game {
 
         BlockUpdate();
     }
-    
+
+    World::World(const Serialization::WorldStructure& ws) {
+        Build(ws);
+    }
+
     World::~World() {}
 
     World::opt_ref<BlockRenderer> World::BlockAt(const Maths::Vec3Int& position, int startIndex) {
@@ -42,5 +50,18 @@ namespace Game {
     void World::DisplayTo(Graphics::GraphicsDevice& gd) {
         for (auto& block : blocks)
             block.GetMeshObjectForm().Bind(gd);
+    }
+
+    void World::Load(const std::string& levelname) {
+        Build(Serialization::WorldStructure::Load(levelname));
+    }
+
+    void World::Build(const Serialization::WorldStructure& structure) {
+        blocks.clear();
+        blocks.data().resize(structure.tiles.size());
+        std::ranges::transform(structure.tiles, blocks.data().begin(), [](auto x){ return BlockRenderer { x }; });
+        
+        boundsMin = structure.boundMin;
+        boundsMax = structure.boundMax;
     }
 }

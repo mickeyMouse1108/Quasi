@@ -1,7 +1,9 @@
 ﻿#pragma once
 
 #include "BlockRenderer.h"
+#include "Serialization/WorldSerialization.h"
 #include "utils/sorted_vector.h"
+#include "utils/func.h"
 
 namespace Game {
     class World {
@@ -9,22 +11,24 @@ namespace Game {
         template <class T> using opt_ref = const T*;
         
         private:
-        int minX, minY, maxX, maxY;
-        stdu::sorted_vector<BlockRenderer> blocks {
-            [](const BlockRenderer& b) {
-                const Maths::Vec3Int& vec = b.GetPosition();
-                return vec.x * 256 + vec.y * 16 + vec.z;
-            }
-        };
+            Maths::Vec3Int boundsMin, boundsMax;
+            static std::function<int(BlockRenderer)> DefaultBlockComparison;
+            stdu::sorted_vector<BlockRenderer> blocks {
+                std::function { DefaultBlockComparison }
+            };
 
-        opt_ref<BlockRenderer> BlockAt(const Maths::Vec3Int& position, int startIndex = 0);
-        
+            opt_ref<BlockRenderer> BlockAt(const Maths::Vec3Int& position, int startIndex = 0);
+            
         public:
-        World();
-        ~World();
+            World();
+            World(const Serialization::WorldStructure& ws);
+            ~World();
 
-        void BlockUpdate();
-        void DisplayTo(Graphics::GraphicsDevice& gd);
+            void BlockUpdate();
+            void DisplayTo(Graphics::GraphicsDevice& gd);
+
+            void Load(const std::string& levelname);
+            void Build(const Serialization::WorldStructure& structure);
     };
 }
     

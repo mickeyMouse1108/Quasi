@@ -1,4 +1,5 @@
 ﻿#include "BlockRenderer.h"
+#include "Block.h"
 
 namespace Game
 {
@@ -30,26 +31,27 @@ namespace Game
                { BLOCK_VERTICES[5], { 1, 1, 1, 1 }, TEX, 2 }, { BLOCK_VERTICES[7], { 1, 1, 1, 1 }, TEX, 3 }, },
     };
 
-    BlockRenderer::BlockRenderer(const Maths::Vec3Int& position, unsigned enabledFlags) : enabledFlags(enabledFlags), position(position) {}
-    BlockRenderer::BlockRenderer(const Serialization::BlockStructure& bs) {
-        Build(bs);
-    }
+    BlockRenderer::BlockRenderer(Block& parent, unsigned enabledFlags) : enabledFlags(enabledFlags), parentBlock(&parent) {}
 
-    BlockRenderer::BlockRenderer(const BlockRenderer& copy) : enabledFlags(copy.enabledFlags), textureID(copy.textureID), position(copy.position) {}
-    BlockRenderer::BlockRenderer(BlockRenderer&& copy) noexcept : enabledFlags(copy.enabledFlags), textureID(copy.textureID), position(copy.position) {}
+    BlockRenderer::BlockRenderer(const BlockRenderer& copy) : enabledFlags(copy.enabledFlags), textureID(copy.textureID), parentBlock(copy.parentBlock) {}
+    BlockRenderer::BlockRenderer(BlockRenderer&& copy) noexcept : enabledFlags(copy.enabledFlags), textureID(copy.textureID), parentBlock(copy.parentBlock) {
+        copy.parentBlock = nullptr;
+    }
     BlockRenderer& BlockRenderer::operator=(const BlockRenderer& copy) noexcept {
         enabledFlags = copy.enabledFlags;
         textureID = copy.textureID;
-        position = copy.position;
+        parentBlock = copy.parentBlock;
         return *this;
     }
-    
     BlockRenderer& BlockRenderer::operator=(BlockRenderer&& copy) noexcept {
         enabledFlags = copy.enabledFlags;
         textureID = copy.textureID;
-        position = copy.position; 
+        parentBlock = copy.parentBlock;
+        copy.parentBlock = nullptr;
         return *this;
     }
+
+    const Maths::Vec3Int& BlockRenderer::GetPosition() const { return parentBlock->Position; }
 
     void BlockRenderer::SetTexture(Graphics::QuadMesh<Vertex>& mesh, int textureID) {
         Vertex* subMeshStart = mesh.GetVertices();
@@ -73,16 +75,7 @@ namespace Game
             }
 
         meshObj = Graphics::MeshObject::Make<Graphics::QuadMesh>(faces.data(), faces.size());
-        meshObj.Transform(Maths::Matrix3D::TranslateMat(position));
+        meshObj.Transform(Maths::Matrix3D::TranslateMat(parentBlock->Position));
         return meshObj;
-    }
-
-    void BlockRenderer::Load(const std::string& levelname) {
-        Build(Serialization::BlockStructure::Load(levelname));
-    }
-
-    void BlockRenderer::Build(const Serialization::BlockStructure& structure) {
-        position = structure.position;
-        std::ranges::fill(textureID, structure.type);
     }
 }

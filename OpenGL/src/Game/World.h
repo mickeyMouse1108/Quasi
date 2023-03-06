@@ -1,9 +1,8 @@
 ﻿#pragma once
 
-#include "BlockRenderer.h"
+#include "Block.h"
 #include "Serialization/WorldSerialization.h"
-#include "utils/sorted_vector.h"
-#include "utils/func.h"
+#include "stdu/sorted_vector.h"
 
 namespace Game {
     class World {
@@ -12,12 +11,12 @@ namespace Game {
         
         private:
             Maths::Vec3Int boundsMin, boundsMax;
-            static std::function<int(BlockRenderer)> DefaultBlockComparison;
-            stdu::sorted_vector<BlockRenderer> blocks {
+            static std::function<int(Block)> DefaultBlockComparison;
+            stdu::sorted_vector<Block> blocks {
                 std::function { DefaultBlockComparison }
             };
 
-            opt_ref<BlockRenderer> BlockAt(const Maths::Vec3Int& position, int startIndex = 0);
+            opt_ref<Block> BlockAt(const Maths::Vec3Int& position, int startIndex = 0);
             
         public:
             World();
@@ -25,7 +24,7 @@ namespace Game {
             ~World();
 
             void BlockUpdate();
-            void DisplayTo(Graphics::GraphicsDevice& gd);
+            void Render(Graphics::GraphicsDevice& gd);
 
             void Load(const std::string& levelname);
             void Build(const Serialization::WorldStructure& structure);

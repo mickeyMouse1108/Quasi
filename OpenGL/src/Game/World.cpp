@@ -1,7 +1,7 @@
 ﻿#include "World.h"
 
 namespace Game {
-    std::function<int(BlockRenderer)> World::DefaultBlockComparison = [](const BlockRenderer& b) {
+    std::function<int(Block)> World::DefaultBlockComparison = [](const Block& b) {
         const Maths::Vec3Int& vec = b.GetPosition();
         return vec.x * 256 + vec.y * 16 + vec.z;
     };
@@ -10,7 +10,7 @@ namespace Game {
         for (int x = 0; x <= 2; ++x)
         for (int y = 0; y <= 2; ++y)
         for (int z = 0; z <= 2; ++z) {
-            BlockRenderer block = BlockRenderer{ { x, y, z } };
+            Block block = { { x, y, z } };
             blocks.insert(block);
         }
 
@@ -23,7 +23,7 @@ namespace Game {
 
     World::~World() {}
 
-    World::opt_ref<BlockRenderer> World::BlockAt(const Maths::Vec3Int& position, int startIndex) {
+    World::opt_ref<Block> World::BlockAt(const Maths::Vec3Int& position, int startIndex) {
         const auto index = blocks.find({position}, startIndex);
         return index.exists ? &blocks[index.index] : nullptr;
     }
@@ -43,13 +43,13 @@ namespace Game {
             for (int f = 0; f < 6; ++f) {
                 cull |= (BlockAt(blocks[i].GetPosition() + DIRECTIONS[f], i) == nullptr ? 1 : 0) << f;
             }
-            blocks[i].CullFaces(cull);
+            blocks[i].GetRenderer().CullFaces(cull);
         }
     }
 
-    void World::DisplayTo(Graphics::GraphicsDevice& gd) {
+    void World::Render(Graphics::GraphicsDevice& gd) {
         for (auto& block : blocks)
-            block.GetMeshObjectForm().Bind(gd);
+            block.GetRenderer().GetMeshObjectForm().Bind(gd);
     }
 
     void World::Load(const std::string& levelname) {
@@ -59,7 +59,7 @@ namespace Game {
     void World::Build(const Serialization::WorldStructure& structure) {
         blocks.clear();
         blocks.data().resize(structure.tiles.size());
-        std::ranges::transform(structure.tiles, blocks.data().begin(), [](auto x){ return BlockRenderer { x }; });
+        std::ranges::transform(structure.tiles, blocks.data().begin(), [](auto x){ return Block { x }; });
         
         boundsMin = structure.boundMin;
         boundsMax = structure.boundMax;

@@ -4,12 +4,15 @@
 
 #include "Vector.h"
 #include "MeshObject.h"
-#include "Serialization/BlockSerialization.h"
 
 namespace Game
 {
+    class Block;
+    
     class BlockRenderer
     {
+        friend Block;
+        
         using Vertex = Graphics::MeshUtils::Vertex;
         using Quad = Graphics::QuadMesh<Vertex>;
         
@@ -39,20 +42,18 @@ namespace Game
         Graphics::MeshObject meshObj;
 
         std::array<int, 6> textureID = {0, 1, 2, 3, 4, 5};
+
+        Block* parentBlock = nullptr;
+        
+        BlockRenderer(Block& parent, unsigned enabledFlags = BLOCK_FACE_ALL);
     public:
-        Maths::Vec3Int position;
-        
-        BlockRenderer(const Maths::Vec3Int& position = {}, unsigned enabledFlags = BLOCK_FACE_ALL);
-        BlockRenderer(const Serialization::BlockStructure& bs);
-        
         BlockRenderer(const BlockRenderer& copy);
         BlockRenderer(BlockRenderer&& copy) noexcept;
         BlockRenderer& operator=(const BlockRenderer& copy) noexcept;
         BlockRenderer& operator=(BlockRenderer&& copy) noexcept;
         ~BlockRenderer() = default;
 
-        Maths::Vec3Int& GetPosition() { return position; }
-        [[nodiscard]] const Maths::Vec3Int& GetPosition() const { return position; }
+        [[nodiscard]] const Maths::Vec3Int& GetPosition() const;
 
         static void SetTexture(Graphics::QuadMesh<Vertex>& mesh, int textureID);
 
@@ -60,8 +61,5 @@ namespace Game
         void SetTextures(const std::array<int, 6>& tex) { textureID = tex; }
 
         Graphics::MeshObject& GetMeshObjectForm();
-
-        void Load(const std::string& levelname);
-        void Build(const Serialization::BlockStructure& structure);
     };
 }

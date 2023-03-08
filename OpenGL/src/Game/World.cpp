@@ -1,7 +1,7 @@
 ﻿#include "World.h"
 
 namespace Game {
-    std::function<int(Block)> World::DefaultBlockComparison = [](const Block& b) {
+    std::function<int(BlockBase)> World::DefaultBlockComparison = [](const BlockBase& b) {
         const Maths::Vec3Int& vec = b.GetPosition();
         return vec.x * 256 + vec.y * 16 + vec.z;
     };
@@ -10,7 +10,7 @@ namespace Game {
         for (int x = 0; x <= 2; ++x)
         for (int y = 0; y <= 2; ++y)
         for (int z = 0; z <= 2; ++z) {
-            Block block = { { x, y, z } };
+            BlockBase block = { { x, y, z } };
             blocks.insert(block);
         }
 
@@ -23,7 +23,7 @@ namespace Game {
 
     World::~World() {}
 
-    World::opt_ref<Block> World::BlockAt(const Maths::Vec3Int& position, int startIndex) {
+    World::opt_ref<BlockBase> World::BlockAt(const Maths::Vec3Int& position, int startIndex) {
         const auto index = blocks.find({position}, startIndex);
         return index.exists ? &blocks[index.index] : nullptr;
     }
@@ -59,7 +59,7 @@ namespace Game {
     void World::Build(const Serialization::WorldStructure& structure) {
         blocks.clear();
         blocks.data().resize(structure.tiles.size());
-        std::ranges::transform(structure.tiles, blocks.data().begin(), [](auto x){ return Block { x }; });
+        std::ranges::transform(structure.tiles, blocks.data().begin(), [](auto x){ return BlockBase { x }; });
         
         boundsMin = structure.boundMin;
         boundsMax = structure.boundMax;

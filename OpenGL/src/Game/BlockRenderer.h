@@ -7,11 +7,11 @@
 
 namespace Game
 {
-    class Block;
+    class BlockBase;
     
     class BlockRenderer
     {
-        friend Block;
+        friend BlockBase;
         
         using Vertex = Graphics::MeshUtils::Vertex;
         using Quad = Graphics::QuadMesh<Vertex>;
@@ -43,9 +43,9 @@ namespace Game
 
         std::array<int, 6> textureID = {0, 1, 2, 3, 4, 5};
 
-        Block* parentBlock = nullptr;
+        BlockBase* parentBlock = nullptr;
         
-        BlockRenderer(Block& parent, unsigned enabledFlags = BLOCK_FACE_ALL);
+        BlockRenderer(BlockBase& parent, unsigned enabledFlags = BLOCK_FACE_ALL);
     public:
         BlockRenderer(const BlockRenderer& copy);
         BlockRenderer(BlockRenderer&& copy) noexcept;

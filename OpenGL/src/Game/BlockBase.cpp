@@ -1,13 +1,13 @@
-﻿#include "Block.h"
+﻿#include "BlockBase.h"
 
 #include "Serialization/BlockSerialization.h"
 
 namespace Game {
-    void Block::Load(const std::string& levelname) {
+    void BlockBase::Load(const std::string& levelname) {
         Build(Serialization::BlockStructure::Load(levelname));
     }
     
-    void Block::Build(const Serialization::BlockStructure& structure) {
+    void BlockBase::Build(const Serialization::BlockStructure& structure) {
         Position = structure.position;
         Type = structure.type;
     }

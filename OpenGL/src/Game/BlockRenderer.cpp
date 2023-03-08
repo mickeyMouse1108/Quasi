@@ -1,5 +1,5 @@
 ﻿#include "BlockRenderer.h"
-#include "Block.h"
+#include "BlockBase.h"
 
 namespace Game
 {
@@ -31,7 +31,7 @@ namespace Game
                { BLOCK_VERTICES[5], { 1, 1, 1, 1 }, TEX, 2 }, { BLOCK_VERTICES[7], { 1, 1, 1, 1 }, TEX, 3 }, },
     };
 
-    BlockRenderer::BlockRenderer(Block& parent, unsigned enabledFlags) : enabledFlags(enabledFlags), parentBlock(&parent) {}
+    BlockRenderer::BlockRenderer(BlockBase& parent, unsigned enabledFlags) : enabledFlags(enabledFlags), parentBlock(&parent) {}
 
     BlockRenderer::BlockRenderer(const BlockRenderer& copy) : enabledFlags(copy.enabledFlags), textureID(copy.textureID), parentBlock(copy.parentBlock) {}
     BlockRenderer::BlockRenderer(BlockRenderer&& copy) noexcept : enabledFlags(copy.enabledFlags), textureID(copy.textureID), parentBlock(copy.parentBlock) {

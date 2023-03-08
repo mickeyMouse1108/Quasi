@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "Block.h"
+#include "BlockBase.h"
 #include "Serialization/WorldSerialization.h"
 #include "stdu/sorted_vector.h"
 
@@ -11,12 +11,12 @@ namespace Game {
         
         private:
             Maths::Vec3Int boundsMin, boundsMax;
-            static std::function<int(Block)> DefaultBlockComparison;
-            stdu::sorted_vector<Block> blocks {
+            static std::function<int(BlockBase)> DefaultBlockComparison;
+            stdu::sorted_vector<BlockBase> blocks {
                 std::function { DefaultBlockComparison }
             };
 
-            opt_ref<Block> BlockAt(const Maths::Vec3Int& position, int startIndex = 0);
+            opt_ref<BlockBase> BlockAt(const Maths::Vec3Int& position, int startIndex = 0);
             
         public:
             World();

@@ -5,7 +5,8 @@
 #include "Serialization/BlockSerialization.h"
 
 namespace Game {
-    class Block {
+    // great naming here
+    class BlockBase {
         friend BlockRenderer;
         
         private:
@@ -14,17 +15,17 @@ namespace Game {
         Maths::Vec3Int Position = {};
         uint Type = 0;
         public:
-        Block(const Maths::Vec3Int& position) : Renderer(new BlockRenderer(*this)), Position(position) {}
-        Block(const Serialization::BlockStructure& bs) : Renderer(new BlockRenderer(*this)) { Build(bs); }
-        Block(const Block& copy)
+        BlockBase(const Maths::Vec3Int& position) : Renderer(new BlockRenderer(*this)), Position(position) {}
+        BlockBase(const Serialization::BlockStructure& bs) : Renderer(new BlockRenderer(*this)) { Build(bs); }
+        BlockBase(const BlockBase& copy)
             : Renderer(new BlockRenderer(*copy.Renderer)),
               Position(copy.Position),
               Type(copy.Type) {}
-        Block(Block&& copy) noexcept
+        BlockBase(BlockBase&& copy) noexcept
             : Renderer(std::move(copy.Renderer)),
               Position(copy.Position),
               Type(copy.Type) {}
-        Block& operator=(const Block& copy) {
+        BlockBase& operator=(const BlockBase& copy) {
             if (this == &copy)
                 return *this;
             Renderer = std::unique_ptr { new BlockRenderer(*copy.Renderer) };
@@ -32,7 +33,7 @@ namespace Game {
             Type     = copy.Type;
             return *this;
         }
-        Block& operator=(Block&& copy) noexcept {
+        BlockBase& operator=(BlockBase&& copy) noexcept {
             if (this == &copy)
                 return *this;
             Renderer = std::move(copy.Renderer);
@@ -49,4 +50,16 @@ namespace Game {
         void Load(const std::string& levelname);
         void Build(const Serialization::BlockStructure& structure);
     };
+
+    enum BlockType {
+        NIL = 0,
+        WALL,
+        PLAYER,
+        BOX,
+        GOAL
+    };
+
+    namespace Blocks {
+        template <BlockType ID> class Block;
+    }
 }

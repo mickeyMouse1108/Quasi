@@ -28,7 +28,7 @@ namespace Graphics
         
         std::unique_ptr<Renderer>                    _renderer;
 
-        Maths::Matrix3D _projection = Maths::Matrix3D::OrthoProjection(-320, 320, -240, 240, -1000, 1000);
+        Maths::Matrix3D _projection = Maths::Matrix3D::OrthoProjection(-320, 320, -240, 240, -100, 100);
         Maths::Matrix3D _camera;
 
         GLFWwindow* _mainWindow;

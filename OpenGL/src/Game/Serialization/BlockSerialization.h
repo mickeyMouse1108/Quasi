@@ -6,6 +6,8 @@
 
 #include <fstream>
 
+#include "Game/BlockBase.h"
+
 namespace Game::Serialization {
     struct BlockStructure {
         Maths::Vec3Int position;

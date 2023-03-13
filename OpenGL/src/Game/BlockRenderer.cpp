@@ -38,6 +38,7 @@ namespace Game
         copy.parentBlock = nullptr;
     }
     BlockRenderer& BlockRenderer::operator=(const BlockRenderer& copy) noexcept {
+        if (this == &copy) return *this;
         enabledFlags = copy.enabledFlags;
         textureID = copy.textureID;
         parentBlock = copy.parentBlock;

@@ -2,6 +2,9 @@
 #include "NumTypes.h"
 #include <concepts>
 
+#include "Corner.h"
+#include "Direction.h"
+
 namespace Maths
 {
     template <class TVec>
@@ -62,6 +65,8 @@ namespace Maths
         
         T x, y;
         Vec2(T x = 0, T y = 0) : x(x), y(y) {}
+        Vec2(Direction2D dir, T scale = 1);
+        Vec2(Corner2D    cor, T scale = 1);
         Vec2(const Vec3<T>& xy);
         Vec2(const Vec4<T>& xy);
 
@@ -101,6 +106,8 @@ namespace Maths
         
         T x, y, z;
         Vec3(T x = 0, T y = 0, T z = 0) : x(x), y(y), z(z) {}
+        Vec3(Direction3D dir, T scale = 1);
+        Vec3(Corner3D    cor, T scale = 1);
         Vec3(const Vec2<T>& xy, float z);
         Vec3(const Vec4<T>& xyz);
 
@@ -141,6 +148,8 @@ namespace Maths
         
         T x, y, z, w;
         Vec4(T x = 0, T y = 0, T z = 0, T w = 0) : x(x), y(y), z(z), w(w) {}
+        Vec4(Direction4D dir, T scale = 1);
+        Vec4(Corner4D    cor, T scale = 1);
         Vec4(const Vec2<T>& xy, float z, float w);
         Vec4(const Vec2<T>& xy, const Vec2<T>& zw);
         Vec4(const Vec3<T>& xyz, float w);
@@ -174,6 +183,45 @@ namespace Maths
     template <Numeral T> const Vec2<T> Vec2<T>::ZERO  = {  0,  0 };
     template <Numeral T> const Vec2<T> Vec2<T>::ONE   = {  1,  1 };
 
+    template <Numeral T>
+    Vec2<T>::Vec2(Direction2D dir, T scale) {
+        using enum Direction2D;
+        switch (dir) {
+            case RIGHT: x =  scale; y =  0;     return;
+            case LEFT : x = -scale; y =  0;     return;
+            case UP   : x =  0;     y =  scale; return;
+            case DOWN : x =  0;     y = -scale; return;
+            
+            case ZERO : x =  0;     y =  0;     return;
+            case UNIT : x =  scale; y =  scale; return;
+            default: x = 0; y = 0;
+        }
+    }
+
+    template <Numeral T>
+    Vec2<T>::Vec2(Corner2D cor, T scale) {
+        using enum Corner2D;
+        // using namespace stdu;
+        // if (cor < 0 || cor >= CENTER) {
+        //     x = 0; y = 0;
+        //     return;
+        // }
+        //
+        // x = cor & SIDE_LEFT   ? -scale : scale;
+        // y = cor & SIDE_BOTTOM ? -scale : scale;
+
+        // default method
+        switch (cor) {
+            case TOP_RIGHT   : x =  scale; y =  scale; return;
+            case TOP_LEFT    : x = -scale; y =  scale; return;
+            case BOTTOM_RIGHT: x =  scale; y = -scale; return;
+            case BOTTOM_LEFT : x = -scale; y = -scale; return;
+            
+            case CENTER: x = 0; y = 0;  return;
+            default: x = 0; y = 0;
+        }
+    }
+
     template <Numeral T> Vec2<T>::Vec2(const Vec3<T>& xy) : x(xy.x), y(xy.y) {}
     template <Numeral T> Vec2<T>::Vec2(const Vec4<T>& xy) : x(xy.x), y(xy.y) {}
 #pragma endregion
@@ -189,6 +237,39 @@ namespace Maths
     template <Numeral T> const Vec3<T> Vec3<T>::ZERO  = {  0,  0,  0 };
     template <Numeral T> const Vec3<T> Vec3<T>::ONE   = {  1,  1,  1 };
 
+    template <Numeral T>
+    Vec3<T>::Vec3(Direction3D dir, T scale) {
+        using enum Direction3D;
+        switch (dir) {
+            case RIGHT: x =  scale; y =  0;     z =  0;     return;
+            case LEFT : x = -scale; y =  0;     z =  0;     return;
+            case UP   : x =  0;     y =  scale; z =  0;     return;
+            case DOWN : x =  0;     y = -scale; z =  0;     return;
+            case FRONT: x =  0;     y =  0;     z =  scale; return;
+            case BACK : x =  0;     y =  0;     z = -scale; return;
+            case ZERO : x =  0;     y =  0;     z =  0;     return;
+            case UNIT : x =  scale; y =  scale; z =  scale; return;
+            default: x = 0; y = 0; z = 0;
+        }
+    }
+
+    template <Numeral T>
+    Vec3<T>::Vec3(Corner3D cor, T scale) {
+        using enum Corner3D;
+        switch (cor) {
+            case FRONT_TOP_RIGHT   : x =  scale; y =  scale; z =  scale; return;
+            case FRONT_TOP_LEFT    : x = -scale; y =  scale; z =  scale; return;
+            case FRONT_BOTTOM_RIGHT: x =  scale; y = -scale; z =  scale; return;
+            case FRONT_BOTTOM_LEFT : x = -scale; y = -scale; z =  scale; return;
+            case BACK_TOP_RIGHT    : x =  scale; y =  scale; z = -scale; return;
+            case BACK_TOP_LEFT     : x = -scale; y =  scale; z = -scale; return;
+            case BACK_BOTTOM_RIGHT : x =  scale; y = -scale; z = -scale; return;
+            case BACK_BOTTOM_LEFT  : x = -scale; y = -scale; z = -scale; return;
+            case CENTER: x = 0; y = 0; z = 0; return;
+            default: x = 0; y = 0; z = 0;
+        }
+    }
+    
     template <Numeral T> Vec3<T>::Vec3(const Vec4<T>& xyz)         : x(xyz.x), y(xyz.y), z(xyz.z) {}
     template <Numeral T> Vec3<T>::Vec3(const Vec2<T>& xy, float z) : x(xy.x),  y(xy.y),  z(z) {}
 #pragma endregion
@@ -205,6 +286,49 @@ namespace Maths
     
     template <Numeral T> const Vec4<T> Vec4<T>::ZERO  = {  0,  0,  0,  0 };
     template <Numeral T> const Vec4<T> Vec4<T>::ONE   = {  1,  1,  1,  1 };
+
+    template <Numeral T>
+    Vec4<T>::Vec4(Direction4D dir, T scale) {
+        using enum Direction4D;
+        switch (dir) {
+            case RIGHT: x =  scale; y =  0;     z =  0;     w =  0;     return;
+            case LEFT : x = -scale; y =  0;     z =  0;     w =  0;     return;
+            case UP   : x =  0;     y =  scale; z =  0;     w =  0;     return;
+            case DOWN : x =  0;     y = -scale; z =  0;     w =  0;     return;
+            case FRONT: x =  0;     y =  0;     z =  scale; w =  0;     return;
+            case BACK : x =  0;     y =  0;     z = -scale; w =  0;     return;
+            case IN   : x =  0;     y =  0;     z =  0;     w =  scale; return;
+            case OUT  : x =  0;     y =  0;     z =  0;     w = -scale; return;
+            case ZERO : x =  0;     y =  0;     z =  0;     w =  0;     return;
+            case UNIT : x =  scale; y =  scale; z =  scale; w =  scale; return;
+            default: x = 0; y = 0;
+        }
+    }
+
+    template <Numeral T>
+    Vec4<T>::Vec4(Corner4D cor, T scale) {
+        using enum Corner4D;
+        switch (cor) {
+            case INNER_FRONT_TOP_RIGHT   : x =  scale; y =  scale; z =  scale; w =  scale; return;
+            case INNER_FRONT_TOP_LEFT    : x = -scale; y =  scale; z =  scale; w =  scale; return;
+            case INNER_FRONT_BOTTOM_RIGHT: x =  scale; y = -scale; z =  scale; w =  scale; return;
+            case INNER_FRONT_BOTTOM_LEFT : x = -scale; y = -scale; z =  scale; w =  scale; return;
+            case INNER_BACK_TOP_RIGHT    : x =  scale; y =  scale; z = -scale; w =  scale; return;
+            case INNER_BACK_TOP_LEFT     : x = -scale; y =  scale; z = -scale; w =  scale; return;
+            case INNER_BACK_BOTTOM_RIGHT : x =  scale; y = -scale; z = -scale; w =  scale; return;
+            case INNER_BACK_BOTTOM_LEFT  : x = -scale; y = -scale; z = -scale; w =  scale; return;
+            case OUTER_FRONT_TOP_RIGHT   : x =  scale; y =  scale; z =  scale; w = -scale; return;
+            case OUTER_FRONT_TOP_LEFT    : x = -scale; y =  scale; z =  scale; w = -scale; return;
+            case OUTER_FRONT_BOTTOM_RIGHT: x =  scale; y = -scale; z =  scale; w = -scale; return;
+            case OUTER_FRONT_BOTTOM_LEFT : x = -scale; y = -scale; z =  scale; w = -scale; return;
+            case OUTER_BACK_TOP_RIGHT    : x =  scale; y =  scale; z = -scale; w = -scale; return;
+            case OUTER_BACK_TOP_LEFT     : x = -scale; y =  scale; z = -scale; w = -scale; return;
+            case OUTER_BACK_BOTTOM_RIGHT : x =  scale; y = -scale; z = -scale; w = -scale; return;
+            case OUTER_BACK_BOTTOM_LEFT  : x = -scale; y = -scale; z = -scale; w = -scale; return;
+            case CENTER: x = 0; y = 0; z = 0; return;
+            default: x = 0; y = 0; z = 0;
+        }
+    }
 
     template <Numeral T> Vec4<T>::Vec4(const Vec2<T>& xy, float z, float w)  : x(xy.x),  y(xy.y),  z(z),     w(w) {}
     template <Numeral T> Vec4<T>::Vec4(const Vec2<T>& xy, const Vec2<T>& zw) : x(xy.x),  y(xy.y),  z(zw.z),  w(zw.w) {}

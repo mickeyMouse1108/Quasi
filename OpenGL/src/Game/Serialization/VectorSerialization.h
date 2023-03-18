@@ -46,11 +46,21 @@ struct nlohmann::adl_serializer<T> {
 
     static void to_json(json& json, const T& vec) {
         constexpr int VEC_SIZE = VEC_LEN(T);
-        if      constexpr (VEC_SIZE == 2) json = json::array({ vec.x, vec.y});
+        if      constexpr (VEC_SIZE == 2) json = json::array({ vec.x, vec.y });
         else if constexpr (VEC_SIZE == 3) json = json::array({ vec.x, vec.y, vec.z });
         else if constexpr (VEC_SIZE == 4) json = json::array({ vec.x, vec.y, vec.z, vec.w });
     }
 };
+
+template struct nlohmann::adl_serializer<Maths::Vec2Int>;
+template struct nlohmann::adl_serializer<Maths::Vec3Int>;
+template struct nlohmann::adl_serializer<Maths::Vec4Int>;
+template struct nlohmann::adl_serializer<Maths::Vec2UInt>;
+template struct nlohmann::adl_serializer<Maths::Vec3UInt>;
+template struct nlohmann::adl_serializer<Maths::Vec4UInt>;
+template struct nlohmann::adl_serializer<Maths::Vector2>;
+template struct nlohmann::adl_serializer<Maths::Vector3>;
+template struct nlohmann::adl_serializer<Maths::Vector4>;
 
 #undef VEC_LEN
 #undef DECLTYPE_VEC

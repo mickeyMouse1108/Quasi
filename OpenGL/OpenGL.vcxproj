@@ -211,6 +211,7 @@
     <ClInclude Include="src\Game\GameTime.h" />
     <ClInclude Include="src\Game\Serialization\BlockSerialization.h" />
     <ClInclude Include="src\Game\Serialization\BlockTextureSerialization.h" />
+    <ClInclude Include="src\Game\Serialization\SerializationUtils.h" />
     <ClInclude Include="src\Game\Serialization\VectorSerialization.h" />
     <ClInclude Include="src\Game\Serialization\WorldSerialization.h" />
     <ClInclude Include="src\Game\World.h" />
@@ -264,6 +265,7 @@
     <Content Include="res\backup.txt" />
     <Content Include="res\game_planning.txt" />
     <Content Include="res\levels\level_test.json" />
+    <Content Include="res\textures\block_texture_atl.json" />
     <Content Include="res\textures\simple_tm.png" />
     <Content Include="res\textures\test_atlas.png" />
     <Content Include="res\textures\UV.png" />

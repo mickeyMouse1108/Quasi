@@ -56,7 +56,7 @@ namespace Game {
         
         const int all = texture.all.id;
         std::ranges::transform(texture.sides, textureID.begin(),
-        [=](TextureAtlasID x){ return x.id == -1 ? all : x.id; });
+        [=](const std::optional<TextureAtlasID>& x){ return x.has_value() ? x->id : all; });
     }
 
     Graphics::MeshObject& BlockRenderer::GetMeshObjectForm() {

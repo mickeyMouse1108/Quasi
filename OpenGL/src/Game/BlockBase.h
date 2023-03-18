@@ -5,15 +5,15 @@
 #include "Serialization/BlockSerialization.h"
 
 namespace Game {
-    enum BlockType {
+    enum class BlockType {
         ERR = -1,
         NIL = 0,
         WALL,
         PLAYER,
         BOX,
         GOAL,
-        BLOCKTYPE_BOUNDMIN = NIL + 1,
-        BLOCKTYPE_BOUNDMAX = GOAL
+        BOUNDMIN = NIL + 1,
+        BOUNDMAX = GOAL
     };
     
     namespace Blocks {
@@ -70,11 +70,11 @@ namespace Game {
             // * this is probably the most janky code ive ever written,
             template <BlockType ID>
             static std::unique_ptr<BlockBase> Create(const Serialization::BlockStructure& structure)
-            requires(BLOCKTYPE_BOUNDMIN <= ID && ID <= BLOCKTYPE_BOUNDMAX);
+            requires(BlockType::BOUNDMIN <= ID && ID <= BlockType::BOUNDMAX);
             // * runtime version of above
-            template <BlockType CompareID = BLOCKTYPE_BOUNDMIN>
+            template <BlockType CompareID = BlockType::BOUNDMIN>
             static std::unique_ptr<BlockBase> Create(BlockType ID, const Serialization::BlockStructure& structure)
-            requires(BLOCKTYPE_BOUNDMIN <= CompareID && CompareID <= BLOCKTYPE_BOUNDMAX);
+            requires(BlockType::BOUNDMIN <= CompareID && CompareID <= BlockType::BOUNDMAX);
     };
 }
 

@@ -2,9 +2,9 @@
 #include "BoxBlock.h"
 
 namespace Game::Blocks {
-    using GoalBlock = Block<GOAL>;
+    using GoalBlock = Block<BlockType::GOAL>;
     
-    template <> class Block<GOAL> : public BlockBase {
+    template <> class Block<BlockType::GOAL> : public BlockBase {
         friend BlockBase;
         
         protected:
@@ -16,6 +16,6 @@ namespace Game::Blocks {
 
             ~Block() override = default;
 
-            inline static BlockType TypeID = GOAL;
+            inline static BlockType TypeID = BlockType::GOAL;
     };
 }

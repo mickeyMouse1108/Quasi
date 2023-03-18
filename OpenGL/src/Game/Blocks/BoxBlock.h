@@ -2,9 +2,9 @@
 #include "PlayerBlock.h"
 
 namespace Game::Blocks {
-    using BoxBlock = Block<BOX>;
+    using BoxBlock = Block<BlockType::BOX>;
     
-    template <> class Block<BOX> : public BlockBase {
+    template <> class Block<BlockType::BOX> : public BlockBase {
         friend BlockBase;
         
         protected:
@@ -16,6 +16,6 @@ namespace Game::Blocks {
 
             ~Block() override = default;
 
-            inline static constexpr BlockType TypeID = BOX;
+            inline static constexpr BlockType TypeID = BlockType::BOX;
     };
 }

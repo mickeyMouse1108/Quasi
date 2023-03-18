@@ -2,9 +2,9 @@
 #include "WallBlock.h"
 
 namespace Game::Blocks {
-    using PlayerBlock = Block<PLAYER>;
+    using PlayerBlock = Block<BlockType::PLAYER>;
     
-    template <> class Block<PLAYER> : public BlockBase {
+    template <> class Block<BlockType::PLAYER> : public BlockBase {
         friend BlockBase;
 
         protected:
@@ -16,6 +16,6 @@ namespace Game::Blocks {
 
             ~Block() override = default;
 
-            inline static constexpr BlockType TypeID = PLAYER;
+            inline static constexpr BlockType TypeID = BlockType::PLAYER;
     };
 }

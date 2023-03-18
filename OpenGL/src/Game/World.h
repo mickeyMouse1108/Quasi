@@ -28,7 +28,7 @@ namespace Game {
             World(const Serialization::WorldStructure& ws);
             ~World();
 
-            void BlockUpdate();
+            void BlockRenderUpdate();
             void Render(Graphics::GraphicsDevice& gd);
 
             void Load(const std::string& levelname);

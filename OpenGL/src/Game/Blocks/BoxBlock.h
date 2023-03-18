@@ -5,10 +5,12 @@ namespace Game::Blocks {
     using BoxBlock = Block<BOX>;
     
     template <> class Block<BOX> : public BlockBase {
+        friend BlockBase;
+        
+        protected:
+            Block(const Maths::Vec3Int& position) : BlockBase(position) {}
         public:
             Block() : BlockBase() {}
-            Block(const Maths::Vec3Int& position) : BlockBase(position) {}
-            Block(const Serialization::BlockStructure& bs) : BlockBase(bs) {}
             Block(const BlockBase& copy) : BlockBase(copy) {}
             Block(BlockBase&& copy) : BlockBase(copy) {}
 

@@ -210,6 +210,7 @@
     <ClInclude Include="src\Game\Game.h" />
     <ClInclude Include="src\Game\GameTime.h" />
     <ClInclude Include="src\Game\Serialization\BlockSerialization.h" />
+    <ClInclude Include="src\Game\Serialization\BlockTextureSerialization.h" />
     <ClInclude Include="src\Game\Serialization\VectorSerialization.h" />
     <ClInclude Include="src\Game\Serialization\WorldSerialization.h" />
     <ClInclude Include="src\Game\World.h" />
@@ -230,10 +231,12 @@
     <ClInclude Include="src\Graphics\Meshes\TriMesh.h" />
     <ClInclude Include="src\Graphics\Utils\Textures\Texture.h" />
     <ClInclude Include="src\Graphics\Utils\Textures\TextureAtlas.h" />
+    <ClInclude Include="src\Maths\Corner.h" />
+    <ClInclude Include="src\Maths\Direction.h" />
     <ClInclude Include="src\Maths\NumTypes.h" />
     <ClInclude Include="src\Maths\Vector.h" />
-    <ClInclude Include="src\Maths\Maths.h" />
     <ClInclude Include="src\Maths\Matrix.h" />
+    <ClInclude Include="src\stdu\enum_utils.h" />
     <ClInclude Include="src\test\Test.h" />
     <ClInclude Include="src\test\TestBatchedTextured.h" />
     <ClInclude Include="src\test\TestClearColor.h" />
@@ -261,6 +264,7 @@
     <Content Include="res\backup.txt" />
     <Content Include="res\game_planning.txt" />
     <Content Include="res\levels\level_test.json" />
+    <Content Include="res\textures\simple_tm.png" />
     <Content Include="res\textures\test_atlas.png" />
     <Content Include="res\textures\UV.png" />
     <Content Include="src\test\res\standard_colored.glsl" />

@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include "Mesh.h"
-#include "Maths.h"
 
 namespace Graphics
 {

@@ -9,7 +9,11 @@ struct nlohmann::adl_serializer<std::optional<T>> {
     using opt_T = std::optional<T>;
     static void from_json(const json& js, opt_T& opt) {
         if (js.is_null()) opt = std::nullopt;
-        else js.get_to(opt);
+        else {
+            T t {};
+            js.get_to<T>(t);
+            opt = std::move(t);
+        }
     }
 
     static void to_json(json& js, const opt_T& opt) {
@@ -17,6 +21,18 @@ struct nlohmann::adl_serializer<std::optional<T>> {
         else js = nullptr;
     }
 };
+
+namespace nlohmann {
+    template <class T>
+    void get_optional(const json& js, const char* key, std::optional<T>& opt) {
+        const auto it = js.find(key);
+        if (it != js.end()) {
+            opt = it->get<T>();
+            return;
+        }
+        opt = std::nullopt;
+    }
+}
 
 #pragma endregion
 
@@ -27,7 +43,7 @@ struct nlohmann::adl_serializer<std::array<T, N>> {
     using array = std::array<T, N>;
     static void from_json(const json& js, array& arr) {
         for (uint i = 0; i < N; ++i) {
-            js[i].get_to(arr[i]);
+            js[i].get_to<T>(arr[i]);
         }
     }
 

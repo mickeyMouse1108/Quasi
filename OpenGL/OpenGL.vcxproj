@@ -210,8 +210,13 @@
     <ClInclude Include="src\Game\Game.h" />
     <ClInclude Include="src\Game\GameTime.h" />
     <ClInclude Include="src\Game\Serialization\BlockSerialization.h" />
+    <ClInclude Include="src\Game\Serialization\BlockStateMatching.h" />
+    <ClInclude Include="src\Game\Serialization\BlockStateTextureDispatch.h" />
+    <ClInclude Include="src\Game\Serialization\BlockTextureDispatch.h" />
     <ClInclude Include="src\Game\Serialization\BlockTextureSerialization.h" />
     <ClInclude Include="src\Game\Serialization\SerializationUtils.h" />
+    <ClInclude Include="src\Game\Serialization\TextureAtlasID.h" />
+    <ClInclude Include="src\Game\Serialization\TextureDispatch.h" />
     <ClInclude Include="src\Game\Serialization\VectorSerialization.h" />
     <ClInclude Include="src\Game\Serialization\WorldSerialization.h" />
     <ClInclude Include="src\Game\World.h" />

@@ -55,8 +55,12 @@ namespace Game {
         using namespace Serialization;
         
         const int all = texture.all.id;
-        std::ranges::transform(texture.sides, textureID.begin(),
-        [=](const std::optional<TextureAtlasID>& x){ return x.has_value() ? x->id : all; });
+        if (texture.sides) {
+            std::ranges::transform(*texture.sides, textureID.begin(),
+            [=](const std::optional<TextureAtlasID>& x){ return x.has_value() ? x->id : all; });
+        } else {
+            textureID.fill(all);
+        }
     }
 
     Graphics::MeshObject& BlockRenderer::GetMeshObjectForm() {

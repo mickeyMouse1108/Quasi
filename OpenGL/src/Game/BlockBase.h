@@ -3,6 +3,7 @@
 
 #include "BlockRenderer.h"
 #include "Serialization/BlockSerialization.h"
+#include "Serialization/TextureDispatch.h"
 
 namespace Game {
     enum class BlockType {
@@ -29,6 +30,9 @@ namespace Game {
             
             Maths::Vec3Int Position;
         protected:
+            inline static const Serialization::TextureDispatcher DefaultTextureDispatch =
+                Serialization::TextureDispatcher::Load("res/textures/block_texture_atl.json");
+        
             BlockBase(const Maths::Vec3Int& position) : Renderer(new BlockRenderer(*this)), Position(position) {}
             BlockBase(const Serialization::BlockStructure& bs) : Renderer(new BlockRenderer(*this)) { BlockBase::Build(bs); }
         public:

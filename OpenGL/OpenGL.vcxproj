@@ -243,6 +243,7 @@
     <ClInclude Include="src\Maths\Vector.h" />
     <ClInclude Include="src\Maths\Matrix.h" />
     <ClInclude Include="src\stdu\enum_utils.h" />
+    <ClInclude Include="src\stdu\optional_ref.h" />
     <ClInclude Include="src\test\Test.h" />
     <ClInclude Include="src\test\TestBatchedTextured.h" />
     <ClInclude Include="src\test\TestClearColor.h" />

@@ -7,8 +7,7 @@
 
 namespace Game {
     class World {
-        // basically std::optional<std::reference_wrapper<T>> but with no overhead 
-        template <class T> using opt_ref = const T*;
+        friend BlockBase;
         
         private:
             Maths::Vec3Int boundsMin, boundsMax;
@@ -21,7 +20,7 @@ namespace Game {
             }
             stdu::sorted_vector<BlockPtr, int(*)(const BlockPtr&)> blocks = { DefaultBlockComparison };
 
-            opt_ref<BlockBase> BlockAt(const Maths::Vec3Int& position, int startIndex = 0);
+            stdu::optional_ref<BlockBase> BlockAt(const Maths::Vec3Int& position, int startIndex = 0);
             
         public:
             World();

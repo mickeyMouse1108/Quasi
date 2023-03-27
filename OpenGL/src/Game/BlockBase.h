@@ -4,8 +4,11 @@
 #include "BlockRenderer.h"
 #include "Serialization/BlockSerialization.h"
 #include "Serialization/TextureDispatch.h"
+#include "stdu/optional_ref.h"
 
 namespace Game {
+    class World;
+    
     enum class BlockType {
         ERR = -1,
         NIL = 0,
@@ -23,31 +26,38 @@ namespace Game {
     
     // great naming here
     class BlockBase {
+        friend World;
         friend BlockRenderer;
         
         private:
             std::unique_ptr<BlockRenderer> Renderer { };
             
             Maths::Vec3Int Position;
+            World* ParentWorld = nullptr;
         protected:
             inline static const Serialization::TextureDispatcher DefaultTextureDispatch =
                 Serialization::TextureDispatcher::Load("res/textures/block_texture_atl.json");
         
-            BlockBase(const Maths::Vec3Int& position) : Renderer(new BlockRenderer(*this)), Position(position) {}
-            BlockBase(const Serialization::BlockStructure& bs) : Renderer(new BlockRenderer(*this)) { BlockBase::Build(bs); }
+            BlockBase(const Maths::Vec3Int& position, stdu::optional_ref<World> world)
+                : Renderer(new BlockRenderer(*this)), Position(position), ParentWorld(&*world) {}
+            BlockBase(const Serialization::BlockStructure& bs, stdu::optional_ref<World> world)
+                : Renderer(new BlockRenderer(*this)), ParentWorld(&*world) { BlockBase::Build(bs); }
         public:
             BlockBase() : Renderer(new BlockRenderer(*this)) {}
             BlockBase(const BlockBase& copy)
                 : Renderer(new BlockRenderer(*copy.Renderer)),
-                  Position(copy.Position) {}
+                  Position(copy.Position),
+                  ParentWorld(copy.ParentWorld) {}
             BlockBase(BlockBase&& copy) noexcept
                 : Renderer(std::move(copy.Renderer)),
-                  Position(copy.Position) {}
+                  Position(copy.Position),
+                  ParentWorld(copy.ParentWorld) {}
             BlockBase& operator=(const BlockBase& copy) {
                 if (this == &copy)
                     return *this;
                 Renderer = std::unique_ptr<BlockRenderer> { new BlockRenderer(*copy.Renderer) };
                 Position = copy.Position;
+                ParentWorld = copy.ParentWorld;
                 return *this;
             }
             BlockBase& operator=(BlockBase&& copy) noexcept {
@@ -55,6 +65,7 @@ namespace Game {
                     return *this;
                 Renderer = std::move(copy.Renderer);
                 Position = copy.Position;
+                ParentWorld = copy.ParentWorld;
                 return *this;
             }
             
@@ -64,6 +75,10 @@ namespace Game {
             [[nodiscard]] const Maths::Vec3Int& GetPosition() const { return Position; }
             BlockRenderer& GetRenderer() { return *Renderer; }
             [[nodiscard]] const BlockRenderer& GetRenderer() const { return *Renderer; }
+            World& GetWorld() { return *ParentWorld; }
+            [[nodiscard]] const World& GetWorld() const { return *ParentWorld; }
+
+            [[nodiscard]] stdu::optional_ref<BlockBase> BlockInDirection(Maths::Direction3D dir) const;
 
             void Load(const std::string& levelname) { Build(Serialization::BlockStructure::Load(levelname)); }
             virtual void Build(const Serialization::BlockStructure& structure) {

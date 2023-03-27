@@ -8,7 +8,7 @@ namespace Game::Blocks {
         friend BlockBase;
 
         protected:
-            Block(const Maths::Vec3Int& position) : BlockBase(position) {}
+            Block(const Maths::Vec3Int& position, stdu::optional_ref<World> world) : BlockBase(position, world) {}
         public:
             Block() : BlockBase() {}
             Block(const BlockBase& copy) : BlockBase(copy) {}

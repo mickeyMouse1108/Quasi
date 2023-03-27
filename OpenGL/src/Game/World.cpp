@@ -9,7 +9,7 @@ namespace Game {
 
     World::~World() {}
 
-    World::opt_ref<BlockBase> World::BlockAt(const Maths::Vec3Int& position, int startIndex) {
+    stdu::optional_ref<BlockBase> World::BlockAt(const Maths::Vec3Int& position, int startIndex) {
         const int comparison = DefaultBlockComparison(position);
         const auto index = blocks.find_predicate( [&](const BlockPtr& x) {
             return comparison - DefaultBlockComparison(x);
@@ -22,14 +22,14 @@ namespace Game {
         for (int i = 0; i < blocks.size(); ++i) {
             unsigned cull = 0;
             for (int f = 0; f < 6; ++f) {
-                cull |= (BlockAt(blocks[i]->GetPosition() + (Maths::Direction3D)f, i) == nullptr ? 1 : 0) << f;
+                cull |= BlockAt(blocks[i]->GetPosition() + (Maths::Direction3D)f, i) << f;
             }
             blocks[i]->GetRenderer().CullFaces(cull);
         }
     }
 
     void World::Render(Graphics::GraphicsDevice& gd) {
-        for (auto& block : blocks)
+        for (const auto& block : blocks)
             block->GetRenderer().GetMeshObjectForm().Bind(gd);
     }
 

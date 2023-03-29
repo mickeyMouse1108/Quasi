@@ -4,7 +4,10 @@
 
 #include "Vector.h"
 #include "MeshObject.h"
+#include "Serialization/BlockStateMatching.h"
 #include "Serialization/BlockTextureSerialization.h"
+#include "Serialization/TextureDispatch.h"
+#include "stdu/optional_ref.h"
 
 namespace Game
 {
@@ -32,9 +35,9 @@ namespace Game
 
         std::array<int, 6> textureID = { 0, 1, 2, 3, 4, 5 };
 
-        BlockBase* parentBlock = nullptr;
+        stdu::optional_ref<BlockBase> ParentBlock = nullptr;
         
-        BlockRenderer(BlockBase& parent, unsigned enabledFlags = BLOCK_FACE_ALL);
+        BlockRenderer(const BlockBase& parent, unsigned enabledFlags = BLOCK_FACE_ALL);
     public:
         BlockRenderer(const BlockRenderer& copy);
         BlockRenderer(BlockRenderer&& copy) noexcept;
@@ -47,8 +50,19 @@ namespace Game
         static void SetTextureOfMesh(Graphics::QuadMesh<Vertex>& mesh, int textureID);
 
         void CullFaces(unsigned faces) { enabledFlags = faces; }
-        void SetTextures(Serialization::BlockTextureStructure texture);
+        void UseTexture(Serialization::BlockTextureStructure texture);
 
+        using Serialization::BlockStateMatchingStructure;
+        [[nodiscard]] bool MatchesTextureState(const BlockStateMatchingStructure& match) const;
+        
+        using Serialization::TextureDispatcher;
+        inline static TextureDispatcher DefaultTexDispatch = TextureDispatcher::Load("res/textures/block_texture_atl.json");
+        
+        using Serialization::BlockTextureDispatcher;
+        void UseTextureDispatch(const BlockTextureDispatcher& disp);
+        void UseTextureDispatch(const TextureDispatcher& disp = DefaultTexDispatch);
+
+        
         Graphics::MeshObject& GetMeshObjectForm();
     };
 }

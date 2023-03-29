@@ -9,7 +9,7 @@ namespace Game {
 
     World::~World() {}
 
-    stdu::optional_ref<BlockBase> World::BlockAt(const Maths::Vec3Int& position, int startIndex) {
+    stdu::optional_ref<BlockBase> World::BlockAt(const Maths::Vec3Int& position, int startIndex) const {
         const int comparison = DefaultBlockComparison(position);
         const auto index = blocks.find_predicate( [&](const BlockPtr& x) {
             return comparison - DefaultBlockComparison(x);

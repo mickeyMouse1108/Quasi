@@ -17,5 +17,6 @@ namespace Game::Blocks {
             ~Block() override = default;
 
             inline static BlockType TypeID = BlockType::GOAL;
+            BlockType ID() override { return TypeID; }
     };
 }

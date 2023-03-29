@@ -33,15 +33,15 @@ namespace Game {
             std::unique_ptr<BlockRenderer> Renderer { };
             
             Maths::Vec3Int Position;
-            World* ParentWorld = nullptr;
+            stdu::optional_ref<World> ParentWorld = nullptr;
         protected:
             inline static const Serialization::TextureDispatcher DefaultTextureDispatch =
                 Serialization::TextureDispatcher::Load("res/textures/block_texture_atl.json");
         
-            BlockBase(const Maths::Vec3Int& position, stdu::optional_ref<World> world)
-                : Renderer(new BlockRenderer(*this)), Position(position), ParentWorld(&*world) {}
-            BlockBase(const Serialization::BlockStructure& bs, stdu::optional_ref<World> world)
-                : Renderer(new BlockRenderer(*this)), ParentWorld(&*world) { BlockBase::Build(bs); }
+            BlockBase(const Maths::Vec3Int& position, const stdu::optional_ref<World> world)
+                : Renderer(new BlockRenderer(*this)), Position(position), ParentWorld(world) {}
+            BlockBase(const Serialization::BlockStructure& bs, const stdu::optional_ref<World> world)
+                : Renderer(new BlockRenderer(*this)), ParentWorld(world) { BlockBase::Build(bs); }
         public:
             BlockBase() : Renderer(new BlockRenderer(*this)) {}
             BlockBase(const BlockBase& copy)
@@ -83,8 +83,10 @@ namespace Game {
             void Load(const std::string& levelname) { Build(Serialization::BlockStructure::Load(levelname)); }
             virtual void Build(const Serialization::BlockStructure& structure) {
                 Position = structure.position;
-                Renderer->SetTextures({ .all = structure.type });
+                Renderer->UseTexture({ .all = structure.type });
             }
+
+            virtual BlockType ID() { return BlockType::NIL; }
             
             // * this is probably the most janky code ive ever written,
             template <BlockType ID>

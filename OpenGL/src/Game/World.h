@@ -20,7 +20,7 @@ namespace Game {
             }
             stdu::sorted_vector<BlockPtr, int(*)(const BlockPtr&)> blocks = { DefaultBlockComparison };
 
-            stdu::optional_ref<BlockBase> BlockAt(const Maths::Vec3Int& position, int startIndex = 0);
+            stdu::optional_ref<BlockBase> BlockAt(const Maths::Vec3Int& position, int startIndex = 0) const;
             
         public:
             World();

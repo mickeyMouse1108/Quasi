@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include <type_traits>
 
+#include "stdu/enum_utils.h"
+
 namespace Maths {
     enum class Direction2D : int {
         RIGHT = 0,
@@ -11,6 +13,7 @@ namespace Maths {
         ZERO = 8,
         UNIT = 9
     };
+    IMPL_ENUM_OPERATORS(Direction2D)
     
     enum class Direction3D : int {
         RIGHT = 0,
@@ -23,6 +26,7 @@ namespace Maths {
         ZERO = 8,
         UNIT = 9
     };
+    IMPL_ENUM_OPERATORS(Direction3D)
 
     enum class Direction4D : int {
         RIGHT = 0,
@@ -37,6 +41,7 @@ namespace Maths {
         ZERO = 8,
         UNIT = 9
     };
+    IMPL_ENUM_OPERATORS(Direction4D)
 
     template <class E>
     concept Direction = requires {

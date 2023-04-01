@@ -35,7 +35,7 @@ namespace Game
 
         std::array<int, 6> textureID = { 0, 1, 2, 3, 4, 5 };
 
-        stdu::optional_ref<BlockBase> ParentBlock = nullptr;
+        stdu::optional_ref<BlockBase> ParentBlock {};
         
         BlockRenderer(const BlockBase& parent, unsigned enabledFlags = BLOCK_FACE_ALL);
     public:
@@ -51,14 +51,14 @@ namespace Game
 
         void CullFaces(unsigned faces) { enabledFlags = faces; }
         void UseTexture(Serialization::BlockTextureStructure texture);
-
-        using Serialization::BlockStateMatchingStructure;
-        [[nodiscard]] bool MatchesTextureState(const BlockStateMatchingStructure& match) const;
         
-        using Serialization::TextureDispatcher;
+        using BlockStateMatchingStructure = Serialization::BlockStateMatchingStructure;
+        using TextureDispatcher = Serialization::TextureDispatcher;
+        using BlockTextureDispatcher = Serialization::BlockTextureDispatcher;
+        
+        [[nodiscard]] bool MatchesTextureState(const BlockStateMatchingStructure& match) const;
         inline static TextureDispatcher DefaultTexDispatch = TextureDispatcher::Load("res/textures/block_texture_atl.json");
         
-        using Serialization::BlockTextureDispatcher;
         void UseTextureDispatch(const BlockTextureDispatcher& disp);
         void UseTextureDispatch(const TextureDispatcher& disp = DefaultTexDispatch);
 

@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include "WallBlock.h"
 
 namespace Game::Blocks {
     using PlayerBlock = Block<BlockType::PLAYER>;

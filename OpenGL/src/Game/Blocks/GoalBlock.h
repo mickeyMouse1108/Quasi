@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include "BoxBlock.h"
 
 namespace Game::Blocks {
     using GoalBlock = Block<BlockType::GOAL>;

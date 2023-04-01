@@ -1,17 +1,16 @@
 ﻿#pragma once
 
+#include "BlockBase.h"
 #include "Blocks/WallBlock.h"
 #include "Blocks/PlayerBlock.h"
 #include "Blocks/BoxBlock.h"
 #include "Blocks/GoalBlock.h"
 
-#include "stdu/enum_utils.h"
-
 namespace Game {
-    template <BlockType ID>
+    template <BlockType CreateID> // ! not using the name ID because it clashes with BlockBase::ID(). why. thids took me 3 days to fix
     std::unique_ptr<BlockBase> BlockBase::Create(const Serialization::BlockStructure& structure)
-    requires(BlockType::BOUNDMIN <= ID && ID <= BlockType::BOUNDMAX) {
-        auto block = std::unique_ptr<BlockBase> { (BlockBase*) new Blocks::Block<ID> { Maths::Vec3Int {} } };
+    requires(BlockType::BOUNDMIN <= CreateID && CreateID <= BlockType::BOUNDMAX) {
+        auto block = std::unique_ptr<BlockBase> { (BlockBase*) new Blocks::Block<CreateID> { Maths::Vec3Int {} } };
         block->Build(structure);
         return block;
     }

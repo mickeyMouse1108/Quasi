@@ -1,4 +1,5 @@
 ﻿#include "World.h"
+#include "BlockPtr.h"
 
 namespace Game {
     World::World() : boundsMin { 0, 0, 0 }, boundsMax { 0, 0, 0 } {}
@@ -8,6 +9,15 @@ namespace Game {
     }
 
     World::~World() {}
+
+    int World::DefaultBlockComparison(const Maths::Vec3Int& vec) {
+        return vec.x * 256 + vec.y * 16 + vec.z;
+    }
+    
+    int World::DefaultBlockComparison(const BlockPtr& x) {
+        const auto vec = x->GetPosition();
+        return vec.x * 256 + vec.y * 16 + vec.z;
+    }
 
     stdu::optional_ref<BlockBase> World::BlockAt(const Maths::Vec3Int& position, int startIndex) const {
         const int comparison = DefaultBlockComparison(position);
@@ -25,6 +35,7 @@ namespace Game {
                 cull |= BlockAt(blocks[i]->GetPosition() + (Maths::Direction3D)f, i) << f;
             }
             blocks[i]->GetRenderer().CullFaces(cull);
+            blocks[i]->GetRenderer().UseTextureDispatch();
         }
     }
 

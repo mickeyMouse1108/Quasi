@@ -10,6 +10,7 @@ namespace stdu {
         optional_ref(const T& t) : obj(&t) {}
         optional_ref(const T* t) : obj( t) {}
         optional_ref(const std::optional<T>& opt) : obj(&*opt) {}
+        optional_ref(std::nullptr_t) : obj(nullptr) {}
         optional_ref(std::nullopt_t) : obj(nullptr) {}
 
         T& value() { return *obj; }

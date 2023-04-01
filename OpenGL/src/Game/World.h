@@ -1,26 +1,26 @@
 ﻿#pragma once
 
-#include "BlockBase.h"
-#include "BlockPtr.h"
+#include "GraphicsDevice.h"
 #include "Serialization/WorldSerialization.h"
 #include "stdu/sorted_vector.h"
+#include "stdu/optional_ref.h"
 
 namespace Game {
+    class BlockBase;
+    class BlockPtr;
+    
     class World {
         friend BlockBase;
         
         private:
             Maths::Vec3Int boundsMin, boundsMax;
-            static int DefaultBlockComparison(const Maths::Vec3Int& vec) {
-                return vec.x * 256 + vec.y * 16 + vec.z;
-            }
-            static int DefaultBlockComparison(const BlockPtr& x) {
-                const auto vec = x->GetPosition();
-                return vec.x * 256 + vec.y * 16 + vec.z;
-            }
+        
+            static int DefaultBlockComparison(const Maths::Vec3Int& vec);
+            static int DefaultBlockComparison(const BlockPtr& x);
+        
             stdu::sorted_vector<BlockPtr, int(*)(const BlockPtr&)> blocks = { DefaultBlockComparison };
 
-            stdu::optional_ref<BlockBase> BlockAt(const Maths::Vec3Int& position, int startIndex = 0) const;
+            [[nodiscard]] stdu::optional_ref<BlockBase> BlockAt(const Maths::Vec3Int& position, int startIndex = 0) const;
             
         public:
             World();

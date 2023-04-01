@@ -2,13 +2,12 @@
 #include <memory>
 
 #include "BlockRenderer.h"
+#include "World.h"
 #include "Serialization/BlockSerialization.h"
 #include "Serialization/TextureDispatch.h"
 #include "stdu/optional_ref.h"
 
 namespace Game {
-    class World;
-    
     enum class BlockType {
         ERR = -1,
         NIL = 0,
@@ -19,6 +18,7 @@ namespace Game {
         BOUNDMIN = NIL + 1,
         BOUNDMAX = GOAL
     };
+    IMPL_ENUM_OPERATORS(BlockType)
     
     namespace Blocks {
         template <BlockType ID> class Block {};
@@ -89,9 +89,9 @@ namespace Game {
             virtual BlockType ID() { return BlockType::NIL; }
             
             // * this is probably the most janky code ive ever written,
-            template <BlockType ID>
+            template <BlockType CreateID>
             static std::unique_ptr<BlockBase> Create(const Serialization::BlockStructure& structure)
-            requires(BlockType::BOUNDMIN <= ID && ID <= BlockType::BOUNDMAX);
+            requires(BlockType::BOUNDMIN <= CreateID && CreateID <= BlockType::BOUNDMAX);
             // * runtime version of above
             template <BlockType CompareID = BlockType::BOUNDMIN>
             static std::unique_ptr<BlockBase> Create(BlockType ID, const Serialization::BlockStructure& structure)

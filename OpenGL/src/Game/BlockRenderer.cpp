@@ -62,13 +62,13 @@ namespace Game {
             textureID.fill(all);
         }
     }
-
+    
     bool BlockRenderer::MatchesTextureState(const BlockStateMatchingStructure& match) const {
         if (match.position && match.position != ParentBlock->Position) 
             return false;
-
-        for (Maths::Direction3D i = (auto)0; i < 6; ++i) {
-            if (match.facing[i] && ParentBlock->BlockInDirection(i)->ID() != match.facing[i])
+        
+        for (auto i = (Maths::Direction3D)0; i < 6; ++i) {
+            if (match.facing[(int)i] && ParentBlock->BlockInDirection(i)->ID() != match.facing[(int)i])
                 return false;
         }
 

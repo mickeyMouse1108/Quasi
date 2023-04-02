@@ -4,10 +4,11 @@
 
 #include "Vector.h"
 #include "MeshObject.h"
+#include "World.h"
 #include "Serialization/BlockStateMatching.h"
 #include "Serialization/BlockTextureSerialization.h"
 #include "Serialization/TextureDispatch.h"
-#include "stdu/optional_ref.h"
+#include "stdu/ref.h"
 
 namespace Game
 {
@@ -35,9 +36,9 @@ namespace Game
 
         std::array<int, 6> textureID = { 0, 1, 2, 3, 4, 5 };
 
-        stdu::optional_ref<BlockBase> ParentBlock {};
+        stdu::ref<BlockBase> ParentBlock {};
         
-        BlockRenderer(const BlockBase& parent, unsigned enabledFlags = BLOCK_FACE_ALL);
+        BlockRenderer(stdu::ref<BlockBase> parent, unsigned enabledFlags = BLOCK_FACE_ALL);
     public:
         BlockRenderer(const BlockRenderer& copy);
         BlockRenderer(BlockRenderer&& copy) noexcept;

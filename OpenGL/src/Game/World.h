@@ -3,7 +3,7 @@
 #include "GraphicsDevice.h"
 #include "Serialization/WorldSerialization.h"
 #include "stdu/sorted_vector.h"
-#include "stdu/optional_ref.h"
+#include "stdu/ref.h"
 
 namespace Game {
     class BlockBase;
@@ -20,8 +20,8 @@ namespace Game {
         
             stdu::sorted_vector<BlockPtr, int(*)(const BlockPtr&)> blocks = { DefaultBlockComparison };
 
-            [[nodiscard]] stdu::optional_ref<BlockBase> BlockAt(const Maths::Vec3Int& position, int startIndex = 0) const;
-            
+            stdu::ref<BlockBase>  BlockAt(const Maths::Vec3Int& position, int startIndex = 0);
+            stdu::cref<BlockBase> BlockAt(const Maths::Vec3Int& position, int startIndex = 0) const;
         public:
             World();
             World(const Serialization::WorldStructure& ws);

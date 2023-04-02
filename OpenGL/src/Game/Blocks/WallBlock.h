@@ -3,11 +3,11 @@
 namespace Game::Blocks {
     using WallBlock = Block<BlockType::WALL>;
     
-    template <> class Block<BlockType::WALL> : public BlockBase {
+    template <> class Block<BlockType::WALL> final : public BlockBase {
         friend BlockBase;
 
         protected:
-            Block(const Maths::Vec3Int& position, stdu::optional_ref<World> world) : BlockBase(position, world) {}
+            Block(const Maths::Vec3Int& position, stdu::ref<World> world) : BlockBase(position, world) {}
         public:
             Block() : BlockBase() {}
             Block(const BlockBase& copy) : BlockBase(copy) {}
@@ -16,6 +16,6 @@ namespace Game::Blocks {
             ~Block() override = default;
 
             inline static constexpr BlockType TypeID = BlockType::WALL;
-            BlockType ID() override { return TypeID; }
+            [[nodiscard]] BlockType ID() const override { return TypeID; }
     };
 }

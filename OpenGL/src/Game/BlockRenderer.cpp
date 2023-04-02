@@ -17,7 +17,7 @@ namespace Game {
                { { -0.5f,  0.5f, -0.5f }, { 1, 1, 1, 1 }, 0, 2 }, { { -0.5f, -0.5f, -0.5f }, { 1, 1, 1, 1 }, 0, 3 }, },
     };
 
-    BlockRenderer::BlockRenderer(const BlockBase& parent, unsigned enabledFlags) : enabledFlags(enabledFlags), ParentBlock(&parent) {}
+    BlockRenderer::BlockRenderer(stdu::ref<BlockBase> parent, unsigned enabledFlags) : enabledFlags(enabledFlags), ParentBlock(parent) {}
 
     BlockRenderer::BlockRenderer(const BlockRenderer& copy) : enabledFlags(copy.enabledFlags), textureID(copy.textureID), ParentBlock(copy.ParentBlock) {}
     BlockRenderer::BlockRenderer(BlockRenderer&& copy) noexcept : enabledFlags(copy.enabledFlags), textureID(copy.textureID), ParentBlock(copy.ParentBlock) {
@@ -68,7 +68,9 @@ namespace Game {
             return false;
         
         for (auto i = (Maths::Direction3D)0; i < 6; ++i) {
-            if (match.facing[(int)i] && ParentBlock->BlockInDirection(i)->ID() != match.facing[(int)i])
+            const auto blockFacing = ParentBlock->BlockInDirection(i);
+            auto bfID = blockFacing.is_null() ? BlockType::NIL : blockFacing->ID();
+            if (match.facing[(int)i] && bfID != match.facing[(int)i])
                 return false;
         }
 
@@ -90,6 +92,8 @@ namespace Game {
     }
 
     void BlockRenderer::UseTextureDispatch(const TextureDispatcher& disp) {
+        if (!disp.blockTextures.contains(ParentBlock->ID())) return;
+        
         UseTextureDispatch(disp.blockTextures.at(ParentBlock->ID()));
     }
 

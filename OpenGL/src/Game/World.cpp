@@ -19,15 +19,27 @@ namespace Game {
         return vec.x * 256 + vec.y * 16 + vec.z;
     }
 
-    stdu::optional_ref<BlockBase> World::BlockAt(const Maths::Vec3Int& position, int startIndex) const {
+    stdu::ref<BlockBase> World::BlockAt(const Maths::Vec3Int& position, int startIndex) {
         const int comparison = DefaultBlockComparison(position);
         const auto index = blocks.find_predicate( [&](const BlockPtr& x) {
             return comparison - DefaultBlockComparison(x);
         }, startIndex);
-        
-        return index.exists ? &*blocks[index.index] : nullptr;
+
+        // cant use ternary operator here :(
+        if (index.exists) return *blocks[index.index]; 
+        return nullptr;
     }
     
+    stdu::cref<BlockBase> World::BlockAt(const Maths::Vec3Int& position, int startIndex) const {
+        const int comparison = DefaultBlockComparison(position);
+        const auto index = blocks.find_predicate( [&](const BlockPtr& x) {
+            return comparison - DefaultBlockComparison(x);
+        }, startIndex);
+
+        if (index.exists) return *blocks[index.index]; 
+        return nullptr;
+    }
+
     void World::BlockRenderUpdate() {
         for (int i = 0; i < blocks.size(); ++i) {
             unsigned cull = 0;
@@ -51,7 +63,7 @@ namespace Game {
     void World::Build(const Serialization::WorldStructure& structure) {
         blocks.clear();
         for (const auto& block : structure.tiles) {
-            blocks.insert(BlockPtr { BlockBase::Create((BlockType)block.type, block) } );
+            blocks.insert(BlockPtr { BlockBase::Create(*this, (BlockType)block.type, block) } );
         }
 
         blocks.resort();

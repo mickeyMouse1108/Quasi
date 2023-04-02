@@ -5,7 +5,7 @@
 #include "World.h"
 #include "Serialization/BlockSerialization.h"
 #include "Serialization/TextureDispatch.h"
-#include "stdu/optional_ref.h"
+#include "stdu/ref.h"
 
 namespace Game {
     enum class BlockType {
@@ -33,14 +33,14 @@ namespace Game {
             std::unique_ptr<BlockRenderer> Renderer { };
             
             Maths::Vec3Int Position;
-            stdu::optional_ref<World> ParentWorld = nullptr;
+            stdu::ref<World> ParentWorld = nullptr;
         protected:
             inline static const Serialization::TextureDispatcher DefaultTextureDispatch =
                 Serialization::TextureDispatcher::Load("res/textures/block_texture_atl.json");
         
-            BlockBase(const Maths::Vec3Int& position, const stdu::optional_ref<World> world)
+            BlockBase(const Maths::Vec3Int& position, const stdu::ref<World> world)
                 : Renderer(new BlockRenderer(*this)), Position(position), ParentWorld(world) {}
-            BlockBase(const Serialization::BlockStructure& bs, const stdu::optional_ref<World> world)
+            BlockBase(const Serialization::BlockStructure& bs, const stdu::ref<World> world)
                 : Renderer(new BlockRenderer(*this)), ParentWorld(world) { BlockBase::Build(bs); }
         public:
             BlockBase() : Renderer(new BlockRenderer(*this)) {}
@@ -78,7 +78,8 @@ namespace Game {
             World& GetWorld() { return *ParentWorld; }
             [[nodiscard]] const World& GetWorld() const { return *ParentWorld; }
 
-            [[nodiscard]] stdu::optional_ref<BlockBase> BlockInDirection(Maths::Direction3D dir) const;
+            stdu::ref<BlockBase>  BlockInDirection(Maths::Direction3D dir);
+            stdu::cref<BlockBase> BlockInDirection(Maths::Direction3D dir) const;
 
             void Load(const std::string& levelname) { Build(Serialization::BlockStructure::Load(levelname)); }
             virtual void Build(const Serialization::BlockStructure& structure) {
@@ -86,15 +87,15 @@ namespace Game {
                 Renderer->UseTexture({ .all = structure.type });
             }
 
-            virtual BlockType ID() { return BlockType::NIL; }
+            virtual BlockType ID() const { return BlockType::NIL; }
             
             // * this is probably the most janky code ive ever written,
             template <BlockType CreateID>
-            static std::unique_ptr<BlockBase> Create(const Serialization::BlockStructure& structure)
+            static std::unique_ptr<BlockBase> Create(stdu::ref<World> world, const Serialization::BlockStructure& structure)
             requires(BlockType::BOUNDMIN <= CreateID && CreateID <= BlockType::BOUNDMAX);
             // * runtime version of above
             template <BlockType CompareID = BlockType::BOUNDMIN>
-            static std::unique_ptr<BlockBase> Create(BlockType ID, const Serialization::BlockStructure& structure)
+            static std::unique_ptr<BlockBase> Create(stdu::ref<World> world, BlockType ID, const Serialization::BlockStructure& structure)
             requires(BlockType::BOUNDMIN <= CompareID && CompareID <= BlockType::BOUNDMAX);
     };
 }

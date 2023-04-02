@@ -1,10 +1,14 @@
 ﻿#include "BlockBase.h"
 
 #include "World.h"
-#include "stdu/optional_ref.h"
+#include "stdu/ref.h"
 
 namespace Game {
-    stdu::optional_ref<BlockBase> BlockBase::BlockInDirection(Maths::Direction3D dir) const {
+    stdu::ref<BlockBase> BlockBase::BlockInDirection(Maths::Direction3D dir) {
+        return ParentWorld->BlockAt(Position + dir);
+    }
+    
+    stdu::cref<BlockBase> BlockBase::BlockInDirection(Maths::Direction3D dir) const {
         return ParentWorld->BlockAt(Position + dir);
     }
 }

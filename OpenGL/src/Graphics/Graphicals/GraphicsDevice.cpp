@@ -41,7 +41,8 @@ namespace Graphics
     void GraphicsDevice::EnableShader()
     {
         _currentShader->Bind();
-        _currentShader->SetUniformMatrix4x4("u_MVP", _projection * _camera);
+        _currentShader->SetUniformMatrix4x4("u_projection", _projection);
+        _currentShader->SetUniformMatrix4x4("u_view", _camera);
     }
     
     void GraphicsDevice::DisableShader()
@@ -114,7 +115,20 @@ namespace Graphics
 
     void GraphicsDevice::DebugMenu()
     {
+        static bool enabled = false;
+        if (ImGui::Button(enabled ? "Hide Debug Menu" : "Show Debug Menu")) enabled = !enabled;
+        
+        if (!enabled) return;
         ImGui::Text("Application Averages %fms/frame (~%f FPS)", 1000.0 / (double)ImGui::GetIO().Framerate, (double)ImGui::GetIO().Framerate);
+
+        static Maths::Matrix3D projMat = Maths::Matrix3D::PerspectiveProjectionFOV(45.0f, 4.0f / 3, 0.1f, 100.0f);
+        static Maths::Matrix3D orthMat = Maths::Matrix3D::OrthoProjection(-4, 4, -3, 3, 0.1f, 100);
+        static bool matMode = true; // proj / orth
+        
+        if (ImGui::Button(matMode ? "Use Projection Mode" : "Use Orthographic Mode")) {
+            matMode = !matMode;
+            SetProjection(matMode ? orthMat : projMat);
+        }
     }
 
     std::unique_ptr<GraphicsDevice> GraphicsDevice::Initialize()

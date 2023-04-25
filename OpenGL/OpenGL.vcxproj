@@ -112,6 +112,7 @@
       <PreprocessorDefinitions>GLEW_STATIC</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -272,6 +273,7 @@
     <Content Include="res\backup.txt" />
     <Content Include="res\game_planning.txt" />
     <Content Include="res\levels\level_test.json" />
+    <Content Include="res\shaders\basic_tex.glsl" />
     <Content Include="res\textures\block_texture_atl.json" />
     <Content Include="res\textures\simple_tm.png" />
     <Content Include="res\textures\test_atlas.png" />

@@ -28,7 +28,8 @@ namespace Graphics
         
         std::unique_ptr<Renderer>                    _renderer;
 
-        Maths::Matrix3D _projection = Maths::Matrix3D::OrthoProjection(-320, 320, -240, 240, -100, 100);
+        // Maths::Matrix3D::PerspectiveProjectionFOV(45.0f, 4.0f / 3, 0.1f, 100.0f);
+        Maths::Matrix3D _projection = Maths::Matrix3D::OrthoProjection(-4, 4, -3, 3, 0.1f, 100);
         Maths::Matrix3D _camera;
 
         GLFWwindow* _mainWindow;
@@ -51,9 +52,10 @@ namespace Graphics
         void UpdateMeshIndices() const;
 
         void ClearColor(const Maths::Vector3& color);
-        
-        bool WindowIsOpen() const { return !glfwWindowShouldClose(_mainWindow); }
 
+        [[nodiscard]] bool WindowIsOpen() const { return !glfwWindowShouldClose(_mainWindow); }
+
+        [[nodiscard]] Renderer& GetRenderer() const { return *_renderer; }
         Renderer& GetRenderer() { return *_renderer; }
         void EnableShader();
         void DisableShader();
@@ -75,6 +77,7 @@ namespace Graphics
 #undef SHADER_UNIF
         
         void SetCamera(const Maths::Matrix3D& camera) { _camera = camera; }
+        void SetProjection(const Maths::Matrix3D& proj) { _projection = proj; }
 
         void DebugMenu();
 

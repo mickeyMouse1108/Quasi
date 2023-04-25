@@ -9,7 +9,15 @@ namespace Maths {
         LEFT,
         UP,
         DOWN,
+        
+        POSITIVE_X = RIGHT,
+        NEGATIVE_X = LEFT,
+        POSITIVE_Y = UP,
+        NEGATIVE_Y = DOWN,
 
+        X_AXIS = POSITIVE_X,
+        Y_AXIS = POSITIVE_Y,
+        
         ZERO = 8,
         UNIT = 9
     };
@@ -22,6 +30,17 @@ namespace Maths {
         DOWN,
         FRONT,
         BACK,
+
+        POSITIVE_X = RIGHT,
+        NEGATIVE_X = LEFT,
+        POSITIVE_Y = UP,
+        NEGATIVE_Y = DOWN,
+        POSITIVE_Z = FRONT,
+        NEGATIVE_Z = BACK,
+        
+        X_AXIS = POSITIVE_X,
+        Y_AXIS = POSITIVE_Y,
+        Z_AXIS = POSITIVE_Z,
     
         ZERO = 8,
         UNIT = 9
@@ -37,6 +56,20 @@ namespace Maths {
         BACK,
         IN,
         OUT,
+
+        POSITIVE_X = RIGHT,
+        NEGATIVE_X = LEFT,
+        POSITIVE_Y = UP,
+        NEGATIVE_Y = DOWN,
+        POSITIVE_Z = FRONT,
+        NEGATIVE_Z = BACK,
+        POSITIVE_W = IN,
+        NEGATIVE_W = OUT,
+                
+        X_AXIS = POSITIVE_X,
+        Y_AXIS = POSITIVE_Y,
+        Z_AXIS = POSITIVE_Z,
+        W_AXIS = POSITIVE_W,
 
         ZERO = 8,
         UNIT = 9

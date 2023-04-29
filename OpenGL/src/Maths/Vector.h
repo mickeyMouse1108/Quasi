@@ -42,6 +42,12 @@ namespace Maths
     using Vector2 = Vec2<float>;
     using Vector3 = Vec3<float>;
     using Vector4 = Vec4<float>;
+    using Vec2f64 = Vec2<double>;
+    using Vec3f64 = Vec3<double>;
+    using Vec4f64 = Vec4<double>;
+    using Vec2d = Vec2<double>;
+    using Vec3d = Vec3<double>;
+    using Vec4d = Vec4<double>;
     using Vec2Int = Vec2<int>;
     using Vec3Int = Vec3<int>;
     using Vec4Int = Vec4<int>;

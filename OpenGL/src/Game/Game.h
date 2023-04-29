@@ -28,5 +28,7 @@ namespace Game
         void Update();
         void Render();
         bool IsWindowOpen() { return GraphicsDevice->WindowIsOpen(); }
+
+        static void TickRising();
     };
 }

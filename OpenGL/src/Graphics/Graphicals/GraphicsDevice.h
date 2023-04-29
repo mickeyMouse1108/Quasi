@@ -32,10 +32,13 @@ namespace Graphics
         Maths::Matrix3D _projection = Maths::Matrix3D::OrthoProjection(-4, 4, -3, 3, 0.1f, 100);
         Maths::Matrix3D _camera;
 
+        const Maths::Vec2Int _windowSize;
         GLFWwindow* _mainWindow;
+
+        inline static GraphicsDevice* Instance = nullptr;
     // public:
         public:
-        GraphicsDevice(GLFWwindow* window);
+        GraphicsDevice(GLFWwindow* window, Maths::Vec2Int winSize);
         using string = const std::string&;
 
         ~GraphicsDevice();
@@ -55,8 +58,9 @@ namespace Graphics
 
         [[nodiscard]] bool WindowIsOpen() const { return !glfwWindowShouldClose(_mainWindow); }
 
-        [[nodiscard]] Renderer& GetRenderer() const { return *_renderer; }
+        [[nodiscard]] const Renderer& GetRenderer() const { return *_renderer; }
         Renderer& GetRenderer() { return *_renderer; }
+        [[nodiscard]] Maths::Vec2Int GetWindowSize() const { return _windowSize; }
         void EnableShader();
         void DisableShader();
         void UseShader          (string shaderPath)                                 { _currentShader = std::make_unique<Shader>(shaderPath); }
@@ -81,9 +85,12 @@ namespace Graphics
 
         void DebugMenu();
 
+        static GraphicsDevice& GetDeviceInstance() { return *Instance; }
+        static GLFWwindow* GetMainWindow() { return Instance->_mainWindow; }
+
         //void Render(bool autoSort = true);
         
-        static std::unique_ptr<GraphicsDevice> Initialize();
+        static std::unique_ptr<GraphicsDevice> Initialize(Maths::Vec2Int winSize = { 640, 480 });
 
         friend class MeshObject;
     };

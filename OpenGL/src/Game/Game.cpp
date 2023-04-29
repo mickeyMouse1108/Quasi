@@ -1,5 +1,6 @@
 ﻿#include "Game.h"
 
+#include "IO/IO.h"
 #include "imgui.h"
 
 namespace Game
@@ -46,6 +47,7 @@ namespace Game
     
     void Game::Update()
     {
+        TickRising();
         // Time.Update();
     }
 
@@ -68,7 +70,11 @@ namespace Game
         
         GraphicsDevice->EndRender();
     }
-    
+
+    void Game::TickRising() {
+        IO::Update();
+    }
+
     Game::~Game()
     {
         // cube.Unbind();

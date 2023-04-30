@@ -49,7 +49,11 @@ namespace stdu {
         
         [[nodiscard]] const T& value() const { return *obj; }
         [[nodiscard]] const T& value_or(const T& none) const { return obj == nullptr ? none : *obj; }
+<<<<<<< HEAD
         [[nodiscard]] bool is_null() const { return obj == nullptr; }
+=======
+        [[nodiscard]] bool is_null() const { return obj != nullptr; }
+>>>>>>> b9abc8a1ada952e8f68ca326d5cbb380117fbd4e
         [[nodiscard]] bool equals(cref r) const {
             if (is_null() && r.is_null()) return true;
             if (is_null() ^  r.is_null()) return false;

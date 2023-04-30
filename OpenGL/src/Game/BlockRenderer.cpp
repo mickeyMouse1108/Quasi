@@ -92,12 +92,7 @@ namespace Game {
     }
 
     void BlockRenderer::UseTextureDispatch(const TextureDispatcher& disp) {
-        if (!disp.blockTextures.contains(ParentBlock->ID())) {
-            // default behaviour
-            int id = (int)ParentBlock->ID();
-            textureID = { id, id, id, id, id, id };
-            return;
-        }
+        if (!disp.blockTextures.contains(ParentBlock->ID())) return;
         
         UseTextureDispatch(disp.blockTextures.at(ParentBlock->ID()));
     }

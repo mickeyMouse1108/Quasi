@@ -3,7 +3,11 @@
 #include "Vector.h"
 
 namespace IO {
-    struct Mouse {
+    struct MouseT;
+    extern MouseT Mouse;
+    
+    // TODO: USE INTERFERE INSTEAD OF POLLING WITH GLFWMOSUECALLBACK
+    struct MouseT {
         static constexpr int LEFT_MOUSE   = 0;
         static constexpr int RIGHT_MOUSE  = 1;
         static constexpr int MIDDLE_MOUSE = 2;
@@ -12,7 +16,8 @@ namespace IO {
         int mouseStates = 0;
         int prevMouseStates = 0;
 
-        Mouse() = default;
+        MouseT() = default;
+        explicit MouseT(std::nullptr_t) {}
 
         void Update();
 

@@ -1,10 +1,10 @@
 #pragma once
-#include "Mouse.h"
+// ! THIS INCLUDES GLEW.H !
 
 namespace IO {
-    inline extern Mouse Mouse = {};
+    // inline extern MouseT Mouse;
+    // inline extern KeyboardT Keyboard;
 
-    inline void Update() {
-        Mouse.Update();
-    }
+    void Init();
+    void Update();
 }

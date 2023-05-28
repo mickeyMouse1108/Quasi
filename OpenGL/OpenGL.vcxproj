@@ -92,7 +92,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>src;src\Graphics\GLs;src\Graphics\Graphicals;src\Graphics\Meshes;src\Maths;src\Graphics\Utils\Textures;src/vendor/imgui;src/vendor;src/test;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;src\Graphics\GLs;src\Graphics\Graphicals;src\Graphics\Meshes;src\Maths;src\Graphics\Utils\Textures;src/IO;src/vendor/imgui;src/vendor;src/test;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
@@ -175,6 +175,8 @@
     <ClCompile Include="src\Graphics\Graphicals\MeshObject.cpp" />
     <ClCompile Include="src\Graphics\Utils\Textures\Texture.cpp" />
     <ClCompile Include="src\Graphics\Utils\Textures\TextureAtlas.cpp" />
+    <ClCompile Include="src\IO\IO.cpp" />
+    <ClCompile Include="src\IO\Keyboard.cpp" />
     <ClCompile Include="src\IO\Mouse.cpp" />
     <ClCompile Include="src\Maths\Matrix.cpp" />
     <ClCompile Include="src\test\TestBatchedTextured.cpp" />
@@ -241,6 +243,7 @@
     <ClInclude Include="src\Graphics\Utils\Textures\Texture.h" />
     <ClInclude Include="src\Graphics\Utils\Textures\TextureAtlas.h" />
     <ClInclude Include="src\IO\IO.h" />
+    <ClInclude Include="src\IO\Keyboard.h" />
     <ClInclude Include="src\IO\Mouse.h" />
     <ClInclude Include="src\Maths\Corner.h" />
     <ClInclude Include="src\Maths\Direction.h" />

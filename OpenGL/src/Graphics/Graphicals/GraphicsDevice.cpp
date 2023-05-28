@@ -1,5 +1,11 @@
-﻿#include "GraphicsDevice.h"
+﻿// because gl.h cant be included before glew.h, weird ordering
+
+#include "GraphicsDevice.h"
 #include "MeshObject.h"
+
+#include "IO.h"
+#include "Mouse.h"
+#include "Keyboard.h"
 
 #include <algorithm>
 #include <numeric>
@@ -7,8 +13,6 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-#include "IO.h"
-#include "IO/IO.h"
 
 namespace Graphics
 {
@@ -24,6 +28,7 @@ namespace Graphics
         _vertexArray->AddBuffer(*_vertexBuffer);
 
         Instance = this;
+        IO::Init();
     }
 
     GraphicsDevice::~GraphicsDevice() {
@@ -131,26 +136,34 @@ namespace Graphics
 
             if (ImGui::TreeNode("Advanced")) {
                 ImGui::Text("Pressed: ");
-                for (int i = 0; i < IO::Mouse::LAST_MOUSE; ++i) {
+                for (int i = 0; i < IO::MouseT::LAST_MOUSE; ++i) {
                     if (!IO::Mouse.ButtonPressed(i)) continue;
-                    ImGui::Text("   %s", IO::Mouse::MouseButtonToStr(i));
+                    ImGui::Text("   %s", IO::MouseT::MouseButtonToStr(i));
                 }
 
                 ImGui::TextDisabled("// The following below actually works, you just can't see it.");
 
                 ImGui::Text("On Pressed: ");
-                for (int i = 0; i < IO::Mouse::LAST_MOUSE; ++i) {
+                for (int i = 0; i < IO::MouseT::LAST_MOUSE; ++i) {
                     if (!IO::Mouse.ButtonOnPress(i)) continue;
-                    ImGui::Text("   %s", IO::Mouse::MouseButtonToStr(i));
+                    ImGui::Text("   %s", IO::MouseT::MouseButtonToStr(i));
                 }
 
                 ImGui::Text("On Release: ");
-                for (int i = 0; i < IO::Mouse::LAST_MOUSE; ++i) {
+                for (int i = 0; i < IO::MouseT::LAST_MOUSE; ++i) {
                     if (!IO::Mouse.ButtonOnRelease(i)) continue;
-                    ImGui::Text("   %s", IO::Mouse::MouseButtonToStr(i));
+                    ImGui::Text("   %s", IO::MouseT::MouseButtonToStr(i));
                 }
                 
                 ImGui::TreePop();
+            }
+        }
+
+        if (ImGui::CollapsingHeader("Keyboard Input")) {
+            ImGui::Text("Keys Pressed Are:");
+
+            for (const auto key : IO::Keyboard.KeysPressed()) {
+                ImGui::Text("   %s", IO::KeyboardT::KeyToStr(key));
             }
         }
         
@@ -164,7 +177,6 @@ namespace Graphics
                 SetProjection(matMode ? orthMat : projMat);
             }
         }
-
         // ImGui::ShowDemoWindow();
     }
 

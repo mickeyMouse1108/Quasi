@@ -61,6 +61,9 @@ namespace Graphics
         [[nodiscard]] const Renderer& GetRenderer() const { return *_renderer; }
         Renderer& GetRenderer() { return *_renderer; }
         [[nodiscard]] Maths::Vec2Int GetWindowSize() const { return _windowSize; }
+        [[nodiscard]] const GLFWwindow* GetWindow() const { return _mainWindow; }
+        GLFWwindow* GetWindow() { return _mainWindow; }
+        
         void EnableShader();
         void DisableShader();
         void UseShader          (string shaderPath)                                 { _currentShader = std::make_unique<Shader>(shaderPath); }

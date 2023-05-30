@@ -134,8 +134,11 @@
 namespace IO {
     KeyboardT Keyboard { nullptr };
     
-    KeyboardT::KeyboardT() {
-        glfwSetKeyCallback(Graphics::GraphicsDevice::GetMainWindow(),
+    auto* KeyboardT::inputWindow() { return graphicsDevice->GetWindow(); }
+    const auto* KeyboardT::inputWindow() const { return graphicsDevice->GetWindow(); }
+    
+    KeyboardT::KeyboardT(Graphics::GraphicsDevice& gd) : graphicsDevice(gd) {
+        glfwSetKeyCallback(inputWindow(),
             // clever hack >:)
             [](auto... args) { Keyboard.OnGlfwKeyCallback(args...); } );
     }

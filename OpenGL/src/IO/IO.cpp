@@ -3,9 +3,9 @@
 #include "Keyboard.h"
 
 namespace IO {
-    void Init() {
-        Mouse = {};
-        Keyboard = {};
+    void Init(Graphics::GraphicsDevice& gd) {
+        Mouse = MouseT { gd };
+        Keyboard = KeyboardT { gd };
     }
 
     void Update() {

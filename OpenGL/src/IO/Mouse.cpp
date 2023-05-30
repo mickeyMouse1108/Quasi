@@ -1,33 +1,37 @@
-#include "Mouse.h"
-
 #include "GraphicsDevice.h"
+
+#include "Mouse.h"
 
 namespace IO {
     MouseT Mouse { nullptr };
     
+    auto* MouseT::inputWindow() { return graphicsDevice->GetWindow(); }
+    const auto* MouseT::inputWindow() const { return graphicsDevice->GetWindow(); }
+
+    MouseT::MouseT(Graphics::GraphicsDevice& gd) : graphicsDevice(gd) {}
+
     void MouseT::Update() {
-        GLFWwindow* win = Graphics::GraphicsDevice::GetMainWindow();
         prevMouseStates = mouseStates;
         mouseStates = 0;
         for (int i = 0; i <= LAST_MOUSE; ++i) {
-            mouseStates |= glfwGetMouseButton(win, i) << i;
+            mouseStates |= glfwGetMouseButton(inputWindow(), i) << i;
         }
     }
 
-    Maths::Vec2d MouseT::GetMousePosPx() const {
+    Maths::Vec2d MouseT::GetMousePosPx() {
         Maths::Vec2d pos;
-        glfwGetCursorPos(Graphics::GraphicsDevice::GetMainWindow(), &pos.x, &pos.y);
+        glfwGetCursorPos(inputWindow(), &pos.x, &pos.y);
         return pos;
     }
 
-    Maths::Vec2d MouseT::GetMousePos() const {
-        auto r01 = GetMousePosPx() / Graphics::GraphicsDevice::GetDeviceInstance().GetWindowSize(); // range 0 - 1
+    Maths::Vec2d MouseT::GetMousePos() {
+        auto r01 = GetMousePosPx() / graphicsDevice->GetWindowSize(); // range 0 - 1
         return r01 * 2.0 - 1.0;
     }
 
-    bool MouseT::IsInWindow() const {
+    bool MouseT::IsInWindow() {
         auto [mouseX,  mouseY ] = GetMousePosPx();
-        auto [borderX, borderY] = Graphics::GraphicsDevice::GetDeviceInstance().GetWindowSize();
+        auto [borderX, borderY] = graphicsDevice->GetWindowSize();
         return 0 <= mouseX && mouseX <= borderX &&
                0 <= mouseY && mouseY <= borderY;
     }

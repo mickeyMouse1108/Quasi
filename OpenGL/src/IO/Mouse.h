@@ -1,6 +1,11 @@
 #pragma once
 
 #include "Vector.h"
+#include "stdu/ref.h"
+
+namespace Graphics {
+    class GraphicsDevice;
+}
 
 namespace IO {
     struct MouseT;
@@ -16,14 +21,16 @@ namespace IO {
         int mouseStates = 0;
         int prevMouseStates = 0;
 
-        MouseT() = default;
+        stdu::ref<Graphics::GraphicsDevice> graphicsDevice;
+
+        explicit MouseT(Graphics::GraphicsDevice& gd);
         explicit MouseT(std::nullptr_t) {}
 
         void Update();
 
-        [[nodiscard]] Maths::Vec2d GetMousePosPx() const;
-        [[nodiscard]] Maths::Vec2d GetMousePos() const;
-        [[nodiscard]] bool IsInWindow() const;
+        Maths::Vec2d GetMousePosPx();
+        Maths::Vec2d GetMousePos();
+        bool IsInWindow();
         
         [[nodiscard]] int  PressedState()         const;
         [[nodiscard]] bool LeftPressed()          const;
@@ -52,5 +59,9 @@ namespace IO {
         static bool IsStandardMouseButton(int btn);
         static bool IsValidMouseButton(int btn);
         static const char* MouseButtonToStr(int btn);
+
+        private:
+            auto* inputWindow();
+            [[nodiscard]] const auto* inputWindow() const;
     };
 }

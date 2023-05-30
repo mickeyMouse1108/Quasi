@@ -28,7 +28,7 @@ namespace Graphics
         _vertexArray->AddBuffer(*_vertexBuffer);
 
         Instance = this;
-        IO::Init();
+        IO::Init(*this);
     }
 
     GraphicsDevice::~GraphicsDevice() {

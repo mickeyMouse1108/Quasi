@@ -5,6 +5,7 @@
 
 #include "NumTypes.h"
 #include "stdu/enum_utils.h"
+#include "stdu/ref.h"
 
 namespace IO {
 #define KEY_IMPL_GLFW(K, NAME_PRE, GLFW_PRE) NAME_PRE##K = GLFW_KEY_##GLFW_PRE##K
@@ -97,7 +98,7 @@ namespace IO {
     extern KeyboardT Keyboard;
     
     struct KeyboardT {
-        KeyboardT();
+        explicit KeyboardT(Graphics::GraphicsDevice& gd);
         explicit KeyboardT(std::nullptr_t) {}
         
         static bool IsValidKey(Key key);
@@ -122,11 +123,16 @@ namespace IO {
         [[nodiscard]] std::vector<Key> KeysPressed() const;
 
         static const char* KeyToStr(Key key);
+
+        stdu::ref<Graphics::GraphicsDevice> graphicsDevice;
         
         private:
             using Keyset = std::array<uint64, KEYSET_SIZE>;
             Keyset currKeySet = {};
             Keyset prevKeySet = {};
+
+            auto* inputWindow();
+            [[nodiscard]] const auto* inputWindow() const;
 
             [[nodiscard]] bool getCurrKeyStatus(KeyIndex i) const { return getKeyStatusOf(currKeySet, i); }
             [[nodiscard]] bool getPrevKeyStatus(KeyIndex i) const { return getKeyStatusOf(prevKeySet, i); }

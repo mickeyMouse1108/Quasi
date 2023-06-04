@@ -4,30 +4,34 @@
 #include "VertexBufferLayout.h"
 #include "VertexElement.h"
 
-namespace Graphics
-{
-    class VertexArray
-    {
-    private:
-        unsigned int rendererID;
-    public:
-        VertexArray();
-        ~VertexArray();
+namespace Graphics {
+    class VertexArray {
+        private:
+            uint rendererID = 0;
+        public:
+            VertexArray();
+            ~VertexArray();
 
-        void AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout);
-        
-        template <typename T>
-        void AddBuffer(const DynamicVertexBuffer<T>& vb) = delete;
-        template <>
-        void AddBuffer<float>(const DynamicVertexBuffer<float>& vb);
-        template <>
-        void AddBuffer<VertexColorTexture3D>(const DynamicVertexBuffer<VertexColorTexture3D>& vb);
-        template <>
-        void AddBuffer<VertexColorTextureAtlas3D>(const DynamicVertexBuffer<VertexColorTextureAtlas3D>& vb);
-        template <>
-        void AddBuffer<VertexColor3D>(const DynamicVertexBuffer<VertexColor3D>& vb);
-        
-        void Bind() const;
-        void Unbind() const;
+            void AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout);
+            
+            template <class T>
+            void AddBuffer(const DynamicVertexBuffer<T>& vb) = delete;
+            
+            void Bind() const;
+            void Unbind() const;
+
+        template <class T>
+        using VBO = const DynamicVertexBuffer<T>&;
     };
+
+    template <>
+    void VertexArray::AddBuffer(VBO<float> vb);
+    template <>
+    void VertexArray::AddBuffer(VBO<VertexColorTexture3D> vb);
+    template <>
+    void VertexArray::AddBuffer(VBO<VertexColorTextureAtlas3D> vb);
+    template <>
+    void VertexArray::AddBuffer(VBO<VertexColor3D> vb);
+
+    
 }

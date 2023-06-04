@@ -1,18 +1,18 @@
 #pragma once
+#include "NumTypes.h"
 
-namespace Graphics
-{
+namespace Graphics {
 	class IndexBuffer {
-	private:
-		unsigned int rendererID;
-		unsigned int length;
-	public:
-		IndexBuffer(const void* data, unsigned int length);
-		~IndexBuffer();
+		private:
+			uint rendererID = 0;
+			uint length = 0;
+		public:
+			IndexBuffer(const void* data, uint length);
+			~IndexBuffer();
 
-		void Bind() const;
-		void Unbind() const;
+			void Bind() const;
+			void Unbind() const;
 
-		inline unsigned int GetLength() const { return length; }
+			[[nodiscard]] uint GetLength() const { return length; }
 	};
 }

@@ -1,12 +1,11 @@
 #include "IndexBuffer.h"
 #include "Debugging.h"
 
-namespace Graphics
-{
-    IndexBuffer::IndexBuffer(const void* data, unsigned int length) : length(length) {
+namespace Graphics {
+    IndexBuffer::IndexBuffer(const void* data, uint length) : length(length) {
         GLCALL(glGenBuffers(1, &rendererID));
         GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rendererID));
-        GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, length * sizeof(unsigned int), data, GL_STATIC_DRAW));
+        GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, length * sizeof(uint), data, GL_STATIC_DRAW));
     }
 
     IndexBuffer::~IndexBuffer() {

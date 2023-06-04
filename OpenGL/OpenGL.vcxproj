@@ -227,7 +227,6 @@
     <ClInclude Include="src\Game\World.h" />
     <ClInclude Include="src\Graphics\GLs\DynamicIndexBuffer.h" />
     <ClInclude Include="src\Graphics\GLs\DynamicVertexBuffer.h" />
-    <ClInclude Include="src\Graphics\GLs\Graphics.h" />
     <ClInclude Include="src\Graphics\GLs\IndexBuffer.h" />
     <ClInclude Include="src\Graphics\GLs\Renderer.h" />
     <ClInclude Include="src\Graphics\GLs\Shader.h" />

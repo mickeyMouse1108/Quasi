@@ -4,16 +4,13 @@
 
 #include "Debugging.h"
 
-namespace Graphics
-{
-    Shader::Shader(const std::string& filepath) : rendererID(0)
-    {
+namespace Graphics {
+    Shader::Shader(stringr filepath) : rendererID(0) {
         ShaderProgramSource shadersrc = ParseShader(filepath);
         rendererID = CreateShader(shadersrc.vertexShader, shadersrc.fragmentShader);
     }
 
-    Shader::~Shader()
-    {
+    Shader::~Shader() {
         GLCALL(glDeleteProgram(rendererID));
     }
 
@@ -25,18 +22,18 @@ namespace Graphics
         GLCALL(glUseProgram(0));
     }
 
-    unsigned Shader::GetUniformLocation(const std::string& name) {
-        if (uniformCache.find(name) != uniformCache.end())
+    uint Shader::GetUniformLocation(stringr name) {
+        if (uniformCache.contains(name))
             return uniformCache[name];
     
-        GLCALL(int location = glGetUniformLocation(rendererID, name.c_str()));
+        GLCALL(const int location = glGetUniformLocation(rendererID, name.c_str()));
         ASSERT(location != -1);
         uniformCache[name] = location;
         return location;
     }
 
 
-    ShaderProgramSource Shader::ParseShader(const std::string& filepath) {
+    ShaderProgramSource Shader::ParseShader(stringr filepath) {
         std::ifstream stream(filepath);
 
         enum class ShaderType {
@@ -62,9 +59,9 @@ namespace Graphics
 
         return ShaderProgramSource{ ss[0].str(), ss[1].str() };
     }
-
-    unsigned int Shader::CompileShader(const std::string& source, unsigned int type) {
-        unsigned int id = glCreateShader(type);
+    
+    uint Shader::CompileShader(stringr source, uint type) {
+        const uint id = glCreateShader(type);
         const char* src = source.c_str();
         glShaderSource(id, 1, &src, nullptr);
         glCompileShader(id);
@@ -86,10 +83,10 @@ namespace Graphics
         return id;
     }
 
-    unsigned int Shader::CreateShader(const std::string& vtx, const std::string& frg) {
-        unsigned int program = glCreateProgram();
-        unsigned int vs = CompileShader(vtx, GL_VERTEX_SHADER);
-        unsigned int fs = CompileShader(frg, GL_FRAGMENT_SHADER);
+    uint Shader::CreateShader(stringr vtx, stringr frg) {
+        const uint program = glCreateProgram();
+        const uint vs = CompileShaderVert(vtx);
+        const uint fs = CompileShaderFrag(frg);
 
         GLCALL(glAttachShader(program, vs));
         GLCALL(glAttachShader(program, fs));

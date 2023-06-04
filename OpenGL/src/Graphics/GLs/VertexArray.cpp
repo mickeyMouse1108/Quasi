@@ -2,36 +2,31 @@
 
 #include "../Debugging.h"
 
-namespace Graphics
-{
-    VertexArray::VertexArray()
-    {
+namespace Graphics {
+    VertexArray::VertexArray() {
         GLCALL(glGenVertexArrays(1, &rendererID));
     }
 
-    VertexArray::~VertexArray()
-    {
+    VertexArray::~VertexArray() {
         GLCALL(glDeleteVertexArrays(1, &rendererID));
     }
 
-    void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout)
-    {
+    void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout) {
         Bind();
         vb.Bind();
         const std::vector<VertexBufferElement>& elements = layout.GetElements();
-        unsigned int offset = 0;
-        for (unsigned int i = 0; i < elements.size(); i++)
+        uint offset = 0;
+        for (uint i = 0; i < elements.size(); i++)
         {
-            const VertexBufferElement& elem = elements[i];
+            const auto& elem = elements[i];
             GLCALL(glEnableVertexAttribArray(i));
-            GLCALL(glVertexAttribPointer(i, elem.count, elem.type, elem.normalized, layout.GetStride(), (const void*)offset));
+            GLCALL(glVertexAttribPointer(i, elem.count, elem.type, elem.normalized, layout.GetStride(), (const void*)offset));  // NOLINT(performance-no-int-to-ptr)
             offset += elem.count * VertexBufferElement::sizeofType(elem.type);
         }
     }
 
     template <>
-    void VertexArray::AddBuffer<float>(const DynamicVertexBuffer<float>& vb)
-    {
+    void VertexArray::AddBuffer(VBO<float> vb) {
         Bind();
         vb.Bind();
         
@@ -40,8 +35,7 @@ namespace Graphics
     }
 
     template <>
-    void VertexArray::AddBuffer<VertexColorTexture3D>(const DynamicVertexBuffer<VertexColorTexture3D>& vb)
-    {
+    void VertexArray::AddBuffer(VBO<VertexColorTexture3D> vb) {
         Bind();
         vb.Bind();
 
@@ -61,7 +55,7 @@ namespace Graphics
     }
 
     template <>
-    void VertexArray::AddBuffer<VertexColorTextureAtlas3D>(const DynamicVertexBuffer<VertexColorTextureAtlas3D>& vb) {
+    void VertexArray::AddBuffer(VBO<VertexColorTextureAtlas3D> vb) {
         Bind();
         vb.Bind();
 
@@ -81,8 +75,7 @@ namespace Graphics
     }
 
     template <>
-    void VertexArray::AddBuffer<VertexColor3D>(const DynamicVertexBuffer<VertexColor3D>& vb)
-    {
+    void VertexArray::AddBuffer(VBO<VertexColor3D> vb) {
         Bind();
         vb.Bind();
 
@@ -95,13 +88,11 @@ namespace Graphics
         GLCALL(glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Color)));
     }
 
-    void VertexArray::Bind() const
-    {
+    void VertexArray::Bind() const {
         GLCALL(glBindVertexArray(rendererID));
     }
 
-    void VertexArray::Unbind() const
-    {
+    void VertexArray::Unbind() const {
         GLCALL(glBindVertexArray(0));
     }
 }

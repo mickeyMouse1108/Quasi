@@ -3,7 +3,7 @@
 
 namespace Graphics
 {
-    VertexBuffer::VertexBuffer(const void* data, unsigned int size) {
+    VertexBuffer::VertexBuffer(const void* data, uint size) {
         GLCALL(glGenBuffers(1, &rendererID));
         GLCALL(glBindBuffer(GL_ARRAY_BUFFER, rendererID));
         GLCALL(glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW));

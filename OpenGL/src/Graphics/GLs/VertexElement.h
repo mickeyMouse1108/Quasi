@@ -1,26 +1,35 @@
 ﻿#pragma once
 #include "Vector.h"
 #include "Matrix.h"
+#include "VertexBufferLayout.h"
 
-using intf = float;
+#define VERTEX_COMP Graphics::VertexBufferComponent::
+#define VERTEX_STRUCT_LAYOUT inline static const Graphics::VertexBufferLayout __VERTEX_LAYOUT
+#define VERTEX_LAYOUT_OF(T) T::__VERTEX_LAYOUT
 
 struct VertexColorTexture3D {
     Maths::Vector3 Position;
     Maths::Vector4 Color;
     Maths::Vector2 TextureCoordinate;
-    intf TextureID = 0;
+    int TextureID = 0;
+    
+    VERTEX_STRUCT_LAYOUT = { VERTEX_COMP Vec3(), VERTEX_COMP Vec4(), VERTEX_COMP Vec2(), VERTEX_COMP Int() };
 };
 
 struct VertexColorTextureAtlas3D {
     Maths::Vector3 Position;
     Maths::Vector4 Color;
-    intf TextureAtlID = 0;
-    intf TextureCorner = 0;
+    int TextureAtlID = 0;
+    int TextureCorner = 0;
+
+    VERTEX_STRUCT_LAYOUT = { VERTEX_COMP Vec3(), VERTEX_COMP Vec4(), VERTEX_COMP Int(), VERTEX_COMP Int() };
 };
 
 struct VertexColor3D {
     Maths::Vector3 Position;
     Maths::Vector4 Color;
+
+    VERTEX_STRUCT_LAYOUT = { VERTEX_COMP Vec3(), VERTEX_COMP Vec4() };
 };
 
 inline VertexColor3D operator*(const Maths::Matrix3D& transform, const VertexColor3D& vec) {

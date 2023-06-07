@@ -11,11 +11,11 @@ namespace Graphics {
         public:
             VertexArray();
             ~VertexArray();
-
+        
+            void AddBuffer(const VertexBufferLayout& layout);
             void AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout);
-            
             template <class T>
-            void AddBuffer(const DynamicVertexBuffer<T>& vb) = delete;
+            void AddBuffer(const DynamicVertexBuffer<T>& vb);
             
             void Bind() const;
             void Unbind() const;
@@ -24,14 +24,10 @@ namespace Graphics {
         using VBO = const DynamicVertexBuffer<T>&;
     };
 
-    template <>
-    void VertexArray::AddBuffer(VBO<float> vb);
-    template <>
-    void VertexArray::AddBuffer(VBO<VertexColorTexture3D> vb);
-    template <>
-    void VertexArray::AddBuffer(VBO<VertexColorTextureAtlas3D> vb);
-    template <>
-    void VertexArray::AddBuffer(VBO<VertexColor3D> vb);
-
-    
+    template <class T>
+    void VertexArray::AddBuffer(const DynamicVertexBuffer<T>& vb) {
+        Bind();
+        vb.Bind();
+        this->AddBuffer(VERTEX_LAYOUT_OF(T));
+    }
 }

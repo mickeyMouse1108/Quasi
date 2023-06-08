@@ -47,49 +47,52 @@ namespace Test
             { -0.5f, -0.5f, -0.5f }, // ---
         };
 
+#define V VertexColor3D
+        
         {
-            cubeFaces[0] = { // left: red
-                { cubeVertices[0], { 1.0f, 0.0f, 0.0f, 1.0f } },
-                { cubeVertices[1], { 1.0f, 0.0f, 0.0f, 1.0f } },
-                { cubeVertices[2], { 1.0f, 0.0f, 0.0f, 1.0f } },
-                { cubeVertices[3], { 1.0f, 0.0f, 0.0f, 1.0f } },
-            };
+            cubeFaces[0] = MESH_QUAD_CREATE(VertexColor3D,  // left: red
+                V { cubeVertices[0], { 1.0f, 0.0f, 0.0f, 1.0f } },
+                V { cubeVertices[1], { 1.0f, 0.0f, 0.0f, 1.0f } },
+                V { cubeVertices[2], { 1.0f, 0.0f, 0.0f, 1.0f } },
+                V { cubeVertices[3], { 1.0f, 0.0f, 0.0f, 1.0f } },
+            );
 
-            cubeFaces[1] = { // right: cyan
-                { cubeVertices[4], { 0.0f, 1.0f, 1.0f, 1.0f } },
-                { cubeVertices[5], { 0.0f, 1.0f, 1.0f, 1.0f } },
-                { cubeVertices[6], { 0.0f, 1.0f, 1.0f, 1.0f } },
-                { cubeVertices[7], { 0.0f, 1.0f, 1.0f, 1.0f } },
-            };
+            cubeFaces[1] = MESH_QUAD_CREATE(VertexColor3D,  // right: cyan
+                V { cubeVertices[4], { 0.0f, 1.0f, 1.0f, 1.0f } },
+                V { cubeVertices[5], { 0.0f, 1.0f, 1.0f, 1.0f } },
+                V { cubeVertices[6], { 0.0f, 1.0f, 1.0f, 1.0f } },
+                V { cubeVertices[7], { 0.0f, 1.0f, 1.0f, 1.0f } },
+            );
 
-            cubeFaces[2] = { // up: green
-                { cubeVertices[0], { 0.0f, 1.0f, 0.0f, 1.0f } },
-                { cubeVertices[1], { 0.0f, 1.0f, 0.0f, 1.0f } },
-                { cubeVertices[4], { 0.0f, 1.0f, 0.0f, 1.0f } },
-                { cubeVertices[5], { 0.0f, 1.0f, 0.0f, 1.0f } },
-            };
+            cubeFaces[2] = MESH_QUAD_CREATE(VertexColor3D,  // up: green
+                V { cubeVertices[0], { 0.0f, 1.0f, 0.0f, 1.0f } },
+                V { cubeVertices[1], { 0.0f, 1.0f, 0.0f, 1.0f } },
+                V { cubeVertices[4], { 0.0f, 1.0f, 0.0f, 1.0f } },
+                V { cubeVertices[5], { 0.0f, 1.0f, 0.0f, 1.0f } },
+            );
 
-            cubeFaces[3] = { // down: purp
-                { cubeVertices[2], { 1.0f, 0.0f, 1.0f, 1.0f } },
-                { cubeVertices[3], { 1.0f, 0.0f, 1.0f, 1.0f } },
-                { cubeVertices[6], { 1.0f, 0.0f, 1.0f, 1.0f } },
-                { cubeVertices[7], { 1.0f, 0.0f, 1.0f, 1.0f } },
-            };
+            cubeFaces[3] = MESH_QUAD_CREATE(VertexColor3D,  // down: purp
+                V { cubeVertices[2], { 1.0f, 0.0f, 1.0f, 1.0f } },
+                V { cubeVertices[3], { 1.0f, 0.0f, 1.0f, 1.0f } },
+                V { cubeVertices[6], { 1.0f, 0.0f, 1.0f, 1.0f } },
+                V { cubeVertices[7], { 1.0f, 0.0f, 1.0f, 1.0f } },
+            );
 
-            cubeFaces[4] = { // back: blue
-                { cubeVertices[0], { 0.0f, 0.0f, 1.0f, 1.0f } },
-                { cubeVertices[2], { 0.0f, 0.0f, 1.0f, 1.0f } },
-                { cubeVertices[4], { 0.0f, 0.0f, 1.0f, 1.0f } },
-                { cubeVertices[6], { 0.0f, 0.0f, 1.0f, 1.0f } },
-            };
+            cubeFaces[4] = MESH_QUAD_CREATE(VertexColor3D,  // back: blue
+                V { cubeVertices[0], { 0.0f, 0.0f, 1.0f, 1.0f } },
+                V { cubeVertices[2], { 0.0f, 0.0f, 1.0f, 1.0f } },
+                V { cubeVertices[4], { 0.0f, 0.0f, 1.0f, 1.0f } },
+                V { cubeVertices[6], { 0.0f, 0.0f, 1.0f, 1.0f } },
+            );
 
-            cubeFaces[5] = { // front: yellow
-                { cubeVertices[1], { 1.0f, 1.0f, 0.0f, 1.0f } },
-                { cubeVertices[3], { 1.0f, 1.0f, 0.0f, 1.0f } },
-                { cubeVertices[5], { 1.0f, 1.0f, 0.0f, 1.0f } },
-                { cubeVertices[7], { 1.0f, 1.0f, 0.0f, 1.0f } },
-            };
+            cubeFaces[5] = MESH_QUAD_CREATE(VertexColor3D,  // front: yellow
+                V { cubeVertices[1], { 1.0f, 1.0f, 0.0f, 1.0f } },
+                V { cubeVertices[3], { 1.0f, 1.0f, 0.0f, 1.0f } },
+                V { cubeVertices[5], { 1.0f, 1.0f, 0.0f, 1.0f } },
+                V { cubeVertices[7], { 1.0f, 1.0f, 0.0f, 1.0f } },
+            );
         }
+#undef V
 
         for (int i = 0; i < 6; ++i) cubeFaces[i].AddTo(*vb, *ib);
     }

@@ -69,17 +69,17 @@ namespace Graphics {
 
 #define VBE VertexBufferComponent::
         
-            void PushFloat()      { Push(VBE Float());     }
-            void PushDouble()     { Push(VBE Double());    }
-            void PushInt()        { Push(VBE Int());       }
-            void PushChar()       { Push(VBE SByte());     }
-            void PushByte()       { Push(VBE Byte());      }
-            void PushVector2()    { Push(VBE Vec2());      }
-            void PushVector3()    { Push(VBE Vec3());      }
-            void PushVector4()    { Push(VBE Vec4());      }
-            void PushVector2Int() { Push(VBE IVec2());     }
-            void PushVector3Int() { Push(VBE IVec3());     }
-            void PushVector4Int() { Push(VBE IVec4());     }
+            void PushFloat()      { Push(VBE Float());  }
+            void PushDouble()     { Push(VBE Double()); }
+            void PushInt()        { Push(VBE Int());    }
+            void PushChar()       { Push(VBE SByte());  }
+            void PushByte()       { Push(VBE Byte());   }
+            void PushVector2()    { Push(VBE Vec2());   }
+            void PushVector3()    { Push(VBE Vec3());   }
+            void PushVector4()    { Push(VBE Vec4());   }
+            void PushVector2Int() { Push(VBE IVec2());  }
+            void PushVector3Int() { Push(VBE IVec3());  }
+            void PushVector4Int() { Push(VBE IVec4());  }
 
 #undef VBE
 

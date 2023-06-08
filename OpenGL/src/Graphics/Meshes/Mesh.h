@@ -3,20 +3,17 @@
 #include "DynamicVertexBuffer.h"
 #include "Matrix.h"
 
-namespace Graphics
-{
-    template<typename TVertex = Maths::Vector3>
-    class Mesh
-    {
-    public:
-        Mesh() = default;
-        virtual ~Mesh() = default;
-
-        virtual void GetData(unsigned int* vertexSize, TVertex** vertices, unsigned int* indexSize, unsigned int** indices) = 0;
-        virtual void AddTo(DynamicVertexBuffer<TVertex>& vb, DynamicIndexBuffer& ib) = 0;
-
-        virtual void Clone(Mesh<TVertex>*& other) const = 0;
+namespace Graphics {
+    template<class TVertex = Maths::Vector3>
+    class Mesh {
+        public:
+            Mesh() = default;
+            virtual ~Mesh() = default;  // NOLINT(clang-diagnostic-deprecated-copy-with-dtor)
         
-        virtual void Transform(const Maths::Matrix3D& transform) = 0;
+            virtual void AddTo(DynamicVertexBuffer<TVertex>& vb, DynamicIndexBuffer& ib) = 0;
+            virtual void Clone(Mesh& other) const = 0;
+            virtual void Clone(std::unique_ptr<Mesh>& other) const = 0;
+            
+            virtual void Transform(const Maths::Matrix3D& transform) = 0;
     };
 }

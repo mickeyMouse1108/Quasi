@@ -5,10 +5,10 @@
 #include <GL/glew.h>
 
 namespace Graphics {
-    DynamicIndexBuffer::DynamicIndexBuffer(unsigned int size) : bufferSize(size) {
+    DynamicIndexBuffer::DynamicIndexBuffer(uint size) : bufferSize(size) {
         glGenBuffers(1, &rendererID);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rendererID);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * size, nullptr, GL_DYNAMIC_DRAW);  // NOLINT(bugprone-narrowing-conversions, cppcoreguidelines-narrowing-conversions)
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * size, nullptr, GL_DYNAMIC_DRAW);  // NOLINT(bugprone-narrowing-conversions, cppcoreguidelines-narrowing-conversions)
     }
 
     DynamicIndexBuffer::~DynamicIndexBuffer() {
@@ -25,12 +25,12 @@ namespace Graphics {
 
     void DynamicIndexBuffer::SetData(const uint* data, uint size) {
         Bind();
-        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, size * sizeof(unsigned int), data);  // NOLINT(bugprone-narrowing-conversions, cppcoreguidelines-narrowing-conversions)
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, size * sizeof(uint), data);  // NOLINT(bugprone-narrowing-conversions, cppcoreguidelines-narrowing-conversions)
     }
 
-    void DynamicIndexBuffer::SetDataWhole(const unsigned* data) {
+    void DynamicIndexBuffer::SetDataWhole(const uint* data) {
         Bind();
-        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, bufferSize * sizeof(unsigned), data);  // NOLINT(bugprone-narrowing-conversions, cppcoreguidelines-narrowing-conversions)
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, bufferSize * sizeof(uint), data);  // NOLINT(bugprone-narrowing-conversions, cppcoreguidelines-narrowing-conversions)
     }
 
     void DynamicIndexBuffer::ClearData(bool shallowClear) {
@@ -39,21 +39,22 @@ namespace Graphics {
         indexOffset = 0;
         if (shallowClear) return;
         const std::vector<uint> clear { bufferSize, 0 };
-        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, bufferSize * sizeof(unsigned), clear.data());  // NOLINT(bugprone-narrowing-conversions, cppcoreguidelines-narrowing-conversions)
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, bufferSize * sizeof(uint), clear.data());  // NOLINT(bugprone-narrowing-conversions, cppcoreguidelines-narrowing-conversions)
     }
 
-    void DynamicIndexBuffer::AddData(const uint* data, uint size, uint maxIndex) {
+    void DynamicIndexBuffer::AddData(const uint* data, uint size, int maxIndex) {
         std::vector<uint> dataOff(size);
         const uint indexOff = indexOffset;
         std::transform(data, data + size, dataOff.begin(), [=](uint i){ return i + indexOff; } );
-        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, dataOffset * sizeof(unsigned), size * sizeof(unsigned), dataOff.data());  // NOLINT(bugprone-narrowing-conversions, cppcoreguidelines-narrowing-conversions)
+        maxIndex = maxIndex == -1 ? *std::ranges::max_element(dataOff) : (maxIndex + indexOffset);  // NOLINT(bugprone-narrowing-conversions, cppcoreguidelines-narrowing-conversions)
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, dataOffset * sizeof(uint), size * sizeof(uint), dataOff.data());  // NOLINT(bugprone-narrowing-conversions, cppcoreguidelines-narrowing-conversions)
         dataOffset += size;
-        indexOffset += maxIndex;
+        indexOffset = maxIndex + 1;
     }
 
     void DynamicIndexBuffer::AddData(uint data) {
         const uint dataOff = data + indexOffset;
-        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, dataOffset * sizeof(unsigned), sizeof(unsigned), (const void*)dataOff);  // NOLINT(bugprone-narrowing-conversions, cppcoreguidelines-narrowing-conversions, performance-no-int-to-ptr)
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, dataOffset * sizeof(uint), sizeof(uint), (const void*)dataOff);  // NOLINT(bugprone-narrowing-conversions, cppcoreguidelines-narrowing-conversions, performance-no-int-to-ptr)
         ++dataOffset;
         indexOffset = std::max(dataOff, indexOffset) + 1;
     }

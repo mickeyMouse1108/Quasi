@@ -1,7 +1,9 @@
 ﻿#pragma once
 #include "Debugging.h"
 #include "NumTypes.h"
+
 #include <vector>
+#include <initializer_list>
 
 namespace Graphics {
     template <class T>
@@ -18,13 +20,19 @@ namespace Graphics {
             void Unbind() const;
             
             void SetData(const T* data, uint size);
+            void SetData(std::initializer_list<T> arr) { this->SetData(arr.begin(), arr.size()); }
             template <class U> void SetData(const U& arr) { this->SetData(arr.data(), arr.size()); }
+        
             void SetDataWhole(const T* data);
+            void SetDataWhole(std::initializer_list<T> arr) { if (arr.size() <= bufferSize) this->SetDataWhole(arr.begin()); }
             template <class U> void SetDataWhole(const U& arr) { if (arr.size() <= bufferSize) this->SetDataWhole(arr.data()); }
+        
             void ClearData(bool shallowClear = true);
+        
             void AddData(const T* data, uint size = 1);
+            void AddData(std::initializer_list<T> arr) { this->AddData(arr.begin(), arr.size()); }
+            void AddData(const T& data) { this->AddData(&data, 1); }
             template <class U> void AddData(const U& arr) { this->AddData(arr.data(), arr.size()); }
-            void AddData(const T& data);
     };
 
     template<class T>
@@ -66,7 +74,7 @@ namespace Graphics {
         Bind();
         dataOffset = 0;
         if (shallowClear) return;
-        const std::vector<T> clear{ bufferSize, T{} };
+        const std::vector<T> clear { bufferSize, T{} };
         glBufferSubData(GL_ARRAY_BUFFER, 0, bufferSize * sizeof(T), clear.data());
     }
 
@@ -74,11 +82,5 @@ namespace Graphics {
     void DynamicVertexBuffer<T>::AddData(const T* data, unsigned size) {
         glBufferSubData(GL_ARRAY_BUFFER, dataOffset * sizeof(T), size * sizeof(T), data);
         dataOffset += size;
-    }
-
-    template <class T>
-    void DynamicVertexBuffer<T>::AddData(const T& data) {
-        glBufferSubData(GL_ARRAY_BUFFER, dataOffset * sizeof(T), sizeof(T), &data);
-        ++dataOffset;
     }
 }

@@ -2,20 +2,23 @@
 #include "BlockBase.h"
 
 namespace Game {
+#define ONE_VEC { 1, 1, 1, 1 }
+#define V Vertex
     BlockRenderer::Quad BlockRenderer::BLOCK_FACES[6] = { // VERT / COL / TEXID / CORNER
-        Quad { { {  0.5f,  0.5f,  0.5f }, { 1, 1, 1, 1 }, 0, 0 }, { {  0.5f,  0.5f, -0.5f }, { 1, 1, 1, 1 }, 0, 1 },    // right
-               { {  0.5f, -0.5f,  0.5f }, { 1, 1, 1, 1 }, 0, 2 }, { {  0.5f, -0.5f, -0.5f }, { 1, 1, 1, 1 }, 0, 3 }, },
-        Quad { { { -0.5f,  0.5f,  0.5f }, { 1, 1, 1, 1 }, 0, 0 }, { { -0.5f,  0.5f, -0.5f }, { 1, 1, 1, 1 }, 0, 1 },    // left
-               { { -0.5f, -0.5f,  0.5f }, { 1, 1, 1, 1 }, 0, 2 }, { { -0.5f, -0.5f, -0.5f }, { 1, 1, 1, 1 }, 0, 3 }, },
-        Quad { { {  0.5f,  0.5f,  0.5f }, { 1, 1, 1, 1 }, 0, 0 }, { {  0.5f,  0.5f, -0.5f }, { 1, 1, 1, 1 }, 0, 1 },    // up
-               { { -0.5f,  0.5f,  0.5f }, { 1, 1, 1, 1 }, 0, 2 }, { { -0.5f,  0.5f, -0.5f }, { 1, 1, 1, 1 }, 0, 3 }, },
-        Quad { { {  0.5f, -0.5f,  0.5f }, { 1, 1, 1, 1 }, 0, 0 }, { {  0.5f, -0.5f, -0.5f }, { 1, 1, 1, 1 }, 0, 1 },    // down
-               { { -0.5f, -0.5f,  0.5f }, { 1, 1, 1, 1 }, 0, 2 }, { { -0.5f, -0.5f, -0.5f }, { 1, 1, 1, 1 }, 0, 3 }, },
-        Quad { { {  0.5f,  0.5f,  0.5f }, { 1, 1, 1, 1 }, 0, 0 }, { {  0.5f, -0.5f,  0.5f }, { 1, 1, 1, 1 }, 0, 1 },    // front
-               { { -0.5f,  0.5f,  0.5f }, { 1, 1, 1, 1 }, 0, 2 }, { { -0.5f, -0.5f,  0.5f }, { 1, 1, 1, 1 }, 0, 3 }, },
-        Quad { { {  0.5f,  0.5f, -0.5f }, { 1, 1, 1, 1 }, 0, 0 }, { {  0.5f, -0.5f, -0.5f }, { 1, 1, 1, 1 }, 0, 1 },    // back
-               { { -0.5f,  0.5f, -0.5f }, { 1, 1, 1, 1 }, 0, 2 }, { { -0.5f, -0.5f, -0.5f }, { 1, 1, 1, 1 }, 0, 3 }, },
+        MESH_QUAD_CREATE(Vertex, V { {  0.5f,  0.5f,  0.5f }, ONE_VEC, 0, 0 }, V { {  0.5f,  0.5f, -0.5f }, ONE_VEC, 0, 1 },    // right
+                                 V { {  0.5f, -0.5f,  0.5f }, ONE_VEC, 0, 2 }, V { {  0.5f, -0.5f, -0.5f }, ONE_VEC, 0, 3 }),
+        MESH_QUAD_CREATE(Vertex, V { { -0.5f,  0.5f,  0.5f }, ONE_VEC, 0, 0 }, V { { -0.5f,  0.5f, -0.5f }, ONE_VEC, 0, 1 },    // left
+                                 V { { -0.5f, -0.5f,  0.5f }, ONE_VEC, 0, 2 }, V { { -0.5f, -0.5f, -0.5f }, ONE_VEC, 0, 3 }),
+        MESH_QUAD_CREATE(Vertex, V { {  0.5f,  0.5f,  0.5f }, ONE_VEC, 0, 0 }, V { {  0.5f,  0.5f, -0.5f }, ONE_VEC, 0, 1 },    // up
+                                 V { { -0.5f,  0.5f,  0.5f }, ONE_VEC, 0, 2 }, V { { -0.5f,  0.5f, -0.5f }, ONE_VEC, 0, 3 }),
+        MESH_QUAD_CREATE(Vertex, V { {  0.5f, -0.5f,  0.5f }, ONE_VEC, 0, 0 }, V { {  0.5f, -0.5f, -0.5f }, ONE_VEC, 0, 1 },    // down
+                                 V { { -0.5f, -0.5f,  0.5f }, ONE_VEC, 0, 2 }, V { { -0.5f, -0.5f, -0.5f }, ONE_VEC, 0, 3 }),
+        MESH_QUAD_CREATE(Vertex, V { {  0.5f,  0.5f,  0.5f }, ONE_VEC, 0, 0 }, V { {  0.5f, -0.5f,  0.5f }, ONE_VEC, 0, 1 },    // front
+                                 V { { -0.5f,  0.5f,  0.5f }, ONE_VEC, 0, 2 }, V { { -0.5f, -0.5f,  0.5f }, ONE_VEC, 0, 3 }),
+        MESH_QUAD_CREATE(Vertex, V { {  0.5f,  0.5f, -0.5f }, ONE_VEC, 0, 0 }, V { {  0.5f, -0.5f, -0.5f }, ONE_VEC, 0, 1 },    // back
+                                 V { { -0.5f,  0.5f, -0.5f }, ONE_VEC, 0, 2 }, V { { -0.5f, -0.5f, -0.5f }, ONE_VEC, 0, 3 })
     };
+#undef ONE_VEC
 
     BlockRenderer::BlockRenderer(stdu::ref<BlockBase> parent, unsigned enabledFlags) : enabledFlags(enabledFlags), ParentBlock(parent) {}
 
@@ -41,14 +44,14 @@ namespace Game {
     const Maths::Vec3Int& BlockRenderer::GetPosition() const { return ParentBlock->Position; }
 
     void BlockRenderer::SetTextureOfMesh(Graphics::QuadMesh<Vertex>& mesh, int textureID) {
-        Vertex* subMeshStart = mesh.GetVertices();
+        auto* subMeshStart = mesh.GetVertices().data();
         // we know its 4 corners per mesh. probably.
         // decrement first so pre-incr doesnt overflow to index 4.
         // could use post-incr but for optimization purposes
         // (its probably gonna get optim'd anyway but whatever)
         --subMeshStart;
         for (int i = 0; i < 4; ++i)
-            (++subMeshStart)->TextureAtlID = (intf)textureID;
+            (++subMeshStart)->TextureAtlID = textureID;
     }
 
     void BlockRenderer::UseTexture(Serialization::BlockTextureStructure texture) {

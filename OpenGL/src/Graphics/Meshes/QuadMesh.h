@@ -14,7 +14,6 @@ namespace Graphics {
             std::array<TVertex, 4> points;
         public:
             QuadMesh() = default;
-            QuadMesh(TVertex _points[4]);
             QuadMesh(const std::array<TVertex, 4>& _points) : points(_points) {}
             QuadMesh(std::array<TVertex, 4>&& _points) : points(std::move(_points)) {}
 
@@ -32,11 +31,6 @@ namespace Graphics {
             template<typename T = TVertex>
             friend QuadMesh<T> operator*(const Maths::Matrix3D& transform, const QuadMesh<T>& mesh);
     };
-
-    template <class TVertex>
-    QuadMesh<TVertex>::QuadMesh(TVertex _points[4]) {
-        std::copy(_points, _points + 4, points.begin());
-    }
 
     template<class TVertex>
     void QuadMesh<TVertex>::AddTo(DynamicVertexBuffer<TVertex>& vb, DynamicIndexBuffer& ib) {

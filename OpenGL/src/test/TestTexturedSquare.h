@@ -20,10 +20,10 @@ namespace Test
         Maths::Vector3  modelScale;
         Maths::Vector3  modelRotation;
     public:
-        TestTexturedSquare();
-        ~TestTexturedSquare() override;
-        void OnUpdate(float deltaTime) override;
-        void OnRender(Graphics::Renderer& renderer) override;
-        void OnImGuiRender() override;
+        OPENGL_API TestTexturedSquare();
+        OPENGL_API ~TestTexturedSquare() override;
+        OPENGL_API void OnUpdate(float deltaTime) override;
+        OPENGL_API void OnRender(Graphics::Renderer& renderer) override;
+        OPENGL_API void OnImGuiRender() override;
     };
 }

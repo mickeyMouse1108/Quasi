@@ -1,5 +1,6 @@
 #pragma once
 #include "NumTypes.h"
+#include "opengl.h"
 
 namespace Graphics {
 	class IndexBuffer {
@@ -7,12 +8,12 @@ namespace Graphics {
 			uint rendererID = 0;
 			uint length = 0;
 		public:
-			IndexBuffer(const void* data, uint length);
-			~IndexBuffer();
+			OPENGL_API IndexBuffer(const void* data, uint length);
+			OPENGL_API ~IndexBuffer();
 
-			void Bind() const;
-			void Unbind() const;
+			OPENGL_API void Bind() const;
+			OPENGL_API void Unbind() const;
 
-			[[nodiscard]] uint GetLength() const { return length; }
+			OPENGL_API [[nodiscard]] uint GetLength() const { return length; }
 	};
 }

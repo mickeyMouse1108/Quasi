@@ -31,7 +31,7 @@ namespace Test
         va->AddBuffer(*vb);
 
         ib = new Graphics::IndexBuffer(indices, 12);
-        shader = new Graphics::Shader("src/test/res/standard_colored.glsl");
+        shader = new Graphics::Shader(Graphics::Shader::StdColored);
         shader->Bind();
 
         shader->SetUniformMatrix4x4("u_MVP", projection);

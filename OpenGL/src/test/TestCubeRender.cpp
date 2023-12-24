@@ -24,7 +24,30 @@ namespace Test
         va->AddBuffer(*vb);
 
         ib = new Graphics::DynamicIndexBuffer(6 * 6);
-        shader = new Graphics::Shader("src/test/res/TestCubeRender/shader.glsl");
+        shader = new Graphics::Shader(
+            "#shader vertex\n"
+            "#version 330 core\n"
+            "layout(location = 0) in vec4 position;\n"
+            "layout(location = 1) in vec4 color;\n"
+            "out vec4 v_color;\n"
+            "out float v_alpha;\n"
+            "uniform mat4 u_MVP;\n"
+            "uniform float u_alpha;\n"
+            "void main(){\n"
+            "    gl_Position = u_MVP * position;\n"
+            "    v_color = color;\n"
+            "    v_alpha = u_alpha;\n"
+            "}\n"
+            "#shader fragment\n"
+            "#version 330 core\n"
+            "layout(location = 0) out vec4 color;\n"
+            "in vec4 v_color;\n"
+            "in float v_alpha;\n"
+            "void main(){\n"
+            "    color = v_color;\n"
+            "    color.a = v_alpha;\n"
+            "}"
+        );
         shader->Bind();
 
         shader->SetUniformMatrix4x4("u_MVP", projection);

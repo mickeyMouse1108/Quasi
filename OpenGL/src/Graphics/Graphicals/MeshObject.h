@@ -25,17 +25,38 @@ namespace Graphics {
             uint deviceIndex = 0;
         public:
             MeshObject() = default;
-            MeshObject(MeshPtrRaw meshes[], unsigned int meshCount);
-            MeshObject(const MeshObject& copy);
-            MeshObject(MeshObject&& copy) noexcept;
-            MeshObject& operator= (const MeshObject&);
-            MeshObject& operator= (MeshObject&&) noexcept;
+            OPENGL_API MeshObject(MeshPtrRaw meshes[], uint meshCount);
+            OPENGL_API MeshObject(const MeshObject& copy);
+            OPENGL_API MeshObject(MeshObject&& copy) noexcept;
+            OPENGL_API MeshObject& operator= (const MeshObject&);
+            OPENGL_API MeshObject& operator= (MeshObject&&) noexcept;
             
             template<template<class> class TMesh>
-            static MeshObject Make(TMesh<Vertex>* meshes[], unsigned int meshCount) {
-                std::vector<MeshPtrRaw> meshPtrs(meshCount);
-                for (unsigned i = 0; i < meshCount; ++i) meshPtrs[i] = meshes[i];
-                return { meshPtrs.data(), meshCount };
+            static MeshObject Make(const std::vector<std::unique_ptr<TMesh<Vertex>>>& meshes) {
+                using TMeshPtr = std::unique_ptr<TMesh<Vertex>>;
+                MeshObject mo {};
+                mo._meshes.reserve(meshes.size()); 
+                std::transform(meshes.begin(), meshes.end(), mo._meshes.begin(),
+                    [](const TMeshPtr& ptr) { MeshPtr p = nullptr; ptr->Clone(p); return p; });
+                return mo;
+            }
+            
+            template<template<class> class TMesh>
+            static MeshObject Make(std::vector<std::unique_ptr<TMesh<Vertex>>>&& meshes) {
+                using TMeshPtr = std::unique_ptr<TMesh<Vertex>>;
+                MeshObject mo {};
+                mo._meshes.reserve(meshes.size()); 
+                std::transform(meshes.begin(), meshes.end(), mo._meshes.begin(),
+                    [](TMeshPtr& ptr) { return MeshPtr((Mesh<Vertex>*)ptr.release()); });
+                return mo;
+            }
+
+            template<template<class> class TMesh>
+            static MeshObject Make(const std::vector<TMesh<Vertex>*>& meshes) {
+                MeshObject mo {};
+                mo._meshes = std::vector<MeshPtr> { meshes.size() };
+                std::transform(meshes.begin(), meshes.end(), mo._meshes.begin(), [](auto* ptr){ return MeshPtr(ptr); });
+                return mo;
             }
             
             // template<template<class> class TMesh>
@@ -46,19 +67,19 @@ namespace Graphics {
             //     out->_meshes.insert(out->_meshes.begin(), meshes, meshes + meshCount);
             // }
 
-            ~MeshObject();
+            OPENGL_API ~MeshObject();
 
-            void SetTransform(const Maths::Matrix3D& model);
-            void AddTo       (DynamicVertexBuffer<Vertex>& vbuffer, DynamicIndexBuffer& ibuffer) const;
+            void SetTransform(const Maths::Matrix3D& model) { modelTransform = model; }
+            OPENGL_API void AddTo       (DynamicVertexBuffer<Vertex>& vbuffer, DynamicIndexBuffer& ibuffer) const;
 
             [[nodiscard]] bool IsBound() const { return device; }
             
-            void Transform(const Maths::Matrix3D& transform);
+            OPENGL_API void Transform(const Maths::Matrix3D& transform);
             
-            void AddMesh(MeshPtrRaw meshes[], unsigned int count);
+            OPENGL_API void AddMesh(MeshPtrRaw meshes[], uint count);
 
-            void Bind(GraphicsDevice& gdevice);
-            void Unbind();
+            OPENGL_API void Bind(GraphicsDevice& gdevice);
+            OPENGL_API void Unbind();
 
             friend class GraphicsDevice;
     };
@@ -67,7 +88,7 @@ namespace Graphics {
     {
         using Vec3 = const Maths::Vector3&;
         using Vertex = MeshObject::Vertex;
-        MeshObject CubeMesh(Vec3 origin, float x, float y, float z);
+        OPENGL_API MeshObject CubeMesh(Vec3 origin, float x, float y, float z);
         // TODO: MeshObject CubeMesh(Vec3 origin, Vec3 x, Vec3 y, Vec3 z);
     }
 }

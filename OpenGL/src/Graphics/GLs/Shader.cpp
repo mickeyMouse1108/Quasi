@@ -1,13 +1,40 @@
 ﻿#include "Shader.h"
 
 #include <fstream>
+#include "stdu/io.h"
 
 #include "Debugging.h"
 
 namespace Graphics {
-    Shader::Shader(stringr filepath) : rendererID(0) {
-        ShaderProgramSource shadersrc = ParseShader(filepath);
+
+    std::string Shader::StdColored = 
+        "#shader vertex\n"
+        "#version 330 core\n"
+        "layout(location = 0) in vec4 position;\n"
+        "layout(location = 1) in vec4 color;\n"
+        "out vec4 v_color;\n"
+        "uniform mat4 u_MVP;\n"
+        "void main(){\n"
+        "    gl_Position = u_MVP * position;\n"
+        "    v_color = color;\n"
+        "}\n"
+        "#shader fragment\n"
+        "#version 330 core\n"
+        "layout(location = 0) out vec4 color;\n"
+        "in vec4 v_color;\n"
+        "void main(){\n"
+        "    color = v_color;\n"
+        "}\n";
+
+    Shader::Shader() : rendererID(-1) {}
+
+    Shader::Shader(const std::string& program) : rendererID(0) {
+        ShaderProgramSource shadersrc = ParseShader(program);
         rendererID = CreateShader(shadersrc.vertexShader, shadersrc.fragmentShader);
+    }
+
+    Shader::Shader(const std::string& vert, const std::string& frag) : rendererID(0) {
+        rendererID = CreateShader(vert, frag);
     }
 
     Shader::~Shader() {
@@ -32,18 +59,16 @@ namespace Graphics {
         return location;
     }
 
-
-    ShaderProgramSource Shader::ParseShader(stringr filepath) {
-        std::ifstream stream(filepath);
-
+    ShaderProgramSource Shader::ParseShader(stringr program) {
         enum class ShaderType {
-            NONE = -1, VERTEX, FRAGMENT 
+            NONE = -1, VERTEX = 0, FRAGMENT
         };
 
+        std::stringstream prog { program };
         ShaderType type = ShaderType::NONE;
         std::string line;
         std::stringstream ss[2];
-        while (getline(stream, line)) {
+        while (std::getline(prog, line)) {
             if (line.find("#shader") != std::string::npos) {
                 if (line.find("vertex") != std::string::npos) {
                     type = ShaderType::VERTEX;
@@ -57,7 +82,19 @@ namespace Graphics {
             }
         }
 
-        return ShaderProgramSource{ ss[0].str(), ss[1].str() };
+        return { ss[0].str(), ss[1].str() };
+    }
+
+
+    ShaderProgramSource Shader::ParseFromFile(stringr filepath) {
+        return ParseShader(stdu::readfile(filepath));
+    }
+
+    Shader Shader::FromFile(stringr filepath) {
+        Shader s {};
+        ShaderProgramSource shadersrc = ParseFromFile(filepath);
+        s.rendererID = CreateShader(shadersrc.vertexShader, shadersrc.fragmentShader);
+        return s;
     }
     
     uint Shader::CompileShader(stringr source, uint type) {

@@ -18,6 +18,7 @@ namespace Game {
         MESH_QUAD_CREATE(Vertex, V { {  0.5f,  0.5f, -0.5f }, ONE_VEC, 0, 0 }, V { {  0.5f, -0.5f, -0.5f }, ONE_VEC, 0, 1 },    // back
                                  V { { -0.5f,  0.5f, -0.5f }, ONE_VEC, 0, 2 }, V { { -0.5f, -0.5f, -0.5f }, ONE_VEC, 0, 3 })
     };
+#undef V
 #undef ONE_VEC
 
     BlockRenderer::BlockRenderer(stdu::ref<BlockBase> parent, unsigned enabledFlags) : enabledFlags(enabledFlags), ParentBlock(parent) {}
@@ -109,7 +110,7 @@ namespace Game {
                 SetTextureOfMesh(*faces.back(), textureID[i]);
             }
 
-        meshObj = Graphics::MeshObject::Make<Graphics::QuadMesh>(faces.data(), faces.size());
+        meshObj = Graphics::MeshObject::Make<Graphics::QuadMesh>(faces);
         meshObj.Transform(Maths::Matrix3D::TranslateMat(ParentBlock->Position));
         return meshObj;
     }

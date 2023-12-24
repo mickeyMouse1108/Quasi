@@ -21,12 +21,12 @@ namespace Test
         Maths::Vector3 modelRotation    = {0.0f, 0.0f, 0.0f};
         float alpha = 1.0f;
     public:
-        TestCubeRender();
-        ~TestCubeRender() override;
-        
-        void OnUpdate(float deltaTime) override;
-        void OnRender(Graphics::Renderer& renderer) override;
-        void OnImGuiRender() override;
+        OPENGL_API TestCubeRender();
+        OPENGL_API ~TestCubeRender() override;
+
+        OPENGL_API void OnUpdate(float deltaTime) override;
+        OPENGL_API void OnRender(Graphics::Renderer& renderer) override;
+        OPENGL_API void OnImGuiRender() override;
         // static Maths::Vector3 faceAxis[6];
     };
 }

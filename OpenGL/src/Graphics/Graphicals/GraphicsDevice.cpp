@@ -7,15 +7,13 @@
 #include "Mouse.h"
 #include "Keyboard.h"
 
-#include <algorithm>
 #include <numeric>
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
-namespace Graphics
-{
+namespace Graphics {
     GraphicsDevice::GraphicsDevice(GLFWwindow* window, Maths::Vec2Int winSize) : 
         _vertexArray  (new VertexArray()),
         _vertexBuffer (new DynamicVertexBuffer<Vertex>(MAX_VERTEX_COUNT)),
@@ -74,22 +72,21 @@ namespace Graphics
     }
 
     void GraphicsDevice::RegisterElements() const {
-        for (unsigned i = 0; i < _meshObjs.size(); ++i) _meshObjs[i].get().AddTo(*_vertexBuffer, *_indexBuffer);
+        for (auto _meshObj : _meshObjs) _meshObj->AddTo(*_vertexBuffer, *_indexBuffer);
     }
 
-    void GraphicsDevice::RegisterNewElements(MeshObject* meshObjs, unsigned int objCount) const {
-        for (unsigned int i = 0; i < objCount; ++i) meshObjs[i].AddTo(*_vertexBuffer, *_indexBuffer);
+    void GraphicsDevice::RegisterNewElements(MeshObject* meshObjs, uint objCount) const {
+        for (uint i = 0; i < objCount; ++i) meshObjs[i].AddTo(*_vertexBuffer, *_indexBuffer);
     }
 
     void GraphicsDevice::RenderRegistered() const {
         _renderer->Draw(*_vertexArray, *_indexBuffer, *_currentShader);
     }
 
-    void GraphicsDevice::AddMeshObject(MeshObject* objs, unsigned int count) {
-        for (unsigned i = 0; i < count; ++i)
-        {
+    void GraphicsDevice::AddMeshObject(MeshObject* objs, uint count) {
+        for (uint i = 0; i < count; ++i) {
             objs[i].device = this;
-            objs[i].deviceIndex = _meshObjs.size();
+            objs[i].deviceIndex = (uint)_meshObjs.size();
             _meshObjs.emplace_back(objs[i]);
         }
     }
@@ -104,9 +101,9 @@ namespace Graphics
         UpdateMeshIndices();
     }
 
-    void GraphicsDevice::UpdateMeshIndices() const {
-        for (unsigned i = 0; i < _meshObjs.size(); ++i)
-            _meshObjs[i].get().deviceIndex = i;
+    void GraphicsDevice::UpdateMeshIndices() {
+        for (uint i = 0; i < _meshObjs.size(); ++i)
+            _meshObjs[i]->deviceIndex = i;
     }
 
     void GraphicsDevice::ClearColor(const Maths::Vector3& color) {
@@ -181,16 +178,14 @@ namespace Graphics
     }
 
     std::unique_ptr<GraphicsDevice> GraphicsDevice::Initialize(Maths::Vec2Int winSize) {
-        GLFWwindow* window;
         /* Initialize the library */
         if (!glfwInit())
             ASSERT(false);
 
         /* Create a windowed mode window and its OpenGL context */
-        window = glfwCreateWindow(winSize.x, winSize.y, "Hello World", nullptr, nullptr);
+        GLFWwindow* window = glfwCreateWindow(winSize.x, winSize.y, "Hello World", nullptr, nullptr);
         
-        if (!window)
-        {
+        if (!window) {
             glfwTerminate();
             ASSERT(false);
         }

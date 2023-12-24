@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <vector>
 #include <GL/glew.h>
+#include "opengl.h"
 
 #include "NumTypes.h"
 
@@ -24,19 +25,18 @@ namespace Graphics {
         VertexBufferComponent(uint type, uint count, uchar norm)
             : type(type), count(count), normalized(norm) {}
         
-        static VertexBufferComponent
-        Float(),
-        Double(),
-        Int(),
-        Uint(),
-        SByte(),
-        Byte(),
-        Vec2(),
-        Vec3(),
-        Vec4(),
-        IVec2(),
-        IVec3(),
-        IVec4();
+        static VertexBufferComponent Float()  { return { GLTypeOf<float>,  1, false }; }
+        static VertexBufferComponent Double() { return { GLTypeOf<double>, 1, false }; }
+        static VertexBufferComponent Int()    { return { GLTypeOf<int>,    1, false }; }
+        static VertexBufferComponent Uint()   { return { GLTypeOf<uint>,   1, false }; }
+        static VertexBufferComponent SByte()  { return { GLTypeOf<char>,   1, false }; }
+        static VertexBufferComponent Byte()   { return { GLTypeOf<uchar>,  1, false }; }
+        static VertexBufferComponent Vec2()   { return { GLTypeOf<float>,  2, false }; }
+        static VertexBufferComponent Vec3()   { return { GLTypeOf<float>,  3, false }; }
+        static VertexBufferComponent Vec4()   { return { GLTypeOf<float>,  4, false }; }
+        static VertexBufferComponent IVec2()  { return { GLTypeOf<int>,    2, false }; }
+        static VertexBufferComponent IVec3()  { return { GLTypeOf<int>,    3, false }; }
+        static VertexBufferComponent IVec4()  { return { GLTypeOf<int>,    4, false }; }
     };
     
     // ReSharper disable once IdentifierTypo
@@ -60,12 +60,12 @@ namespace Graphics {
             std::vector<VertexBufferComponent> _components;
             uint stride = 0;
         public:
-            VertexBufferLayout() = default;
-            VertexBufferLayout(std::initializer_list<VertexBufferComponent> comps);
+            OPENGL_API VertexBufferLayout() = default;
+            OPENGL_API VertexBufferLayout(std::initializer_list<VertexBufferComponent> comps);
 
             template <class T> void Push(uint count, bool normalized = false);
-            void Push(const VertexBufferComponent& comp);
-            void PushLayout(const VertexBufferLayout& layout);
+            OPENGL_API void Push(const VertexBufferComponent& comp);
+            OPENGL_API void PushLayout(const VertexBufferLayout& layout);
 
 #define VBE VertexBufferComponent::
         

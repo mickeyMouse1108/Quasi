@@ -12,7 +12,6 @@ namespace Graphics {
             std::array<TVertex, 3> points;
         public:
             TriMesh() = default;
-            TriMesh(TVertex _points[3]);
             TriMesh(const std::array<TVertex, 3>& _points) : points(_points) {}
             TriMesh(std::array<TVertex, 3>&& _points) : points(std::move(_points)) {}
 
@@ -30,11 +29,6 @@ namespace Graphics {
             template<class T = TVertex>
             friend TriMesh<T> operator*(const Maths::Matrix3D& transform, const TriMesh<T>& mesh);
     };
-
-    template <class TVertex>
-    TriMesh<TVertex>::TriMesh(TVertex _points[3]) {
-        std::copy(_points, _points + 4, points.begin());
-    }
 
     template<class TVertex>
     void TriMesh<TVertex>::AddTo(DynamicVertexBuffer<TVertex>& vb, DynamicIndexBuffer& ib) {

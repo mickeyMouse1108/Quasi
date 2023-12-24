@@ -9,11 +9,11 @@ namespace Graphics {
         private:
             uint renderType = GL_TRIANGLES;
         public:
-            void Clear() const;
-            void Draw(const VertexArray& vertexArr, const IndexBuffer& indexBuff, const Shader& shader) const;
-            void Draw(const VertexArray& vertexArr, const DynamicIndexBuffer& indexBuff, const Shader& shader) const;
+            OPENGL_API void Clear() const;
+            OPENGL_API void Draw(const VertexArray& vertexArr, const IndexBuffer& indexBuff, const Shader& shader) const;
+            OPENGL_API void Draw(const VertexArray& vertexArr, const DynamicIndexBuffer& indexBuff, const Shader& shader) const;
 
-            void SetRenderMode(uint drawType);
-            void SetRenderMode(char drawType); // t: tri, w: wireframe, 
+            OPENGL_API void SetRenderMode(uint drawType);
+            OPENGL_API void SetRenderMode(char drawType); // t: tri, w: wireframe, 
     };
 }

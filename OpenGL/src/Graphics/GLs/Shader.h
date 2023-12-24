@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <string>
 #include <unordered_map>
+#include "opengl.h"
 
 #include "Debugging.h"
 #include "Matrix.h"
@@ -16,11 +17,13 @@ namespace Graphics {
             uint rendererID;
             std::unordered_map<std::string, int> uniformCache;
         public:
-            Shader(const std::string& filepath);
-            ~Shader();
+            OPENGL_API Shader();
+            OPENGL_API Shader(const std::string& program);
+            OPENGL_API Shader(const std::string& vert, const std::string& frag);
+            OPENGL_API ~Shader();
 
-            void Bind() const;
-            void Unbind() const;
+            OPENGL_API void Bind() const;
+            OPENGL_API void Unbind() const;
 
             using stringr = const std::string&; // the 'r' stands for reference
             using intptr = const int*;
@@ -59,10 +62,10 @@ namespace Graphics {
 #pragma endregion
 #pragma region Uniform Unsigned Int Vecs
 #define SHADER_UNIF_UIV(n, d, c) GLCALL(glUniform##n##uiv(GetUniformLocation(name), c, d))
-            void SetUniform1IUnsignedVec(stringr name, uintptr vals, uint count) { SHADER_UNIF_UIV(1, vals, count); }
-            void SetUniform2IUnsignedVec(stringr name, uintptr vals, uint count) { SHADER_UNIF_UIV(2, vals, count); }
-            void SetUniform3IUnsignedVec(stringr name, uintptr vals, uint count) { SHADER_UNIF_UIV(3, vals, count); }
-            void SetUniform4IUnsignedVec(stringr name, uintptr vals, uint count) { SHADER_UNIF_UIV(4, vals, count); }
+            void SetUniform1UIVec(stringr name, uintptr vals, uint count) { SHADER_UNIF_UIV(1, vals, count); }
+            void SetUniform2UIVec(stringr name, uintptr vals, uint count) { SHADER_UNIF_UIV(2, vals, count); }
+            void SetUniform3UIVec(stringr name, uintptr vals, uint count) { SHADER_UNIF_UIV(3, vals, count); }
+            void SetUniform4UIVec(stringr name, uintptr vals, uint count) { SHADER_UNIF_UIV(4, vals, count); }
 #undef SHADER_UNIF_UIV
 #pragma endregion
 #pragma region Uniform Floats
@@ -99,13 +102,17 @@ namespace Graphics {
             void SetUniformMatrix4x4(stringr name, const Maths::Matrix3D& mat) { SHADER_UNIF_MAT(4, mat.GetInRow()); }
 #undef SHADER_UNIF_MAT
 #pragma endregion
+
+            static std::string StdColored;
     
         private:
-            uint GetUniformLocation(stringr name);
-            static ShaderProgramSource ParseShader(stringr filepath);
-            static uint CompileShader(stringr source, uint type);
-            static uint CompileShaderVert(stringr source) { return CompileShader(source, GL_VERTEX_SHADER); }
-            static uint CompileShaderFrag(stringr source) { return CompileShader(source, GL_FRAGMENT_SHADER); }
-            static uint CreateShader(stringr vtx, stringr frg);
+            OPENGL_API uint GetUniformLocation(stringr name);
+            OPENGL_API static ShaderProgramSource ParseShader(stringr program);
+            OPENGL_API static ShaderProgramSource ParseFromFile(stringr filepath);
+            OPENGL_API static Shader FromFile(stringr filepath);
+            OPENGL_API static uint CompileShader(stringr source, uint type);
+            OPENGL_API static uint CompileShaderVert(stringr source) { return CompileShader(source, GL_VERTEX_SHADER); }
+            OPENGL_API static uint CompileShaderFrag(stringr source) { return CompileShader(source, GL_FRAGMENT_SHADER); }
+            OPENGL_API static uint CreateShader(stringr vtx, stringr frg);
     };
 }

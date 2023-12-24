@@ -30,12 +30,12 @@ namespace Test
 
         Maths::Matrix3D ModelMatrix();
     public:
-        TestDynamicTris();
-        ~TestDynamicTris() override;
-        
-        void OnUpdate(float deltaTime) override;
-        void OnRender(Graphics::Renderer& renderer) override;
-        void OnImGuiRender() override;
+        OPENGL_API TestDynamicTris();
+        OPENGL_API ~TestDynamicTris() override;
+
+        OPENGL_API void OnUpdate(float deltaTime) override;
+        OPENGL_API void OnRender(Graphics::Renderer& renderer) override;
+        OPENGL_API void OnImGuiRender() override;
 
         static Maths::Vector4 COLORS[8];
     };

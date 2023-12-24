@@ -13,7 +13,7 @@ namespace Graphics {
 
     void VertexArray::AddBuffer(const VertexBufferLayout& layout) {
         const std::vector<VertexBufferComponent>& elements = layout.GetComponents();
-        uint offset = 0;
+        size_t offset = 0;
         for (uint i = 0; i < elements.size(); i++) {
             const auto& elem = elements[i];
             GLCALL(glEnableVertexAttribArray(i));

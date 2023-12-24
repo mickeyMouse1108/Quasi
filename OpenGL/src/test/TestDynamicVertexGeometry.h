@@ -18,11 +18,11 @@ namespace Test
 
         Maths::Matrix3D projection;
     public:
-        TestDynamicVertexGeometry();
-        ~TestDynamicVertexGeometry() override;
+        OPENGL_API TestDynamicVertexGeometry();
+        OPENGL_API ~TestDynamicVertexGeometry() override;
 
-        void OnUpdate(float deltaTime) override;
-        void OnRender(Graphics::Renderer& renderer) override;
-        void OnImGuiRender() override;
+        OPENGL_API void OnUpdate(float deltaTime) override;
+        OPENGL_API void OnRender(Graphics::Renderer& renderer) override;
+        OPENGL_API void OnImGuiRender() override;
     };
 }

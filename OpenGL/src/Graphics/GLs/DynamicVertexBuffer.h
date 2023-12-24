@@ -20,8 +20,8 @@ namespace Graphics {
             void Unbind() const;
             
             void SetData(const T* data, uint size);
-            void SetData(std::initializer_list<T> arr) { this->SetData(arr.begin(), arr.size()); }
-            template <class U> void SetData(const U& arr) { this->SetData(arr.data(), arr.size()); }
+            void SetData(std::initializer_list<T> arr) { this->SetData(arr.begin(), (uint)(arr.size())); }
+            template <class U> void SetData(const U& arr) { this->SetData(arr.data(), (uint)(arr.size())); }
         
             void SetDataWhole(const T* data);
             void SetDataWhole(std::initializer_list<T> arr) { if (arr.size() <= bufferSize) this->SetDataWhole(arr.begin()); }
@@ -30,9 +30,9 @@ namespace Graphics {
             void ClearData(bool shallowClear = true);
         
             void AddData(const T* data, uint size = 1);
-            void AddData(std::initializer_list<T> arr) { this->AddData(arr.begin(), arr.size()); }
+            void AddData(std::initializer_list<T> arr) { this->AddData(arr.begin(), (uint)(arr.size())); }
             void AddData(const T& data) { this->AddData(&data, 1); }
-            template <class U> void AddData(const U& arr) { this->AddData(arr.data(), arr.size()); }
+            template <class U> void AddData(const U& arr) { this->AddData(arr.data(), (uint)(arr.size())); }
     };
 
     template<class T>
@@ -58,7 +58,7 @@ namespace Graphics {
     }
 
     template <class T>
-    void DynamicVertexBuffer<T>::SetData(const T* data, unsigned int size) {
+    void DynamicVertexBuffer<T>::SetData(const T* data, uint size) {
         Bind();
         glBufferSubData(GL_ARRAY_BUFFER, 0, size * sizeof(T), data);
     }
@@ -79,7 +79,7 @@ namespace Graphics {
     }
 
     template <class T>
-    void DynamicVertexBuffer<T>::AddData(const T* data, unsigned size) {
+    void DynamicVertexBuffer<T>::AddData(const T* data, uint size) {
         glBufferSubData(GL_ARRAY_BUFFER, dataOffset * sizeof(T), size * sizeof(T), data);
         dataOffset += size;
     }

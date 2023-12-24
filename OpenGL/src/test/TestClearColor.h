@@ -8,11 +8,11 @@ namespace Test
     private:
         float clearColor[4];
     public:
-        TestClearColor();
-        ~TestClearColor() override;
+        OPENGL_API TestClearColor();
+        OPENGL_API ~TestClearColor() override;
 
-        void OnUpdate(float deltaTime) override;
-        void OnRender(Graphics::Renderer& renderer) override;
-        void OnImGuiRender() override;
+        OPENGL_API void OnUpdate(float deltaTime) override;
+        OPENGL_API void OnRender(Graphics::Renderer& renderer) override;
+        OPENGL_API void OnImGuiRender() override;
     };
 }

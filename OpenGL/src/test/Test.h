@@ -27,15 +27,15 @@ namespace Test
         Test** currentTest;
         std::vector<TestMenuItem> menuItems;
     public:
-        TestMenu(Test*& currTest);
-        
-        void OnImGuiRender() override;
+        OPENGL_API TestMenu(Test*& currTest);
+
+        OPENGL_API void OnImGuiRender() override;
 
         template <typename T>
         void RegisterTest(const std::string& name)
         {
             //LOG("Registered " << name << " Test");
-            menuItems.push_back( { name, []{ return new T(); } } );
+            menuItems.emplace_back(name, []{ return (Test*)(new T()); });
         }
     };
 }

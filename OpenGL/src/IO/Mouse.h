@@ -1,4 +1,5 @@
 #pragma once
+#include "opengl.h"
 
 #include "Vector.h"
 #include "stdu/ref.h"
@@ -23,45 +24,45 @@ namespace IO {
 
         stdu::ref<Graphics::GraphicsDevice> graphicsDevice;
 
-        explicit MouseT(Graphics::GraphicsDevice& gd);
+        OPENGL_API explicit MouseT(Graphics::GraphicsDevice& gd);
         explicit MouseT(std::nullptr_t) {}
 
-        void Update();
+        OPENGL_API void Update();
 
-        Maths::Vec2d GetMousePosPx();
-        Maths::Vec2d GetMousePos();
-        bool IsInWindow();
+        OPENGL_API Maths::Vec2d GetMousePosPx();
+        OPENGL_API Maths::Vec2d GetMousePos();
+        OPENGL_API bool IsInWindow();
         
-        [[nodiscard]] int  PressedState()         const;
-        [[nodiscard]] bool LeftPressed()          const;
-        [[nodiscard]] bool RightPressed()         const;
-        [[nodiscard]] bool MiddlePressed()        const;
-        [[nodiscard]] bool ButtonPressed(int btn) const;
-        [[nodiscard]] bool AnyPressed()           const;
-        [[nodiscard]] bool NonePressed()          const;
+        OPENGL_API [[nodiscard]] int  PressedState()         const;
+        OPENGL_API [[nodiscard]] bool LeftPressed()          const;
+        OPENGL_API [[nodiscard]] bool RightPressed()         const;
+        OPENGL_API [[nodiscard]] bool MiddlePressed()        const;
+        OPENGL_API [[nodiscard]] bool ButtonPressed(int btn) const;
+        OPENGL_API [[nodiscard]] bool AnyPressed()           const;
+        OPENGL_API [[nodiscard]] bool NonePressed()          const;
 
-        [[nodiscard]] int  OnPressState()         const;
-        [[nodiscard]] bool LeftOnPress()          const;
-        [[nodiscard]] bool RightOnPress()         const;
-        [[nodiscard]] bool MiddleOnPress()        const;
-        [[nodiscard]] bool ButtonOnPress(int btn) const;
-        [[nodiscard]] bool AnyOnPress()           const;
-        [[nodiscard]] bool NoneOnPress()          const;
+        OPENGL_API [[nodiscard]] int  OnPressState()         const;
+        OPENGL_API [[nodiscard]] bool LeftOnPress()          const;
+        OPENGL_API [[nodiscard]] bool RightOnPress()         const;
+        OPENGL_API [[nodiscard]] bool MiddleOnPress()        const;
+        OPENGL_API [[nodiscard]] bool ButtonOnPress(int btn) const;
+        OPENGL_API [[nodiscard]] bool AnyOnPress()           const;
+        OPENGL_API [[nodiscard]] bool NoneOnPress()          const;
 
-        [[nodiscard]] int  OnReleaseState()         const;
-        [[nodiscard]] bool LeftOnRelease()          const;
-        [[nodiscard]] bool RightOnRelease()         const;
-        [[nodiscard]] bool MiddleOnRelease()        const;
-        [[nodiscard]] bool ButtonOnRelease(int btn) const;
-        [[nodiscard]] bool AnyOnRelease()           const;
-        [[nodiscard]] bool NoneOnRelease()          const;
+        OPENGL_API [[nodiscard]] int  OnReleaseState()         const;
+        OPENGL_API [[nodiscard]] bool LeftOnRelease()          const;
+        OPENGL_API [[nodiscard]] bool RightOnRelease()         const;
+        OPENGL_API [[nodiscard]] bool MiddleOnRelease()        const;
+        OPENGL_API [[nodiscard]] bool ButtonOnRelease(int btn) const;
+        OPENGL_API [[nodiscard]] bool AnyOnRelease()           const;
+        OPENGL_API [[nodiscard]] bool NoneOnRelease()          const;
 
-        static bool IsStandardMouseButton(int btn);
-        static bool IsValidMouseButton(int btn);
-        static const char* MouseButtonToStr(int btn);
+        OPENGL_API static bool IsStandardMouseButton(int btn);
+        OPENGL_API static bool IsValidMouseButton(int btn);
+        OPENGL_API static const char* MouseButtonToStr(int btn);
 
         private:
-            auto* inputWindow();
-            [[nodiscard]] const auto* inputWindow() const;
+            OPENGL_API auto* inputWindow();
+            OPENGL_API [[nodiscard]] const auto* inputWindow() const;
     };
 }

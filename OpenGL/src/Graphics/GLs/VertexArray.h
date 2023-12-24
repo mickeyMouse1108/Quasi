@@ -9,16 +9,16 @@ namespace Graphics {
         private:
             uint rendererID = 0;
         public:
-            VertexArray();
-            ~VertexArray();
-        
-            void AddBuffer(const VertexBufferLayout& layout);
-            void AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout);
+            OPENGL_API VertexArray();
+            OPENGL_API ~VertexArray();
+
+            OPENGL_API void AddBuffer(const VertexBufferLayout& layout);
+            OPENGL_API void AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout);
             template <class T>
-            void AddBuffer(const DynamicVertexBuffer<T>& vb);
-            
-            void Bind() const;
-            void Unbind() const;
+            OPENGL_API void AddBuffer(const DynamicVertexBuffer<T>& vb);
+
+            OPENGL_API void Bind() const;
+            OPENGL_API void Unbind() const;
 
         template <class T>
         using VBO = const DynamicVertexBuffer<T>&;

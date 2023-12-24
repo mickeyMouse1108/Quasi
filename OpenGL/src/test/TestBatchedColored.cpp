@@ -36,7 +36,7 @@ namespace Test
         projection = Maths::Matrix3D::OrthoProjection(-320.0f, 320.0f, -240.0f, 240.0f, -1.0f, 1.0f);
         //LOG(*mat);
 
-        shader = new Graphics::Shader("src/test/res/standard_colored.glsl");
+        shader = new Graphics::Shader(Graphics::Shader::StdColored);
         shader->Bind();
         
         shader->SetUniformMatrix4x4("u_MVP", projection);

@@ -7,19 +7,18 @@
 
 #include <GLFW/glfw3.h>
 
-namespace Graphics
-{
+#include "stdu/ref.h"
+
+namespace Graphics {
     class MeshObject;
     
     // TODO: make this changeable
-    class GraphicsDevice
-    {
+    class GraphicsDevice {
         using                    Vertex = VertexColorTextureAtlas3D;
-        template <class T> using ref = std::reference_wrapper<T>;
         static constexpr unsigned int MAX_VERTEX_COUNT = 1000;
         static constexpr unsigned int MAX_INDEX_COUNT = 1000;
     private:
-        std::vector<ref<MeshObject>> _meshObjs;
+        std::vector<stdu::ref<MeshObject>> _meshObjs;
         
         std::unique_ptr<VertexArray>                 _vertexArray;
         std::unique_ptr<DynamicVertexBuffer<Vertex>> _vertexBuffer;
@@ -38,62 +37,63 @@ namespace Graphics
         inline static GraphicsDevice* Instance = nullptr;
     // public:
         public:
-        GraphicsDevice(GLFWwindow* window, Maths::Vec2Int winSize);
-        using string = const std::string&;
+            OPENGL_API GraphicsDevice(GLFWwindow* window, Maths::Vec2Int winSize);
+            using stringr = const std::string&;
 
-        ~GraphicsDevice();
-        void BeginRender();
-        void EndRender();
-        
-        void ClearRegistered() const;
-        void RegisterElements() const;
-        void RegisterNewElements(MeshObject* meshObjs, unsigned int objCount) const;
-        void RenderRegistered() const;
-        void AddMeshObject(MeshObject* meshObjs, unsigned int objCount);
-        void Delete(int index);
-        void Delete(int indexStart, int indexEnd);
-        void UpdateMeshIndices() const;
+            OPENGL_API ~GraphicsDevice();
+            OPENGL_API void BeginRender();
+            OPENGL_API void EndRender();
 
-        void ClearColor(const Maths::Vector3& color);
+            OPENGL_API void ClearRegistered() const;
+            OPENGL_API void RegisterElements() const;
+            OPENGL_API void RegisterNewElements(MeshObject* meshObjs, uint objCount) const;
+            OPENGL_API void RenderRegistered() const;
+            OPENGL_API void AddMeshObject(MeshObject* meshObjs, uint objCount);
+            OPENGL_API void Delete(int index);
+            OPENGL_API void Delete(int indexStart, int indexEnd);
+            OPENGL_API void UpdateMeshIndices();
 
-        [[nodiscard]] bool WindowIsOpen() const { return !glfwWindowShouldClose(_mainWindow); }
+            OPENGL_API void ClearColor(const Maths::Vector3& color);
 
-        [[nodiscard]] const Renderer& GetRenderer() const { return *_renderer; }
-        Renderer& GetRenderer() { return *_renderer; }
-        [[nodiscard]] Maths::Vec2Int GetWindowSize() const { return _windowSize; }
-        [[nodiscard]] const GLFWwindow* GetWindow() const { return _mainWindow; }
-        GLFWwindow* GetWindow() { return _mainWindow; }
-        
-        void EnableShader();
-        void DisableShader();
-        void UseShader          (string shaderPath)                                 { _currentShader = std::make_unique<Shader>(shaderPath); }
-#define SHADER_UNIF(x) _currentShader->Bind(); _currentShader->SetUniform##x; _currentShader->Unbind()
-        void SetUniform1Int     (string unifName, int val)                    const { SHADER_UNIF(1I(unifName, val));                 }
-        void SetUniform2Int     (string unifName, const Maths::Vec2Int& val)  const { SHADER_UNIF(2I(unifName, (const int*)&val));    }
-        void SetUniform3Int     (string unifName, const Maths::Vec3Int& val)  const { SHADER_UNIF(3I(unifName, (const int*)&val));    }
-        void SetUniform4Int     (string unifName, const Maths::Vec4Int& val)  const { SHADER_UNIF(4I(unifName, (const int*)&val));    }
-        
-        void SetUniform1IntArr  (string unifName, int vals[], unsigned num)   const { SHADER_UNIF(1IVec(unifName, vals, num));        }
-        
-        void SetUniform1Float   (string unifName, float val)                  const { SHADER_UNIF(1F(unifName, val));                 }
-        void SetUniform2Float   (string unifName, const Maths::Vector2& val)  const { SHADER_UNIF(2F(unifName, (const float*)&val) ); }
-        void SetUniform3Float   (string unifName, const Maths::Vector3& val)  const { SHADER_UNIF(3F(unifName, (const float*)&val) ); }
-        void SetUniform4Float   (string unifName, const Maths::Vector4& val)  const { SHADER_UNIF(4F(unifName, (const float*)&val) ); }
-        
-        void SetUniform4x4Matrix(string unifName, const Maths::Matrix3D& val) const { SHADER_UNIF(Matrix4x4(unifName, val)   ); }
-#undef SHADER_UNIF
-        
-        void SetCamera(const Maths::Matrix3D& camera) { _camera = camera; }
-        void SetProjection(const Maths::Matrix3D& proj) { _projection = proj; }
+            [[nodiscard]] bool WindowIsOpen() const { return !glfwWindowShouldClose(_mainWindow); }
 
-        void DebugMenu();
+            [[nodiscard]] const Renderer& GetRenderer() const { return *_renderer; }
+            Renderer& GetRenderer() { return *_renderer; }
+            [[nodiscard]] Maths::Vec2Int GetWindowSize() const { return _windowSize; }
+            [[nodiscard]] const GLFWwindow* GetWindow() const { return _mainWindow; }
+            GLFWwindow* GetWindow() { return _mainWindow; }
+            [[nodiscard]] const Shader& GetShader() const { return *_currentShader; }
 
-        static GraphicsDevice& GetDeviceInstance() { return *Instance; }
-        static GLFWwindow* GetMainWindow() { return Instance->_mainWindow; }
+            OPENGL_API void EnableShader();
+            OPENGL_API void DisableShader();
+            void UseShader(stringr shaderPath) { _currentShader = std::make_unique<Shader>(shaderPath); }
+            /*#define SHADER_UNIF(x) _currentShader->Bind(); _currentShader->SetUniform##x; _currentShader->Unbind()
+            void SetUniform1Int(stringr unifName, int val)                    const { SHADER_UNIF(1I(unifName, val)); }
+            void SetUniform2Int(stringr unifName, const Maths::Vec2Int& val)  const { SHADER_UNIF(2I(unifName, (const int*)&val)); }
+            void SetUniform3Int(stringr unifName, const Maths::Vec3Int& val)  const { SHADER_UNIF(3I(unifName, (const int*)&val)); }
+            void SetUniform4Int(stringr unifName, const Maths::Vec4Int& val)  const { SHADER_UNIF(4I(unifName, (const int*)&val)); }
 
-        //void Render(bool autoSort = true);
-        
-        static std::unique_ptr<GraphicsDevice> Initialize(Maths::Vec2Int winSize = { 640, 480 });
+            void SetUniform1IntArr(stringr unifName, int vals[], unsigned num)   const { SHADER_UNIF(1IVec(unifName, vals, num)); }
+
+            void SetUniform1Float(stringr unifName, float val)                  const { SHADER_UNIF(1F(unifName, val)); }
+            void SetUniform2Float(stringr unifName, const Maths::Vector2& val)  const { SHADER_UNIF(2F(unifName, (const float*)&val)); }
+            void SetUniform3Float(stringr unifName, const Maths::Vector3& val)  const { SHADER_UNIF(3F(unifName, (const float*)&val)); }
+            void SetUniform4Float(stringr unifName, const Maths::Vector4& val)  const { SHADER_UNIF(4F(unifName, (const float*)&val)); }
+
+            void SetUniform4x4Matrix(stringr unifName, const Maths::Matrix3D& val) const { SHADER_UNIF(Matrix4x4(unifName, val)); }
+            #undef SHADER_UNIF*/
+
+            void SetCamera(const Maths::Matrix3D& camera) { _camera = camera; }
+            void SetProjection(const Maths::Matrix3D& proj) { _projection = proj; }
+
+            OPENGL_API void DebugMenu();
+
+            static GraphicsDevice& GetDeviceInstance() { return *Instance; }
+            static GLFWwindow* GetMainWindow() { return Instance->_mainWindow; }
+
+            //void Render(bool autoSort = true);
+
+            OPENGL_API static std::unique_ptr<GraphicsDevice> Initialize(Maths::Vec2Int winSize = { 640, 480 });
 
         friend class MeshObject;
     };

@@ -19,11 +19,11 @@ namespace Test
         Maths::Vector3  modelScale;
         Maths::Vector3  modelRotation;
     public:
-        TestBatchedTextured();
-        ~TestBatchedTextured() override;
-        
-        void OnUpdate(float deltaTime) override;
-        void OnRender(Graphics::Renderer& renderer) override;
-        void OnImGuiRender() override;
+        OPENGL_API TestBatchedTextured();
+        OPENGL_API ~TestBatchedTextured() override;
+
+        OPENGL_API void OnUpdate(float deltaTime) override;
+        OPENGL_API void OnRender(Graphics::Renderer& renderer) override;
+        OPENGL_API void OnImGuiRender() override;
     };
 }

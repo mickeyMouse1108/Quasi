@@ -1,4 +1,5 @@
 #pragma once
+#include "opengl.h"
 #include "NumTypes.h"
 
 namespace Graphics {
@@ -6,10 +7,10 @@ namespace Graphics {
 	    private:
 		    uint rendererID = 0;
 	    public:
-		    VertexBuffer(const void* data, uint size);
-		    ~VertexBuffer();
+		    OPENGL_API VertexBuffer(const void* data, uint size);
+		    OPENGL_API ~VertexBuffer();
 
-		    void Bind() const;
-		    void Unbind() const;
+		    OPENGL_API void Bind() const;
+		    OPENGL_API void Unbind() const;
 	};
 }

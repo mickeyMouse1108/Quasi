@@ -9,7 +9,7 @@ namespace Graphics {
             Maths::Vec2UInt atlasSize;
             Maths::Vec2UInt subTextureSize;
         public:
-            TextureAtlas(const std::string& filename, uint xSize, uint ySize);
+            OPENGL_API TextureAtlas(const std::string& filename, uint xSize, uint ySize);
 
             [[nodiscard]] Maths::Vec2UInt GetTextureSize()    const { return { texture.GetWidth(), texture.GetHeight() }; }
             [[nodiscard]] Maths::Vec2UInt GetAtlasSize()      const { return atlasSize; }

@@ -1,7 +1,0 @@
-﻿  Game.cpp
-     Creating library C:\Users\User\RiderProjects\OpenGL\out\Release\x64\out\Game.lib and object C:\Users\User\RiderProjects\OpenGL\out\Release\x64\out\Game.exp
-  Generating code
-  Previous IPDB not found, fall back to full compilation.
-  All 346 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
-  Finished generating code
-  Game.vcxproj -> C:\Users\User\RiderProjects\OpenGL\out\Release\x64\out\Game.exe

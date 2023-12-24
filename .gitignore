@@ -3,3 +3,4 @@ OpenGL/src/vendor/include/
 OpenGL/src/vendor/imgui-1.60/
 .idea/
 .vs/
+out/

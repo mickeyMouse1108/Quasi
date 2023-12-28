@@ -6,39 +6,30 @@
 #include "Debugging.h"
 
 namespace Graphics {
+    Shader::Shader() {}
 
-    std::string Shader::StdColored = 
-        "#shader vertex\n"
-        "#version 330 core\n"
-        "layout(location = 0) in vec4 position;\n"
-        "layout(location = 1) in vec4 color;\n"
-        "out vec4 v_color;\n"
-        "uniform mat4 u_MVP;\n"
-        "void main(){\n"
-        "    gl_Position = u_MVP * position;\n"
-        "    v_color = color;\n"
-        "}\n"
-        "#shader fragment\n"
-        "#version 330 core\n"
-        "layout(location = 0) out vec4 color;\n"
-        "in vec4 v_color;\n"
-        "void main(){\n"
-        "    color = v_color;\n"
-        "}\n";
-
-    Shader::Shader() : rendererID(-1) {}
-
-    Shader::Shader(const std::string& program) : rendererID(0) {
+    Shader::Shader(const std::string& program) {
         ShaderProgramSource shadersrc = ParseShader(program);
         rendererID = CreateShader(shadersrc.vertexShader, shadersrc.fragmentShader);
     }
 
-    Shader::Shader(const std::string& vert, const std::string& frag) : rendererID(0) {
+    Shader::Shader(const std::string& vert, const std::string& frag) {
         rendererID = CreateShader(vert, frag);
     }
 
     Shader::~Shader() {
         GLCALL(glDeleteProgram(rendererID));
+    }
+
+    Shader::Shader(Shader&& s) noexcept {
+        *this = std::move(s);
+    }
+
+    Shader& Shader::operator=(Shader&& s) {
+        rendererID = s.rendererID;
+        s.rendererID = 0;
+        uniformCache = std::move(s.uniformCache);
+        return *this;
     }
 
     void Shader::Bind() const {
@@ -94,7 +85,7 @@ namespace Graphics {
         Shader s {};
         ShaderProgramSource shadersrc = ParseFromFile(filepath);
         s.rendererID = CreateShader(shadersrc.vertexShader, shadersrc.fragmentShader);
-        return s;
+        return std::move(s);
     }
     
     uint Shader::CompileShader(stringr source, uint type) {

@@ -1,11 +1,11 @@
 ﻿#include "TestCubeRender.h"
+#include "Quad.h"
 
 #include <algorithm>
 
 #include "imgui.h"
 
-namespace Test
-{
+namespace Test {
     // Maths::Vector3 TestCubeRender::faceAxis[6] = {
     //     { +1.0f, +0.0f, +0.0f },
     //     { -1.0f, +0.0f, +0.0f },
@@ -16,8 +16,7 @@ namespace Test
     // };
     
     TestCubeRender::TestCubeRender()
-    : projection(Maths::Matrix3D::OrthoProjection(-5.0f, 5.0f, -5.0f, 5.0f, -5.0f, 5.0f))
-    {
+    : projection(Maths::Matrix3D::OrthoProjection(-5.0f, 5.0f, -5.0f, 5.0f, -5.0f, 5.0f)) {
         va = new Graphics::VertexArray();
         vb = new Graphics::DynamicVertexBuffer<VertexColor3D>(4 * 6);
         
@@ -47,104 +46,75 @@ namespace Test
             "    color = v_color;\n"
             "    color.a = v_alpha;\n"
             "}"
+            // Graphics::Shader::StdColored
         );
         shader->Bind();
 
         shader->SetUniformMatrix4x4("u_MVP", projection);
-        shader->SetUniform1F("u_alpha", alpha);
+        // shader->SetUniform1F("u_alpha", alpha);
         
         va->Unbind();
         vb->Unbind();
         ib->Unbind();
         shader->Unbind();
 
-        Maths::Vector3 cubeVertices[8] =
-        {
-            { +0.5f, +0.5f, +0.5f }, // +++
-            { +0.5f, +0.5f, -0.5f }, // ++-
-            { +0.5f, -0.5f, +0.5f }, // +-+
-            { +0.5f, -0.5f, -0.5f }, // +--
-            { -0.5f, +0.5f, +0.5f }, // -++
-            { -0.5f, +0.5f, -0.5f }, // -+-
-            { -0.5f, -0.5f, +0.5f }, // --+
-            { -0.5f, -0.5f, -0.5f }, // ---
-        };
+        using Graphics::Primitives::Quad;
 
-#define V VertexColor3D
-        
-        {
-            cubeFaces[0] = MESH_QUAD_CREATE(VertexColor3D,  // left: red
-                V { cubeVertices[0], { 1.0f, 0.0f, 0.0f, 1.0f } },
-                V { cubeVertices[1], { 1.0f, 0.0f, 0.0f, 1.0f } },
-                V { cubeVertices[2], { 1.0f, 0.0f, 0.0f, 1.0f } },
-                V { cubeVertices[3], { 1.0f, 0.0f, 0.0f, 1.0f } },
-            );
+        auto face0 = Quad({ +1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 })
+            .IntoMesh<VertexColor3D>();
+        face0.ApplyMaterial(&VertexColor3D::Color, { 1, 0, 0, 1 });
 
-            cubeFaces[1] = MESH_QUAD_CREATE(VertexColor3D,  // right: cyan
-                V { cubeVertices[4], { 0.0f, 1.0f, 1.0f, 1.0f } },
-                V { cubeVertices[5], { 0.0f, 1.0f, 1.0f, 1.0f } },
-                V { cubeVertices[6], { 0.0f, 1.0f, 1.0f, 1.0f } },
-                V { cubeVertices[7], { 0.0f, 1.0f, 1.0f, 1.0f } },
-            );
+        auto face1 = Quad({ -1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 })
+            .IntoMesh<VertexColor3D>();
+        face1.ApplyMaterial(&VertexColor3D::Color, { 0, 1, 1, 1 });
 
-            cubeFaces[2] = MESH_QUAD_CREATE(VertexColor3D,  // up: green
-                V { cubeVertices[0], { 0.0f, 1.0f, 0.0f, 1.0f } },
-                V { cubeVertices[1], { 0.0f, 1.0f, 0.0f, 1.0f } },
-                V { cubeVertices[4], { 0.0f, 1.0f, 0.0f, 1.0f } },
-                V { cubeVertices[5], { 0.0f, 1.0f, 0.0f, 1.0f } },
-            );
+        auto face2 = Quad({ 0, +1, 0 }, { 1, 0, 0 }, { 0, 0, 1 })
+            .IntoMesh<VertexColor3D>();
+        face2.ApplyMaterial(&VertexColor3D::Color, { 0, 1, 0, 1 });
 
-            cubeFaces[3] = MESH_QUAD_CREATE(VertexColor3D,  // down: purp
-                V { cubeVertices[2], { 1.0f, 0.0f, 1.0f, 1.0f } },
-                V { cubeVertices[3], { 1.0f, 0.0f, 1.0f, 1.0f } },
-                V { cubeVertices[6], { 1.0f, 0.0f, 1.0f, 1.0f } },
-                V { cubeVertices[7], { 1.0f, 0.0f, 1.0f, 1.0f } },
-            );
+        auto face3 = Quad({ 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, 1 })
+            .IntoMesh<VertexColor3D>();
+        face3.ApplyMaterial(&VertexColor3D::Color, { 1, 0, 1, 1 });
 
-            cubeFaces[4] = MESH_QUAD_CREATE(VertexColor3D,  // back: blue
-                V { cubeVertices[0], { 0.0f, 0.0f, 1.0f, 1.0f } },
-                V { cubeVertices[2], { 0.0f, 0.0f, 1.0f, 1.0f } },
-                V { cubeVertices[4], { 0.0f, 0.0f, 1.0f, 1.0f } },
-                V { cubeVertices[6], { 0.0f, 0.0f, 1.0f, 1.0f } },
-            );
+        auto face4 = Quad({ 0, 0, +1 }, { 1, 0, 0 }, { 0, 1, 0 })
+            .IntoMesh<VertexColor3D>();
+        face4.ApplyMaterial(&VertexColor3D::Color, { 0, 0, 1, 1 });
 
-            cubeFaces[5] = MESH_QUAD_CREATE(VertexColor3D,  // front: yellow
-                V { cubeVertices[1], { 1.0f, 1.0f, 0.0f, 1.0f } },
-                V { cubeVertices[3], { 1.0f, 1.0f, 0.0f, 1.0f } },
-                V { cubeVertices[5], { 1.0f, 1.0f, 0.0f, 1.0f } },
-                V { cubeVertices[7], { 1.0f, 1.0f, 0.0f, 1.0f } },
-            );
-        }
-#undef V
+        auto face5 = Quad({ 0, 0, -1 }, { 1, 0, 0 }, { 0, 1, 0 })
+            .IntoMesh<VertexColor3D>();
+        face5.ApplyMaterial(&VertexColor3D::Color, { 1, 1, 0, 1 });
 
-        for (int i = 0; i < 6; ++i) cubeFaces[i].AddTo(*vb, *ib);
+        cube = std::move(face0);
+        cube.Add(face1);
+        cube.Add(face2);
+        cube.Add(face3);
+        cube.Add(face4);
+        cube.Add(face5);
+
+        cube.AddTo(*vb, *ib);
     }
 
-    TestCubeRender::~TestCubeRender()
-    {
+    TestCubeRender::~TestCubeRender() {
         delete va;
         delete vb;
         delete ib;
         delete shader;
     }
 
-    void TestCubeRender::OnUpdate(float deltaTime)
-    {
+    void TestCubeRender::OnUpdate(float deltaTime) {
         Test::OnUpdate(deltaTime);
     }
 
-    void TestCubeRender::OnRender(Graphics::Renderer& renderer)
-    {
+    void TestCubeRender::OnRender(Graphics::Renderer& renderer) {
         Test::OnRender(renderer);
 
         Maths::Matrix3D mat = Maths::Matrix3D::Transform(modelTranslation, modelScale, modelRotation);
         
         // std::sort(faceOrder, faceOrder + 6,
         // [&](unsigned int face1, unsigned int face2){ return (mat * faceAxis[face1]).z < (mat * faceAxis[face2]).z; });
-
         vb->ClearData();
         ib->ClearData();
-        for (int i = 0; i < 6; ++i) cubeFaces[i].AddTo(*vb, *ib);
+        cube.AddTo(*vb, *ib);
 
         shader->Bind();
         shader->SetUniformMatrix4x4("u_MVP", projection * mat);

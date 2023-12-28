@@ -10,22 +10,22 @@
 #include "stdu/ref.h"
 
 namespace Graphics {
-    class MeshObject;
+    using Vertex = VertexColor3D;
+    template <class T = Vertex> class Mesh;
     
     // TODO: make this changeable
     class GraphicsDevice {
-        using                    Vertex = VertexColorTextureAtlas3D;
         static constexpr unsigned int MAX_VERTEX_COUNT = 1000;
         static constexpr unsigned int MAX_INDEX_COUNT = 1000;
     private:
-        std::vector<stdu::ref<MeshObject>> _meshObjs;
+        std::vector<stdu::ref<Mesh<>>> _meshes;
         
-        std::unique_ptr<VertexArray>                 _vertexArray;
-        std::unique_ptr<DynamicVertexBuffer<Vertex>> _vertexBuffer;
-        std::unique_ptr<DynamicIndexBuffer>          _indexBuffer;
-        std::unique_ptr<Shader>                      _currentShader;
+        VertexArray                 _vertexArray;
+        DynamicVertexBuffer<Vertex> _vertexBuffer;
+        DynamicIndexBuffer          _indexBuffer;
+        Shader                      _currentShader = {}; // shader can be null if renderId is 0
         
-        std::unique_ptr<Renderer>                    _renderer;
+        Renderer                    _renderer;
 
         // Maths::Matrix3D::PerspectiveProjectionFOV(45.0f, 4.0f / 3, 0.1f, 100.0f);
         Maths::Matrix3D _projection = Maths::Matrix3D::OrthoProjection(-4, 4, -3, 3, 0.1f, 100);
@@ -34,7 +34,7 @@ namespace Graphics {
         const Maths::Vec2Int _windowSize;
         GLFWwindow* _mainWindow;
 
-        inline static GraphicsDevice* Instance = nullptr;
+        inline static stdu::ref<GraphicsDevice> Instance = nullptr;
     // public:
         public:
             OPENGL_API GraphicsDevice(GLFWwindow* window, Maths::Vec2Int winSize);
@@ -44,29 +44,33 @@ namespace Graphics {
             OPENGL_API void BeginRender();
             OPENGL_API void EndRender();
 
-            OPENGL_API void ClearRegistered() const;
-            OPENGL_API void RegisterElements() const;
-            OPENGL_API void RegisterNewElements(MeshObject* meshObjs, uint objCount) const;
+            OPENGL_API void ClearRegistered();
+            OPENGL_API void RegisterMeshes();
+            OPENGL_API void RegisterNewMeshes(const Mesh<>* meshes, uint count);
+            template <class U> void RegisterNewMeshes(const U& ms) { RegisterNewMeshes(ms.data(), ms.size()); }
             OPENGL_API void RenderRegistered() const;
-            OPENGL_API void AddMeshObject(MeshObject* meshObjs, uint objCount);
+            OPENGL_API void AddMeshes(Mesh<>* meshes, uint count);
+            template <class U> void AddMeshes(const U& ms) { AddMeshes(ms.data(), ms.size()); }
             OPENGL_API void Delete(int index);
             OPENGL_API void Delete(int indexStart, int indexEnd);
-            OPENGL_API void UpdateMeshIndices();
+            OPENGL_API void UpdateMeshIndicies();
 
             OPENGL_API void ClearColor(const Maths::Vector3& color);
 
             [[nodiscard]] bool WindowIsOpen() const { return !glfwWindowShouldClose(_mainWindow); }
 
-            [[nodiscard]] const Renderer& GetRenderer() const { return *_renderer; }
-            Renderer& GetRenderer() { return *_renderer; }
+            [[nodiscard]] const Renderer& GetRenderer() const { return _renderer; }
+            Renderer& GetRenderer() { return _renderer; }
             [[nodiscard]] Maths::Vec2Int GetWindowSize() const { return _windowSize; }
             [[nodiscard]] const GLFWwindow* GetWindow() const { return _mainWindow; }
             GLFWwindow* GetWindow() { return _mainWindow; }
-            [[nodiscard]] const Shader& GetShader() const { return *_currentShader; }
+            Shader& GetShader() { return _currentShader; }
+            [[nodiscard]] const Shader& GetShader() const { return _currentShader; }
 
             OPENGL_API void EnableShader();
             OPENGL_API void DisableShader();
-            void UseShader(stringr shaderPath) { _currentShader = std::make_unique<Shader>(shaderPath); }
+            void UseShader(stringr code) { _currentShader = std::move(Shader { code }); }
+            void UseShaderFromFile(stringr file) { _currentShader = std::move(Shader::FromFile(file)); }
             /*#define SHADER_UNIF(x) _currentShader->Bind(); _currentShader->SetUniform##x; _currentShader->Unbind()
             void SetUniform1Int(stringr unifName, int val)                    const { SHADER_UNIF(1I(unifName, val)); }
             void SetUniform2Int(stringr unifName, const Maths::Vec2Int& val)  const { SHADER_UNIF(2I(unifName, (const int*)&val)); }
@@ -86,6 +90,8 @@ namespace Graphics {
             void SetCamera(const Maths::Matrix3D& camera) { _camera = camera; }
             void SetProjection(const Maths::Matrix3D& proj) { _projection = proj; }
 
+            void SetRenderWireframe(bool usewire) { glPolygonMode(GL_FRONT_AND_BACK, usewire ? GL_LINE, GL_FILL); }
+
             OPENGL_API void DebugMenu();
 
             static GraphicsDevice& GetDeviceInstance() { return *Instance; }
@@ -95,6 +101,6 @@ namespace Graphics {
 
             OPENGL_API static std::unique_ptr<GraphicsDevice> Initialize(Maths::Vec2Int winSize = { 640, 480 });
 
-        friend class MeshObject;
+        friend class Mesh<>;
     };
 }

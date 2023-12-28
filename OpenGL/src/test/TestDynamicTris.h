@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "DynamicIndexBuffer.h"
 #include "Test.h"
-#include "TriMesh.h"
+#include "Mesh.h"
 
 namespace Test
 {
@@ -13,10 +13,10 @@ namespace Test
         bool isMax = false;
         bool isMin = false;
 
-        unsigned int triCount = 1;
+        uint triCount = 1;
         
-        Graphics::TriMesh<VertexColor3D> currentTri;
-        Graphics::TriMesh<VertexColor3D> tris[MAX_TRIS];
+        Graphics::Mesh<VertexColor3D> currentTri;
+        Graphics::Mesh<VertexColor3D> tris[MAX_TRIS];
         
         Graphics::DynamicVertexBuffer<VertexColor3D>* vb;
         Graphics::DynamicIndexBuffer* ib;

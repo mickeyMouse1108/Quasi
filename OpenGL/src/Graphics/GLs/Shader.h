@@ -14,13 +14,19 @@ namespace Graphics {
 
     class Shader {
         private:
-            uint rendererID;
+            uint rendererID = 0;
             std::unordered_map<std::string, int> uniformCache;
         public:
             OPENGL_API Shader();
             OPENGL_API Shader(const std::string& program);
             OPENGL_API Shader(const std::string& vert, const std::string& frag);
             OPENGL_API ~Shader();
+
+            OPENGL_API Shader(Shader&& s) noexcept;
+            Shader(const Shader& s) = delete;
+
+            OPENGL_API Shader& operator=(Shader&& s);
+            OPENGL_API Shader& operator=(const Shader& s) = delete;
 
             OPENGL_API void Bind() const;
             OPENGL_API void Unbind() const;
@@ -103,13 +109,31 @@ namespace Graphics {
 #undef SHADER_UNIF_MAT
 #pragma endregion
 
-            static std::string StdColored;
+            inline const static std::string StdColored = 
+                "#shader vertex\n"
+                "#version 330 core\n"
+                "layout(location = 0) in vec4 position;\n"
+                "layout(location = 1) in vec4 color;\n"
+                "out vec4 v_color;\n"
+                "uniform mat4 u_MVP;\n"
+                "void main(){\n"
+                "    gl_Position = u_MVP * position;\n"
+                "    v_color = color;\n"
+                "}\n"
+                "#shader fragment\n"
+                "#version 330 core\n"
+                "layout(location = 0) out vec4 color;\n"
+                "in vec4 v_color;\n"
+                "void main(){\n"
+                "    color = v_color;\n"
+                "}\n";
+
+            OPENGL_API static Shader FromFile(stringr filepath);
     
         private:
             OPENGL_API uint GetUniformLocation(stringr name);
             OPENGL_API static ShaderProgramSource ParseShader(stringr program);
             OPENGL_API static ShaderProgramSource ParseFromFile(stringr filepath);
-            OPENGL_API static Shader FromFile(stringr filepath);
             OPENGL_API static uint CompileShader(stringr source, uint type);
             OPENGL_API static uint CompileShaderVert(stringr source) { return CompileShader(source, GL_VERTEX_SHADER); }
             OPENGL_API static uint CompileShaderFrag(stringr source) { return CompileShader(source, GL_FRAGMENT_SHADER); }

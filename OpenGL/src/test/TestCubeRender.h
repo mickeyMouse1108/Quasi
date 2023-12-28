@@ -1,14 +1,12 @@
 ﻿#pragma once
-#include "QuadMesh.h"
+#include "Mesh.h"
 #include "Test.h"
 
-namespace Test
-{
-    class TestCubeRender : public Test
-    {
+namespace Test {
+    class TestCubeRender : public Test {
     private:
         // unsigned int faceOrder[6] = { 0, 1, 2, 3, 4, 5 };
-        Graphics::QuadMesh<VertexColor3D> cubeFaces[6];
+        Graphics::Mesh<VertexColor3D> cube;
         
         Graphics::DynamicVertexBuffer<VertexColor3D>* vb;
         Graphics::DynamicIndexBuffer* ib;
@@ -16,9 +14,9 @@ namespace Test
         Graphics::Shader* shader;
 
         Maths::Matrix3D projection;
-        Maths::Vector3 modelTranslation = {0.0f, 0.0f, 0.0f};
-        Maths::Vector3 modelScale       = {1.0f, 1.0f, 1.0f};
-        Maths::Vector3 modelRotation    = {0.0f, 0.0f, 0.0f};
+        Maths::Vector3 modelTranslation = { 0.0f, 0.0f, 0.0f };
+        Maths::Vector3 modelScale       = { 1.0f, 1.0f, 1.0f };
+        Maths::Vector3 modelRotation    = { 0.0f, 0.0f, 0.0f };
         float alpha = 1.0f;
     public:
         OPENGL_API TestCubeRender();

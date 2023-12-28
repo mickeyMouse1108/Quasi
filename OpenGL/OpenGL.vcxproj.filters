@@ -39,7 +39,7 @@
     <ClCompile Include="src\Graphics\Graphicals\GraphicsDevice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Graphics\Graphicals\MeshObject.cpp">
+    <ClCompile Include="src\Graphics\Graphicals\Mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Graphics\Utils\Textures\Texture.cpp">
@@ -111,6 +111,12 @@
     <ClCompile Include="src\vendor\stb_image\stb_image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Graphics\Primitives\Quad.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Primitives\Tri.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\vendor\imgui\main.cpp">
@@ -153,16 +159,10 @@
     <ClInclude Include="src\Graphics\Graphicals\GraphicsDevice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Graphics\Graphicals\MeshObject.h">
+    <ClInclude Include="src\Graphics\Graphicals\Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Graphics\Meshes\Mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Graphics\Meshes\QuadMesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Graphics\Meshes\TriMesh.h">
+    <ClInclude Include="src\Graphics\Primitives\Quad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics\Utils\Textures\Texture.h">
@@ -268,6 +268,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\stdu\io.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Graphicals\TriIndicies.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Primitives\Tri.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

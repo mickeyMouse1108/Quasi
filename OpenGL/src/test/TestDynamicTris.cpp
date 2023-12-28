@@ -1,4 +1,5 @@
 ﻿#include "TestDynamicTris.h"
+#include "Tri.h"
 
 #include "imgui.h"
 
@@ -15,14 +16,12 @@ namespace Test
         { 0.5f, 0.0f, 1.0f, 1.0f }, // purple
     };
 
-    Maths::Matrix3D TestDynamicTris::ModelMatrix()
-    {
+    Maths::Matrix3D TestDynamicTris::ModelMatrix() {
         return Maths::Matrix3D::Transform({modelTranslation, 0.0f}, {modelScale, 1.0f}, {0.0f, 0.0f, modelRotation});
     }
 
     TestDynamicTris::TestDynamicTris()
-        : projection(Maths::Matrix3D::OrthoProjection(-320.f, 320.0f, -240.0f, 240.0f, -1.0f, 1.0f))
-    {
+        : projection(Maths::Matrix3D::OrthoProjection(-320.f, 320.0f, -240.0f, 240.0f, -1.0f, 1.0f)) {
         va = new Graphics::VertexArray();
         vb = new Graphics::DynamicVertexBuffer<VertexColor3D>(MAX_TRIS * 3);
         
@@ -39,65 +38,65 @@ namespace Test
         ib->Unbind();
         shader->Unbind();
 
-        std::array vc3 = {
+        std::vector vc3 = {
             VertexColor3D { { +00.0f, +50.0f, 0.0f }, COLORS[0]},
             VertexColor3D { { -50.0f, -50.0f, 0.0f }, COLORS[0]},
             VertexColor3D { { +50.0f, -50.0f, 0.0f }, COLORS[0]},
         };
         
-        currentTri = Graphics::TriMesh( vc3 );
+        currentTri = Graphics::Mesh(vc3, { { 0, 1, 2 } });
     }
 
-    TestDynamicTris::~TestDynamicTris()
-    {
+    TestDynamicTris::~TestDynamicTris() {
         delete va;
         delete vb;
         delete ib;
         delete shader;
     }
 
-    void TestDynamicTris::OnUpdate(float deltaTime)
-    {
+    void TestDynamicTris::OnUpdate(float deltaTime) {
         Test::OnUpdate(deltaTime);
     }
 
-    void TestDynamicTris::OnRender(Graphics::Renderer& renderer)
-    {
+    void TestDynamicTris::OnRender(Graphics::Renderer& renderer) {
         Test::OnRender(renderer);
 
         vb->ClearData();
         ib->ClearData();
 
         for (unsigned int i = 0; i < triCount - 1; ++i) tris[i].AddTo(*vb, *ib);
-        (ModelMatrix() * currentTri).AddTo(*vb, *ib);
+        currentTri.SetTransform(ModelMatrix());
+        currentTri.AddTo(*vb, *ib);
 
         renderer.Draw(*va, *ib, *shader);
     }
 
-    void TestDynamicTris::OnImGuiRender()
-    {
+    void TestDynamicTris::OnImGuiRender() {
         Test::OnImGuiRender();
 
         ImGui::DragFloat2("Current Tri Translation", modelTranslation       );
         ImGui::DragFloat2("Current Tri Scale      ", modelScale      , 0.10f);
         ImGui::DragFloat ("Current Tri Rotation   ", &modelRotation  , 0.05f);
 
-        if (ImGui::Button("Add Tri") && !isMax)
-        {
-            if (triCount >= MAX_TRIS)
-            {
+        if (ImGui::Button("Add Tri") && !isMax) {
+            if (triCount >= MAX_TRIS) {
                 isMax = true;
-            } else
-            {
-                tris[triCount - 1] = ModelMatrix() * currentTri;
-                std::array vc3 = {
+            } else {
+                tris[triCount - 1] = std::move(currentTri);
+                std::vector vc3 = {
                     VertexColor3D { { +00.0f, +50.0f, 0.0f }, COLORS[triCount]},
                     VertexColor3D { { -50.0f, -50.0f, 0.0f }, COLORS[triCount]},
                     VertexColor3D { { +50.0f, -50.0f, 0.0f }, COLORS[triCount]},
                 };
-                currentTri = Graphics::TriMesh(vc3);
-                modelTranslation = {0.0f, 0.0f};
-                modelScale = {1.0f, 1.0f};
+                currentTri = Graphics::Primitives::Tri(
+                    { +00.0f, +50.0f, 0.0f },
+                    { -50.0f, -50.0f, 0.0f },
+                    { +50.0f, -50.0f, 0.0f }
+                ).IntoMesh<VertexColor3D>();
+                currentTri.ApplyMaterial(&VertexColor3D::Color, COLORS[triCount]);
+                // Graphics::Mesh(vc3, { { 0, 1, 2 } });
+                modelTranslation = { 0.0f, 0.0f };
+                modelScale = { 1.0f, 1.0f };
                 modelRotation = 0.0f;
                 
                 ++triCount;
@@ -112,9 +111,9 @@ namespace Test
         {
             if (triCount <= 1) { isMin = true; } else
             {
-                currentTri = tris[triCount - 2];
-                modelTranslation = {0.0f, 0.0f};
-                modelScale = {1.0f, 1.0f};
+                currentTri = std::move(tris[triCount - 2]);
+                modelTranslation = { 0.0f, 0.0f };
+                modelScale = { 1.0f, 1.0f };
                 modelRotation = 0.0f;
                 --triCount;
                 

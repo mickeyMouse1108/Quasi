@@ -1,7 +1,6 @@
 ﻿// because gl.h cant be included before glew.h, weird ordering
 
-#include "GraphicsDevice.h"
-#include "MeshObject.h"
+#include "Mesh.h"
 
 #include "IO.h"
 #include "Mouse.h"
@@ -15,17 +14,17 @@
 
 namespace Graphics {
     GraphicsDevice::GraphicsDevice(GLFWwindow* window, Maths::Vec2Int winSize) : 
-        _vertexArray  (new VertexArray()),
-        _vertexBuffer (new DynamicVertexBuffer<Vertex>(MAX_VERTEX_COUNT)),
-        _indexBuffer  (new DynamicIndexBuffer(MAX_INDEX_COUNT)),
-        _renderer     (new Renderer()),
+        _vertexArray  (),
+        _vertexBuffer (MAX_VERTEX_COUNT),
+        _indexBuffer  (MAX_INDEX_COUNT),
+        _renderer     (),
     
         _windowSize   (winSize),
         _mainWindow   { window }
     {
-        _vertexArray->AddBuffer(*_vertexBuffer);
+        _vertexArray.AddBuffer(_vertexBuffer);
 
-        Instance = this;
+        Instance = *this;
         IO::Init(*this);
     }
 
@@ -39,20 +38,20 @@ namespace Graphics {
     }
 
     void GraphicsDevice::BeginRender() {
-        _renderer->Clear();
+        _renderer.Clear();
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
     }
     
     void GraphicsDevice::EnableShader() {
-        _currentShader->Bind();
-        _currentShader->SetUniformMatrix4x4("u_projection", _projection);
-        _currentShader->SetUniformMatrix4x4("u_view", _camera);
+        _currentShader.Bind();
+        _currentShader.SetUniformMatrix4x4("u_projection", _projection);
+        _currentShader.SetUniformMatrix4x4("u_view", _camera);
     }
     
     void GraphicsDevice::DisableShader() {
-        _currentShader->Unbind();
+        _currentShader.Unbind();
     }
 
     void GraphicsDevice::EndRender() {
@@ -66,44 +65,44 @@ namespace Graphics {
         glfwSwapBuffers(_mainWindow);
     }
 
-    void GraphicsDevice::ClearRegistered() const {
-        _vertexBuffer->ClearData();
-        _indexBuffer ->ClearData();
+    void GraphicsDevice::ClearRegistered() {
+        _vertexBuffer.ClearData();
+        _indexBuffer .ClearData();
     }
 
-    void GraphicsDevice::RegisterElements() const {
-        for (auto _meshObj : _meshObjs) _meshObj->AddTo(*_vertexBuffer, *_indexBuffer);
+    void GraphicsDevice::RegisterMeshes() {
+        for (stdu::ref mesh : _meshes) mesh->AddTo(_vertexBuffer, _indexBuffer);
     }
 
-    void GraphicsDevice::RegisterNewElements(MeshObject* meshObjs, uint objCount) const {
-        for (uint i = 0; i < objCount; ++i) meshObjs[i].AddTo(*_vertexBuffer, *_indexBuffer);
+    void GraphicsDevice::RegisterNewMeshes(const Mesh<>* meshes, uint count) {
+        for (uint i = 0; i < count; ++i) meshes[i].AddTo(_vertexBuffer, _indexBuffer);
     }
 
     void GraphicsDevice::RenderRegistered() const {
-        _renderer->Draw(*_vertexArray, *_indexBuffer, *_currentShader);
+        _renderer.Draw(_vertexArray, _indexBuffer, _currentShader);
     }
 
-    void GraphicsDevice::AddMeshObject(MeshObject* objs, uint count) {
+    void GraphicsDevice::AddMeshes(Mesh<>* meshes, uint count) {
         for (uint i = 0; i < count; ++i) {
-            objs[i].device = this;
-            objs[i].deviceIndex = (uint)_meshObjs.size();
-            _meshObjs.emplace_back(objs[i]);
+            meshes[i].device = this;
+            meshes[i].deviceIndex = (uint)_meshes.size();
+            _meshes.emplace_back(meshes[i]);
         }
     }
 
     void GraphicsDevice::Delete(int index) {
-        _meshObjs.erase(_meshObjs.begin() + index);
-        UpdateMeshIndices();
+        _meshes.erase(_meshes.begin() + index);
+        UpdateMeshIndicies();
     }
 
     void GraphicsDevice::Delete(int indexStart, int indexEnd) {
-        _meshObjs.erase(_meshObjs.begin() + indexStart, _meshObjs.begin() + indexEnd);
-        UpdateMeshIndices();
+        _meshes.erase(_meshes.begin() + indexStart, _meshes.begin() + indexEnd);
+        UpdateMeshIndicies();
     }
 
-    void GraphicsDevice::UpdateMeshIndices() {
-        for (uint i = 0; i < _meshObjs.size(); ++i)
-            _meshObjs[i]->deviceIndex = i;
+    void GraphicsDevice::UpdateMeshIndicies() {
+        for (uint i = 0; i < _meshes.size(); ++i)
+            _meshes[i]->deviceIndex = i;
     }
 
     void GraphicsDevice::ClearColor(const Maths::Vector3& color) {

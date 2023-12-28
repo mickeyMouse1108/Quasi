@@ -92,7 +92,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;OPENGL_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>src;src\Graphics\GLs;src\Graphics\Graphicals;src\Graphics\Meshes;src\Maths;src\Graphics\Utils\Textures;src\IO;src\vendor\imgui;src\vendor;src\test;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;src\Graphics\GLs;src\Graphics\Graphicals;src\Graphics\Primitives;src\Maths;src\Graphics\Utils\Textures;src\IO;src\vendor\imgui;src\vendor;src\test;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ShowIncludes>false</ShowIncludes>
@@ -113,7 +113,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;OPENGL_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>src;src\Graphics\GLs;src\Graphics\Graphicals;src\Graphics\Meshes;src\Maths;src\Graphics\Utils\Textures;src\IO;src\vendor\imgui;src\vendor;src\test;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;src\Graphics\GLs;src\Graphics\Graphicals;src\Graphics\Primitives;src\Maths;src\Graphics\Utils\Textures;src\IO;src\vendor\imgui;src\vendor;src\test;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -131,7 +131,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;OPENGL_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>src;src\Graphics\GLs;src\Graphics\Graphicals;src\Graphics\Meshes;src\Maths;src\Graphics\Utils\Textures;src\IO;src\vendor\imgui;src\vendor;src\test;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;src\Graphics\GLs;src\Graphics\Graphicals;src\Graphics\Primitives;src\Maths;src\Graphics\Utils\Textures;src\IO;src\vendor\imgui;src\vendor;src\test;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -149,7 +149,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;OPENGL_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>src;src\Graphics\GLs;src\Graphics\Graphicals;src\Graphics\Meshes;src\Maths;src\Graphics\Utils\Textures;src\IO;src\vendor\imgui;src\vendor;src\test;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;src\Graphics\GLs;src\Graphics\Graphicals;src\Graphics\Primitives;src\Maths;src\Graphics\Utils\Textures;src\IO;src\vendor\imgui;src\vendor;src\test;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -170,7 +170,9 @@
     <ClCompile Include="src\Graphics\GLs\VertexBuffer.cpp" />
     <ClCompile Include="src\Graphics\GLs\VertexBufferLayout.cpp" />
     <ClCompile Include="src\Graphics\Graphicals\GraphicsDevice.cpp" />
-    <ClCompile Include="src\Graphics\Graphicals\MeshObject.cpp" />
+    <ClCompile Include="src\Graphics\Graphicals\Mesh.cpp" />
+    <ClCompile Include="src\Graphics\Primitives\Quad.cpp" />
+    <ClCompile Include="src\Graphics\Primitives\Tri.cpp" />
     <ClCompile Include="src\Graphics\Utils\Textures\Texture.cpp" />
     <ClCompile Include="src\Graphics\Utils\Textures\TextureAtlas.cpp" />
     <ClCompile Include="src\IO\IO.cpp" />
@@ -212,10 +214,10 @@
     <ClInclude Include="src\Graphics\GLs\VertexBufferLayout.h" />
     <ClInclude Include="src\Graphics\GLs\VertexElement.h" />
     <ClInclude Include="src\Graphics\Graphicals\GraphicsDevice.h" />
-    <ClInclude Include="src\Graphics\Graphicals\MeshObject.h" />
-    <ClInclude Include="src\Graphics\Meshes\Mesh.h" />
-    <ClInclude Include="src\Graphics\Meshes\QuadMesh.h" />
-    <ClInclude Include="src\Graphics\Meshes\TriMesh.h" />
+    <ClInclude Include="src\Graphics\Graphicals\Mesh.h" />
+    <ClInclude Include="src\Graphics\Graphicals\TriIndicies.h" />
+    <ClInclude Include="src\Graphics\Primitives\Quad.h" />
+    <ClInclude Include="src\Graphics\Primitives\Tri.h" />
     <ClInclude Include="src\Graphics\Utils\Textures\Texture.h" />
     <ClInclude Include="src\Graphics\Utils\Textures\TextureAtlas.h" />
     <ClInclude Include="src\IO\IO.h" />

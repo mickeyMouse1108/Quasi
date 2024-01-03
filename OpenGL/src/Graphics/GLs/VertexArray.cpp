@@ -11,6 +11,13 @@ namespace Graphics {
         GLCALL(glDeleteVertexArrays(1, &rendererID));
     }
 
+    VertexArray& VertexArray::Transfer(VertexArray& dest, VertexArray&& from) {
+        dest.rendererID = from.rendererID;
+        from.rendererID = 0;
+
+        return dest;
+    }
+
     void VertexArray::AddBuffer(const VertexBufferLayout& layout) {
         const std::vector<VertexBufferComponent>& elements = layout.GetComponents();
         size_t offset = 0;
@@ -23,6 +30,12 @@ namespace Graphics {
     }
 
     void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout) {
+        Bind();
+        vb.Bind();
+        AddBuffer(layout);
+    }
+
+    void VertexArray::AddBuffer(const DynamicVertexBuffer& vb, const VertexBufferLayout& layout) {
         Bind();
         vb.Bind();
         AddBuffer(layout);

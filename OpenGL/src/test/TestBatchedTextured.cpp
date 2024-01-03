@@ -1,42 +1,13 @@
 ﻿#include "TestBatchedTextured.h"
+#include "TriIndicies.h"
 
 #include "imgui.h"
 #include "NumTypes.h"
 
-namespace Test
-{
-    TestBatchedTextured::TestBatchedTextured()
-    {
-        float vertices[(2 + 2 + 1) * 4 * 2] =
-        {   -240.0f, -80.0f,    0.0f, 0.0f, 0,
-            -80.00f, -80.0f,    1.0f, 0.0f, 0,
-            -80.00f, +80.0f,    1.0f, 1.0f, 0,
-            -240.0f, +80.0f,    0.0f, 1.0f, 0,
-      
-            +80.00f, -80.0f,    0.0f, 0.0f, 1,
-            +240.0f, -80.0f,    1.0f, 0.0f, 1,
-            +240.0f, +80.0f,    1.0f, 1.0f, 1,
-            +80.00f, +80.0f,    0.0f, 1.0f, 1,
-        };
-        
-        unsigned int indices[6 * 2] = {
-            0, 1, 2,  2, 3, 0,
-            4, 5, 6,  6, 7, 4
-        };
-        
-        va = new Graphics::VertexArray();
-        vb = new Graphics::VertexBuffer(vertices, (2 + 2 + 1) * 4 * 2 * sizeof(float));
+namespace Test {
+    void TestBatchedTextured::OnInit(Graphics::GraphicsDevice& gdevice) {
+        render = gdevice.CreateNewRender<VertexColorTexture3D>(8, 4);
 
-        Graphics::VertexBufferLayout layout;
-        layout.Push<float>(2);
-        layout.Push<float>(2);
-        layout.Push<float>(1);
-        va->AddBuffer(*vb, layout);
-
-        ib = new Graphics::IndexBuffer(indices, 12);
-
-        projection = Maths::Matrix3D::OrthoProjection(-320.0f, 320.0f, -240.0f, 240.0f, -1.0f, 1.0f);
-        //LOG(*mat);
         // because i couldn't get rc files working and 
         // dlls/libs dont pack things like pngs into itself, im using these bytes instead
         uchar tex0[] = {
@@ -59,6 +30,7 @@ namespace Test
             0x46,0x2f,0x2f,0x8d,0x22,0x1e,0x9e,0x1c,0x53,0x00,0x00,0x00,0x00,0x49,0x45,0x4e,
             0x44,0xae,0x42,0x60,0x82
         };
+        textures[0] = Graphics::Texture(tex0, sizeof(tex0) / sizeof(uchar), false);
         uchar tex1[] = {
             0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a,0x00,0x00,0x00,0x0d,0x49,0x48,0x44,0x52,
             0x00,0x00,0x00,0x20,0x00,0x00,0x00,0x20,0x08,0x02,0x00,0x00,0x00,0xfc,0x18,0xed,
@@ -79,89 +51,61 @@ namespace Test
             0x27,0x78,0xed,0x81,0x35,0x83,0x0d,0x52,0x89,0x00,0x00,0x00,0x00,0x49,0x45,0x4e,
             0x44,0xae,0x42,0x60,0x82
         };
+        textures[1] = Graphics::Texture(tex1, sizeof(tex1) / sizeof(uchar), false);
 
-        textures[0] = new Graphics::Texture(tex0, sizeof(tex0) / sizeof(uchar), false);
-        textures[1] = new Graphics::Texture(tex1, sizeof(tex1) / sizeof(uchar), false);
-        textures[0]->Bind(0);
-        textures[1]->Bind(1);
+        gdevice.BindTexture(textures[0], 0);
+        gdevice.BindTexture(textures[1], 1);
 
-        shader = new Graphics::Shader(
-            "#shader vertex\n"
-            "#version 330 core\n"
-            "layout(location = 0) in vec4 position;\n"
-            "layout(location = 1) in vec2 texCoord;\n"
-            "layout(location = 2) in float textureID;\n"
-            "out vec2 v_TexCoord;\n"
-            "flat out int v_index;\n"
-            "uniform mat4 u_MVP;\n"
-            "void main(){\n"
-            "    gl_Position = u_MVP * position;\n"
-            "    v_TexCoord = texCoord;\n"
-            "    v_index = int(textureID);\n"
-            "}\n"
-            "#shader fragment\n"
-            "#version 330 core\n"
-            "layout(location = 0) out vec4 color;\n"
-            "in vec2 v_TexCoord;\n"
-            "flat in int v_index;\n"
-            "uniform sampler2D u_Texture[2];\n"
-            "void main(){\n"
-            "    vec4 texColor = texture(u_Texture[v_index], v_TexCoord);\n"
-            "    color = texColor;\n"
-            "}"
+        VertexColorTexture3D verticies[] = {
+            { { -240.0f, -80.0f }, Maths::Vector4::ONE, { 0.0f, 0.0f }, 0 },
+            { { -80.00f, -80.0f }, Maths::Vector4::ONE, { 1.0f, 0.0f }, 0 },
+            { { -80.00f, +80.0f }, Maths::Vector4::ONE, { 1.0f, 1.0f }, 0 },
+            { { -240.0f, +80.0f }, Maths::Vector4::ONE, { 0.0f, 1.0f }, 0 },
+
+            { { +80.00f, -80.0f }, Maths::Vector4::ONE, { 0.0f, 0.0f }, 1 },
+            { { +240.0f, -80.0f }, Maths::Vector4::ONE, { 1.0f, 0.0f }, 1 },
+            { { +240.0f, +80.0f }, Maths::Vector4::ONE, { 1.0f, 1.0f }, 1 },
+            { { +80.00f, +80.0f }, Maths::Vector4::ONE, { 0.0f, 1.0f }, 1 },
+        };
+
+        Graphics::TriIndicies indicies[] = {
+            { 0, 1, 2 }, { 2, 3, 0 },
+            { 4, 5, 6 }, { 6, 7, 4 }
+        };
+
+        mesh = Graphics::Mesh<VertexColorTexture3D>(
+            std::vector(verticies, verticies + 8),
+            std::vector(indicies, indicies + 4)
         );
-        shader->Bind();
-        
-        shader->SetUniformMatrix4x4("u_MVP", projection);
-        int ids[2] = { 0, 1 };
-        shader->SetUniform1IVec("u_Texture", ids, 2);
 
-        va->Unbind();
-        vb->Unbind();
-        ib->Unbind();
-        shader->Unbind();
+        render->BindMeshes(&mesh, 1);
+        gdevice.SetProjection(projection);
 
-        modelTranslation = {0.0f, 0.0f, 0.0f};
-        modelScale       = {1.0f, 1.0f, 1.0f};
-        modelRotation    = {0.0f, 0.0f, 0.0f};
+        gdevice.UseShader(Graphics::Shader::StdTextured);
     }
 
-    TestBatchedTextured::~TestBatchedTextured()
-    {
-        delete va;
-        delete vb;
-        delete ib;
-        delete shader;
-        delete textures[0];
-        delete textures[1];
-    }
-
-    void TestBatchedTextured::OnUpdate(float deltaTime)
-    {
-        Test::OnUpdate(deltaTime);
-    }
-
-    void TestBatchedTextured::OnRender(Graphics::Renderer& renderer)
-    {
-        Test::OnRender(renderer);
-        shader->Bind();
+    void TestBatchedTextured::OnRender(Graphics::GraphicsDevice& gdevice) {
+        Test::OnRender(gdevice);
         //shader.SetUniform4F("u_Color", color);
         Maths::Matrix3D mat = Maths::Matrix3D::Transform(modelTranslation,
                                                          modelScale,
                                                          modelRotation);
-        //LOG(mat);
-        shader->SetUniformMatrix4x4("u_MVP", projection * mat);
-        shader->Unbind();
-        
-        renderer.Draw(*va, *ib, *shader);
+        gdevice.SetCamera(mat);
+
+        render->ResetData<VertexColorTexture3D>();
+        render->Render();
     }
 
-    void TestBatchedTextured::OnImGuiRender()
-    {
-        Test::OnImGuiRender();
+    void TestBatchedTextured::OnImGuiRender(Graphics::GraphicsDevice& gdevice) {
+        Test::OnImGuiRender(gdevice);
         
         ImGui::DragFloat3("Translation", modelTranslation);
         ImGui::DragFloat3("Scale",       modelScale      , 0.1f);
         ImGui::DragFloat3("Rotation",    modelRotation   , 0.03f);
+    }
+
+    void TestBatchedTextured::OnDestroy(Graphics::GraphicsDevice& gdevice) {
+        Test::OnDestroy(gdevice);
+        render->Destroy();
     }
 }

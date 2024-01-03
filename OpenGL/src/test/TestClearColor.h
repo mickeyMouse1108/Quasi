@@ -1,18 +1,16 @@
 ﻿#pragma once
 #include "Test.h"
 
-namespace Test
-{
-    class TestClearColor : public Test
-    {
+namespace Test {
+    class TestClearColor : public Test {
     private:
-        float clearColor[4];
+        Maths::Vector4 clearColor = { 0.8f, 0.9f, 1.0f, 1.0f };
     public:
-        OPENGL_API TestClearColor();
-        OPENGL_API ~TestClearColor() override;
+        TestClearColor() {}
+        ~TestClearColor() override {}
 
-        OPENGL_API void OnUpdate(float deltaTime) override;
-        OPENGL_API void OnRender(Graphics::Renderer& renderer) override;
-        OPENGL_API void OnImGuiRender() override;
+        OPENGL_API void OnRender(Graphics::GraphicsDevice& gdevice) override;
+        OPENGL_API void OnImGuiRender(Graphics::GraphicsDevice& gdevice) override;
+        OPENGL_API void OnDestroy(Graphics::GraphicsDevice& gdevice) override;
     };
 }

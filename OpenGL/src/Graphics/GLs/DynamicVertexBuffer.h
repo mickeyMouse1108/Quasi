@@ -1,86 +1,66 @@
 ﻿#pragma once
 #include "Debugging.h"
 #include "NumTypes.h"
+#include "opengl.h"
 
+#include <typeindex>
 #include <vector>
 #include <initializer_list>
 
 namespace Graphics {
-    template <class T>
     class DynamicVertexBuffer {
         private:
             uint rendererID = 0;
             uint dataOffset = 0;
             uint bufferSize = 0;
-        public:
-            DynamicVertexBuffer(uint size);
-            ~DynamicVertexBuffer();
 
-            void Bind() const;
-            void Unbind() const;
-            
-            void SetData(const T* data, uint size);
-            void SetData(std::initializer_list<T> arr) { this->SetData(arr.begin(), (uint)(arr.size())); }
-            template <class U> void SetData(const U& arr) { this->SetData(arr.data(), (uint)(arr.size())); }
+            uint vertSize = 1;
+            std::type_index vertType = typeid(void);
+
+            template <class T> bool IsValidVert() { 
+                if (typeid(T) == vertType) return true;
+                LOG("ERR: C++ Type " << typeid(T).name() << " doesn't fit with " << vertType.name());
+                return false;
+            }
+        public:
+            DynamicVertexBuffer() {}
+            OPENGL_API DynamicVertexBuffer(uint size, uint typeSize, std::type_index type);
+            OPENGL_API ~DynamicVertexBuffer();
+
+            DynamicVertexBuffer(const DynamicVertexBuffer&) = delete;
+            DynamicVertexBuffer& operator=(const DynamicVertexBuffer&) = delete;
+            OPENGL_API static DynamicVertexBuffer& Transfer(DynamicVertexBuffer& dest, DynamicVertexBuffer&& from);
+            DynamicVertexBuffer(DynamicVertexBuffer&& vbo) noexcept { Transfer(*this, std::move(vbo)); }
+            DynamicVertexBuffer& operator=(DynamicVertexBuffer&& vbo) noexcept { return Transfer(*this, std::move(vbo)); }
+
+            template <class T> static DynamicVertexBuffer of(uint size) { 
+                return DynamicVertexBuffer(size, sizeof(T), typeid(T));
+            }
+
+            OPENGL_API void Bind() const;
+            OPENGL_API void Unbind() const;
+
+            [[nodiscard]] uint GetLength() const { return bufferSize; }
+            [[nodiscard]] std::type_index GetType() const { return vertType; }
+
+            OPENGL_API void SetDataUnchecked(const void* data, uint vertSize, uint count);
+            template <class T> void SetData(const T* data, uint size);
+            template <class T> void SetData(const T& arr) { SetData(arr.data(), (uint)(arr.size())); }
         
-            void SetDataWhole(const T* data);
-            void SetDataWhole(std::initializer_list<T> arr) { if (arr.size() <= bufferSize) this->SetDataWhole(arr.begin()); }
-            template <class U> void SetDataWhole(const U& arr) { if (arr.size() <= bufferSize) this->SetDataWhole(arr.data()); }
+            OPENGL_API void ClearData(bool shallowClear = true);
         
-            void ClearData(bool shallowClear = true);
-        
-            void AddData(const T* data, uint size = 1);
-            void AddData(std::initializer_list<T> arr) { this->AddData(arr.begin(), (uint)(arr.size())); }
-            void AddData(const T& data) { this->AddData(&data, 1); }
-            template <class U> void AddData(const U& arr) { this->AddData(arr.data(), (uint)(arr.size())); }
+            OPENGL_API void AddDataUnchecked(const void* data, uint vertSize, uint count);
+            template <class T> void AddData(const T* data, uint size = 1);
+            template <class T> void AddData(const T& arr) { AddData(arr.data(), (uint)(arr.size())); }
     };
 
-    template<class T>
-    DynamicVertexBuffer<T>::DynamicVertexBuffer(uint size) : bufferSize(size) {
-        GLCALL(glGenBuffers(1, &rendererID));
-        GLCALL(glBindBuffer(GL_ARRAY_BUFFER, rendererID));
-        GLCALL(glBufferData(GL_ARRAY_BUFFER, sizeof(T) * size, nullptr, GL_DYNAMIC_DRAW));
-    }
-    
     template <class T>
-    DynamicVertexBuffer<T>::~DynamicVertexBuffer() {
-        GLCALL(glDeleteBuffers(1, &rendererID));
-    }
-    
-    template <class T>
-    void DynamicVertexBuffer<T>::Bind() const {
-        GLCALL(glBindBuffer(GL_ARRAY_BUFFER, rendererID));
-    }
-    
-    template <class T>
-    void DynamicVertexBuffer<T>::Unbind() const {
-        GLCALL(glBindBuffer(GL_ARRAY_BUFFER, 0));
+    void DynamicVertexBuffer::SetData(const T* data, uint size) {
+        if (IsValidVert<T>()) SetDataUnchecked((const void*)data, sizeof(T), size);
     }
 
     template <class T>
-    void DynamicVertexBuffer<T>::SetData(const T* data, uint size) {
-        Bind();
-        glBufferSubData(GL_ARRAY_BUFFER, 0, size * sizeof(T), data);
-    }
-
-    template <class T>
-    void DynamicVertexBuffer<T>::SetDataWhole(const T* data) {
-        Bind();
-        glBufferSubData(GL_ARRAY_BUFFER, 0, bufferSize * sizeof(T), data);
-    }
-    
-    template <class T>
-    void DynamicVertexBuffer<T>::ClearData(bool shallowClear) {
-        Bind();
-        dataOffset = 0;
-        if (shallowClear) return;
-        const std::vector<T> clear { bufferSize, T{} };
-        glBufferSubData(GL_ARRAY_BUFFER, 0, bufferSize * sizeof(T), clear.data());
-    }
-
-    template <class T>
-    void DynamicVertexBuffer<T>::AddData(const T* data, uint size) {
-        glBufferSubData(GL_ARRAY_BUFFER, dataOffset * sizeof(T), size * sizeof(T), data);
-        dataOffset += size;
+    void DynamicVertexBuffer::AddData(const T* data, uint size) {
+        if (IsValidVert<T>()) AddDataUnchecked((const void*)data, sizeof(T), size);
     }
 }

@@ -1,35 +1,30 @@
 ﻿#pragma once
 
-#include "DynamicIndexBuffer.h"
-#include "Renderer.h"
 #include "Shader.h"
-#include "VertexArray.h"
+#include "Renderer.h"
+#include "Texture.h"
 
 #include <GLFW/glfw3.h>
 
 #include "stdu/ref.h"
 
 namespace Graphics {
-    using Vertex = VertexColor3D;
-    template <class T = Vertex> class Mesh;
-    
+    template <class T> class Mesh;
+    class GenericMesh;
+
     // TODO: make this changeable
     class GraphicsDevice {
         static constexpr unsigned int MAX_VERTEX_COUNT = 1000;
         static constexpr unsigned int MAX_INDEX_COUNT = 1000;
     private:
-        std::vector<stdu::ref<Mesh<>>> _meshes;
+        std::vector<RenderData> renders;
+        Shader _currentShader = {}; // shader can be null if renderId is 0
         
-        VertexArray                 _vertexArray;
-        DynamicVertexBuffer<Vertex> _vertexBuffer;
-        DynamicIndexBuffer          _indexBuffer;
-        Shader                      _currentShader = {}; // shader can be null if renderId is 0
-        
-        Renderer                    _renderer;
+        Renderer _renderer;
 
         // Maths::Matrix3D::PerspectiveProjectionFOV(45.0f, 4.0f / 3, 0.1f, 100.0f);
         Maths::Matrix3D _projection = Maths::Matrix3D::OrthoProjection(-4, 4, -3, 3, 0.1f, 100);
-        Maths::Matrix3D _camera;
+        Maths::Matrix3D _camera {};
 
         const Maths::Vec2Int _windowSize;
         GLFWwindow* _mainWindow;
@@ -44,26 +39,24 @@ namespace Graphics {
             OPENGL_API void BeginRender();
             OPENGL_API void EndRender();
 
-            OPENGL_API void ClearRegistered();
-            OPENGL_API void RegisterMeshes();
-            OPENGL_API void RegisterNewMeshes(const Mesh<>* meshes, uint count);
-            template <class U> void RegisterNewMeshes(const U& ms) { RegisterNewMeshes(ms.data(), ms.size()); }
-            OPENGL_API void RenderRegistered() const;
-            OPENGL_API void AddMeshes(Mesh<>* meshes, uint count);
-            template <class U> void AddMeshes(const U& ms) { AddMeshes(ms.data(), ms.size()); }
-            OPENGL_API void Delete(int index);
-            OPENGL_API void Delete(int indexStart, int indexEnd);
-            OPENGL_API void UpdateMeshIndicies();
+            template <class T> RenderData& CreateNewRender(uint vsize = MAX_VERTEX_COUNT, uint isize = MAX_INDEX_COUNT);
+            OPENGL_API void BindRender(RenderData& render);
+            OPENGL_API void DeleteRender(int index);
+            OPENGL_API RenderData& GetRender(int index);
+            OPENGL_API void Render(RenderData& r);
+            void Render(int index) { Render(GetRender(index)); }
 
-            OPENGL_API void ClearColor(const Maths::Vector3& color);
+            OPENGL_API void BindTexture(Texture& texture, uint slot);
+
+            OPENGL_API void ClearColor(const Maths::Vector4& color);
 
             [[nodiscard]] bool WindowIsOpen() const { return !glfwWindowShouldClose(_mainWindow); }
 
-            [[nodiscard]] const Renderer& GetRenderer() const { return _renderer; }
-            Renderer& GetRenderer() { return _renderer; }
+            OPENGL_API Renderer& GetRenderer();
+            OPENGL_API [[nodiscard]] const Renderer& GetRenderer() const;
             [[nodiscard]] Maths::Vec2Int GetWindowSize() const { return _windowSize; }
-            [[nodiscard]] const GLFWwindow* GetWindow() const { return _mainWindow; }
             GLFWwindow* GetWindow() { return _mainWindow; }
+            [[nodiscard]] const GLFWwindow* GetWindow() const { return _mainWindow; }
             Shader& GetShader() { return _currentShader; }
             [[nodiscard]] const Shader& GetShader() const { return _currentShader; }
 
@@ -90,7 +83,7 @@ namespace Graphics {
             void SetCamera(const Maths::Matrix3D& camera) { _camera = camera; }
             void SetProjection(const Maths::Matrix3D& proj) { _projection = proj; }
 
-            void SetRenderWireframe(bool usewire) { glPolygonMode(GL_FRONT_AND_BACK, usewire ? GL_LINE, GL_FILL); }
+            void SetRenderWireframe(bool usewire) { _renderer.SetRenderWireframe(usewire); }
 
             OPENGL_API void DebugMenu();
 
@@ -99,8 +92,13 @@ namespace Graphics {
 
             //void Render(bool autoSort = true);
 
-            OPENGL_API static std::unique_ptr<GraphicsDevice> Initialize(Maths::Vec2Int winSize = { 640, 480 });
-
-        friend class Mesh<>;
+            OPENGL_API static GraphicsDevice Initialize(Maths::Vec2Int winSize = { 640, 480 });
     };
+
+    template <class T>
+    RenderData& GraphicsDevice::CreateNewRender(uint vsize, uint isize) {
+        renders.push_back(RenderData::Create<T>(vsize, isize));
+        BindRender(renders.back());
+        return renders.back();
+    }
 }

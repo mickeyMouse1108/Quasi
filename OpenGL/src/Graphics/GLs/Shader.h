@@ -22,11 +22,11 @@ namespace Graphics {
             OPENGL_API Shader(const std::string& vert, const std::string& frag);
             OPENGL_API ~Shader();
 
-            OPENGL_API Shader(Shader&& s) noexcept;
-            Shader(const Shader& s) = delete;
-
-            OPENGL_API Shader& operator=(Shader&& s);
-            OPENGL_API Shader& operator=(const Shader& s) = delete;
+            Shader(const Shader&) = delete;
+            OPENGL_API Shader& operator=(const Shader&) = delete;
+            OPENGL_API static Shader& Transfer(Shader& dest, Shader&& from);
+            Shader(Shader&& s) noexcept { Transfer(*this, std::move(s)); }
+            Shader& operator=(Shader&& s) noexcept { return Transfer(*this, std::move(s)); }
 
             OPENGL_API void Bind() const;
             OPENGL_API void Unbind() const;
@@ -115,9 +115,10 @@ namespace Graphics {
                 "layout(location = 0) in vec4 position;\n"
                 "layout(location = 1) in vec4 color;\n"
                 "out vec4 v_color;\n"
-                "uniform mat4 u_MVP;\n"
+                "uniform mat4 u_projection;\n"
+                "uniform mat4 u_view;\n"
                 "void main(){\n"
-                "    gl_Position = u_MVP * position;\n"
+                "    gl_Position = u_projection * u_view * position;\n"
                 "    v_color = color;\n"
                 "}\n"
                 "#shader fragment\n"
@@ -127,6 +128,36 @@ namespace Graphics {
                 "void main(){\n"
                 "    color = v_color;\n"
                 "}\n";
+            
+            inline const static std::string StdTextured =
+                "#shader vertex\n"
+                "#version 330 core\n"
+                "layout(location = 0) in vec4 position;\n"
+                "layout(location = 1) in vec4 color;\n"
+                "layout(location = 2) in vec2 texCoord;\n"
+                "layout(location = 3) in float textureID;\n"
+                "out vec2 v_TexCoord;\n"
+                "out vec4 v_color;\n"
+                "flat out int v_index;\n"
+                "uniform mat4 u_projection;\n"
+                "uniform mat4 u_view;\n"
+                "void main(){\n"
+                "    gl_Position = u_projection * u_view * position;\n"
+                "    v_color = color;\n"
+                "    v_TexCoord = texCoord;\n"
+                "    v_index = int(textureID);\n"
+                "}\n"
+                "#shader fragment\n"
+                "#version 330 core\n"
+                "layout(location = 0) out vec4 color;\n"
+                "in vec2 v_TexCoord;\n"
+                "in vec4 v_color;\n"
+                "flat in int v_index;\n"
+                "uniform sampler2D u_Texture[2];\n"
+                "void main(){\n"
+                "    vec4 texColor = texture(u_Texture[v_index], v_TexCoord);\n"
+                "    color = v_color * texColor;\n"
+                "}";
 
             OPENGL_API static Shader FromFile(stringr filepath);
     

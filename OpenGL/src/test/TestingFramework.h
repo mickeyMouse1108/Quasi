@@ -11,26 +11,22 @@
 #include "TestDynamicTris.h"
 #include "TestCubeRender.h"
 
-namespace Test
-{
-    class TestManager : public Test
-    {
+namespace Test {
+    class TestManager : public Test {
     private:
         Test* currentTest = nullptr;
-        TestMenu* menu = new TestMenu(currentTest);
-        bool debugMode = false;
+        std::unique_ptr<TestMenu> menu = std::make_unique<TestMenu>(currentTest);
     public:
         TestManager();
         ~TestManager() override;
         
         void OnUpdate(float deltaTime = -1) override;
-        void OnRender(Graphics::Renderer& renderer) override;
-        void OnImGuiRender() override;
+        void OnRender(Graphics::GraphicsDevice& gdevice) override;
+        void OnImGuiRender(Graphics::GraphicsDevice& gdevice) override;
     };
 
-    inline TestManager::TestManager()
-    {
-        currentTest = menu;
+    inline TestManager::TestManager() {
+        currentTest = menu.get();
         {
             menu->RegisterTest<TestClearColor>           ("Clear Color Test            ");
             menu->RegisterTest<TestTexturedSquare>       ("Texture Square Test         ");
@@ -43,49 +39,38 @@ namespace Test
         }
     }
 
-    inline TestManager::~TestManager()
-    {
+    inline TestManager::~TestManager() {
         delete currentTest;
-        if (currentTest != menu)
-            delete menu;
     }
 
-    inline void TestManager::OnUpdate(float deltaTime)
-    {
+    inline void TestManager::OnUpdate(float deltaTime) {
         Test::OnUpdate(deltaTime);
         // TODO: make it when dt = -1, auto calc dt
         if (currentTest)
             currentTest->OnUpdate(deltaTime);
     }
     
-    inline void TestManager::OnRender(Graphics::Renderer& renderer)
-    {
-        Test::OnRender(renderer);
+    inline void TestManager::OnRender(Graphics::GraphicsDevice& gdevice) {
+        Test::OnRender(gdevice);
         if (currentTest)
-            currentTest->OnRender(renderer);
+            currentTest->OnRender(gdevice);
     }
 
-    inline void TestManager::OnImGuiRender()
-    {
-        Test::OnImGuiRender();
-        if (currentTest)
-        {
+    inline void TestManager::OnImGuiRender(Graphics::GraphicsDevice& gdevice) {
+        Test::OnImGuiRender(gdevice);
+        if (currentTest) {
             ImGui::Begin("Test");
-            if (currentTest != menu && ImGui::Button("<- Back"))
-            {
+            if (currentTest != menu.get() && ImGui::Button("<- Back")) {
+                currentTest->OnDestroy(gdevice);
                 delete currentTest;
-                currentTest = menu;
+                currentTest = menu.get();
+                currentTest->OnInit(gdevice);
             }
             
-            currentTest->OnImGuiRender();
+            currentTest->OnImGuiRender(gdevice);
             
             ImGui::Separator();
-            if (ImGui::Button(debugMode ? "Show Debug Menu..." : "Hide Debug Menu...")) debugMode ^= true;
-
-            if (debugMode)
-            {
-                ImGui::Text("Application Averages %fms/frame (~%f FPS)", 1000.0 / (double)ImGui::GetIO().Framerate, (double)ImGui::GetIO().Framerate);
-            }
+            gdevice.DebugMenu();
 
             ImGui::End();
         }

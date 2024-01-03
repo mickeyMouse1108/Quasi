@@ -16,18 +16,10 @@ namespace Graphics {
         vertexArr.Bind();
         indexBuff.Bind();
         shader.Bind();
-        GLCALL(glDrawElements(GL_TRIANGLES, indexBuff.GetLength(), GL_UNSIGNED_INT, nullptr));
+        GLCALL(glDrawElements(GL_TRIANGLES, indexBuff.GetUsedLength(), GL_UNSIGNED_INT, nullptr));
     }
 
-    void Renderer::SetRenderMode(uint drawType) {
-        renderType = drawType;
-    }
-
-    void Renderer::SetRenderMode(char drawType) {
-        switch(drawType) {
-            case 't': renderType = GL_TRIANGLES; return;
-            case 'w': renderType = GL_LINES; return;
-            default:;
-        }
+    void Renderer::SetRenderWireframe(bool isWireframe) {
+        glPolygonMode(GL_FRONT_AND_BACK, isWireframe ? GL_LINE : GL_FILL);
     }
 }

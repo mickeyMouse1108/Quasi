@@ -6,25 +6,21 @@ namespace Test {
     class TestCubeRender : public Test {
     private:
         // unsigned int faceOrder[6] = { 0, 1, 2, 3, 4, 5 };
+        stdu::ref<Graphics::RenderData> render;
         Graphics::Mesh<VertexColor3D> cube;
-        
-        Graphics::DynamicVertexBuffer<VertexColor3D>* vb;
-        Graphics::DynamicIndexBuffer* ib;
-        Graphics::VertexArray* va;
-        Graphics::Shader* shader;
 
-        Maths::Matrix3D projection;
-        Maths::Vector3 modelTranslation = { 0.0f, 0.0f, 0.0f };
-        Maths::Vector3 modelScale       = { 1.0f, 1.0f, 1.0f };
-        Maths::Vector3 modelRotation    = { 0.0f, 0.0f, 0.0f };
+        Maths::Matrix3D projection = Maths::Matrix3D::OrthoProjection(-5.0f, 5.0f, -5.0f, 5.0f, -5.0f, 5.0f);
+        Maths::Vector3 modelTranslation = 0;
+        Maths::Vector3 modelScale       = Maths::Vector3::ONE;
+        Maths::Vector3 modelRotation    = 0;
         float alpha = 1.0f;
     public:
-        OPENGL_API TestCubeRender();
-        OPENGL_API ~TestCubeRender() override;
+        TestCubeRender() {}
+        ~TestCubeRender() override {}
 
-        OPENGL_API void OnUpdate(float deltaTime) override;
-        OPENGL_API void OnRender(Graphics::Renderer& renderer) override;
-        OPENGL_API void OnImGuiRender() override;
-        // static Maths::Vector3 faceAxis[6];
+        OPENGL_API void OnInit(Graphics::GraphicsDevice& gdevice) override;
+        OPENGL_API void OnRender(Graphics::GraphicsDevice& gdevice) override;
+        OPENGL_API void OnImGuiRender(Graphics::GraphicsDevice& gdevice) override;
+        OPENGL_API void OnDestroy(Graphics::GraphicsDevice& gdevice) override;
     };
 }

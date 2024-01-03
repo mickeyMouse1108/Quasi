@@ -21,15 +21,12 @@ namespace Graphics {
         GLCALL(glDeleteProgram(rendererID));
     }
 
-    Shader::Shader(Shader&& s) noexcept {
-        *this = std::move(s);
-    }
+    Shader& Shader::Transfer(Shader& dest, Shader&& from) {
+        dest.rendererID = from.rendererID;
+        from.rendererID = 0;
+        dest.uniformCache = std::move(from.uniformCache);
 
-    Shader& Shader::operator=(Shader&& s) {
-        rendererID = s.rendererID;
-        s.rendererID = 0;
-        uniformCache = std::move(s.uniformCache);
-        return *this;
+        return dest;
     }
 
     void Shader::Bind() const {

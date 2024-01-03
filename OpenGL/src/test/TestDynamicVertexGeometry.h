@@ -1,28 +1,21 @@
 ﻿#pragma once
-#include "IndexBuffer.h"
-#include "Shader.h"
 #include "Test.h"
-#include "VertexArray.h"
+#include "Mesh.h"
 
-namespace Test
-{
-    class TestDynamicVertexGeometry : public Test
-    {
+namespace Test {
+    class TestDynamicVertexGeometry : public Test {
     private:
-        VertexColor3D* vertexes;
-        
-        Graphics::DynamicVertexBuffer<VertexColor3D>* vb;
-        Graphics::VertexArray* va;
-        Graphics::IndexBuffer* ib;
-        Graphics::Shader* shader;
+        stdu::ref<Graphics::RenderData> render;
+        Graphics::Mesh<VertexColor3D> mesh;
 
-        Maths::Matrix3D projection;
+        Maths::Matrix3D projection = Maths::Matrix3D::OrthoProjection(-320.0f, 320.0f, -240.0f, 240.0f, -1.0f, 1.0f);
     public:
-        OPENGL_API TestDynamicVertexGeometry();
-        OPENGL_API ~TestDynamicVertexGeometry() override;
+        TestDynamicVertexGeometry() {}
+        ~TestDynamicVertexGeometry() override {}
 
-        OPENGL_API void OnUpdate(float deltaTime) override;
-        OPENGL_API void OnRender(Graphics::Renderer& renderer) override;
-        OPENGL_API void OnImGuiRender() override;
+        OPENGL_API void OnInit(Graphics::GraphicsDevice& gdevice) override;
+        OPENGL_API void OnRender(Graphics::GraphicsDevice& gdevice) override;
+        OPENGL_API void OnImGuiRender(Graphics::GraphicsDevice& gdevice) override;
+        OPENGL_API void OnDestroy(Graphics::GraphicsDevice& gdevice) override;
     };
 }

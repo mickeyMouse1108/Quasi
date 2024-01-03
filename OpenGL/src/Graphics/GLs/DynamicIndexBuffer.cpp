@@ -15,6 +15,17 @@ namespace Graphics {
         glDeleteBuffers(1, &rendererID);
     }
 
+    DynamicIndexBuffer& DynamicIndexBuffer::Transfer(DynamicIndexBuffer& dest, DynamicIndexBuffer&& from) {
+        dest.rendererID = from.rendererID;
+        from.rendererID = 0;
+
+        dest.bufferSize = from.bufferSize;
+        dest.dataOffset = from.dataOffset;
+        dest.indexOffset = from.indexOffset;
+
+        return dest;
+    }
+
     void DynamicIndexBuffer::Bind() const {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rendererID);
     }
@@ -50,12 +61,5 @@ namespace Graphics {
         glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, dataOffset * sizeof(uint), size * sizeof(uint), dataOff.data());  // NOLINT(bugprone-narrowing-conversions, cppcoreguidelines-narrowing-conversions)
         dataOffset += size;
         indexOffset = maxIndex + 1;
-    }
-
-    void DynamicIndexBuffer::AddData(uint data) {
-        const uint dataOff = data + indexOffset;
-        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, dataOffset * sizeof(uint), sizeof(uint), (const void*)dataOff);  // NOLINT(bugprone-narrowing-conversions, cppcoreguidelines-narrowing-conversions, performance-no-int-to-ptr)
-        ++dataOffset;
-        indexOffset = std::max(dataOff, indexOffset) + 1;
     }
 }

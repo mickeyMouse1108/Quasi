@@ -1,25 +1,25 @@
 ﻿#pragma once
 #include "Test.h"
+#include "RenderData.h"
+#include "Mesh.h"
 
-namespace Test
-{
-    class TestBatchedColored : public Test
-    {
+namespace Test {
+    class TestBatchedColored : public Test {
     private:
-        Graphics::VertexBuffer* vb;
-        Graphics::VertexArray* va;
-        Graphics::IndexBuffer* ib;
-        Graphics::Shader* shader;
-        
-        Maths::Matrix3D projection;
-        Maths::Vector3  modelTranslation;
-        Maths::Vector3  modelScale;
-        Maths::Vector3  modelRotation;
+        stdu::ref<Graphics::RenderData> render;
+        Graphics::Mesh<VertexColor3D> mesh;
+
+        Maths::Matrix3D projection = Maths::Matrix3D::OrthoProjection(-320.0f, 320.0f, -240.0f, 240.0f, -1.0f, 1.0f);
+        Maths::Vector3  modelTranslation = 0;
+        Maths::Vector3  modelScale = Maths::Vector3::ONE;
+        Maths::Vector3  modelRotation = 0;
     public:
-        OPENGL_API TestBatchedColored();
-        OPENGL_API ~TestBatchedColored() override;
-        OPENGL_API void OnUpdate(float deltaTime) override;
-        OPENGL_API void OnRender(Graphics::Renderer& renderer) override;
-        OPENGL_API void OnImGuiRender() override;
+        TestBatchedColored() {}
+        ~TestBatchedColored() override {}
+
+        OPENGL_API void OnInit(Graphics::GraphicsDevice& gdevice) override;
+        OPENGL_API void OnRender(Graphics::GraphicsDevice& gdevice) override;
+        OPENGL_API void OnImGuiRender(Graphics::GraphicsDevice& gdevice) override;
+        OPENGL_API void OnDestroy(Graphics::GraphicsDevice& gdevice) override;
     };
 }

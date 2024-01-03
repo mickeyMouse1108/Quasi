@@ -1,10 +1,12 @@
 ﻿// because gl.h cant be included before glew.h, weird ordering
-
-#include "Mesh.h"
+#include "Renderer.h"
+#include "GenericMesh.h"
+#include "GraphicsDevice.h"
 
 #include "IO.h"
 #include "Mouse.h"
 #include "Keyboard.h"
+
 
 #include <numeric>
 
@@ -14,16 +16,8 @@
 
 namespace Graphics {
     GraphicsDevice::GraphicsDevice(GLFWwindow* window, Maths::Vec2Int winSize) : 
-        _vertexArray  (),
-        _vertexBuffer (MAX_VERTEX_COUNT),
-        _indexBuffer  (MAX_INDEX_COUNT),
-        _renderer     (),
-    
-        _windowSize   (winSize),
-        _mainWindow   { window }
+        renders(), _renderer(), _windowSize(winSize), _mainWindow{ window }
     {
-        _vertexArray.AddBuffer(_vertexBuffer);
-
         Instance = *this;
         IO::Init(*this);
     }
@@ -65,12 +59,7 @@ namespace Graphics {
         glfwSwapBuffers(_mainWindow);
     }
 
-    void GraphicsDevice::ClearRegistered() {
-        _vertexBuffer.ClearData();
-        _indexBuffer .ClearData();
-    }
-
-    void GraphicsDevice::RegisterMeshes() {
+    /*void GraphicsDevice::RegisterMeshes() {
         for (stdu::ref mesh : _meshes) mesh->AddTo(_vertexBuffer, _indexBuffer);
     }
 
@@ -80,41 +69,60 @@ namespace Graphics {
 
     void GraphicsDevice::RenderRegistered() const {
         _renderer.Draw(_vertexArray, _indexBuffer, _currentShader);
-    }
+    }*/
 
-    void GraphicsDevice::AddMeshes(Mesh<>* meshes, uint count) {
-        for (uint i = 0; i < count; ++i) {
-            meshes[i].device = this;
-            meshes[i].deviceIndex = (uint)_meshes.size();
-            _meshes.emplace_back(meshes[i]);
-        }
-    }
-
-    void GraphicsDevice::Delete(int index) {
+    /*void GraphicsDevice::UnbindMesh(int index) {
         _meshes.erase(_meshes.begin() + index);
         UpdateMeshIndicies();
     }
 
-    void GraphicsDevice::Delete(int indexStart, int indexEnd) {
+    void GraphicsDevice::UnbindMeshes(int indexStart, int indexEnd) {
         _meshes.erase(_meshes.begin() + indexStart, _meshes.begin() + indexEnd);
         UpdateMeshIndicies();
     }
 
     void GraphicsDevice::UpdateMeshIndicies() {
         for (uint i = 0; i < _meshes.size(); ++i)
-            _meshes[i]->deviceIndex = i;
+            _meshes[i].deviceIndex() = i;
+    }*/
+
+    void GraphicsDevice::BindRender(RenderData& render) {
+        render.device = this;
+        render.deviceIndex = renders.size() - 1;
     }
 
-    void GraphicsDevice::ClearColor(const Maths::Vector3& color) {
-        glClearColor(color.x, color.y, color.z, 1.0f);
+    void GraphicsDevice::DeleteRender(int index) {
+        renders.erase(renders.begin() + index);
     }
+
+    RenderData& GraphicsDevice::GetRender(int index) {
+        return renders[index];
+    }
+
+    void GraphicsDevice::Render(RenderData& r) {
+        EnableShader();
+        _renderer.Draw(r, _currentShader);
+    }
+
+    void GraphicsDevice::BindTexture(Texture& texture, uint slot) {
+        texture.Bind(slot);
+    }
+
+    void GraphicsDevice::ClearColor(const Maths::Vector4& color) {
+        glClearColor(color.x, color.y, color.z, color.w);
+    }
+
+    Renderer& GraphicsDevice::GetRenderer() { return _renderer; }
+    const Renderer& GraphicsDevice::GetRenderer() const { return _renderer; }
 
     void GraphicsDevice::DebugMenu() {
         static bool enabled = false;
         if (ImGui::Button(enabled ? "Hide Debug Menu" : "Show Debug Menu")) enabled = !enabled;
-        
+
         if (!enabled) return;
         ImGui::Text("Application Averages %fms/frame (~%f FPS)", 1000.0 / (double)ImGui::GetIO().Framerate, (double)ImGui::GetIO().Framerate);
+        static bool drawWireframe = false;
+        if (ImGui::Button(drawWireframe ? "Draw Fill" : "Draw Wireframe")) { SetRenderWireframe(drawWireframe); }
 
         if (ImGui::CollapsingHeader("Mouse Input")) {
             ImGui::Text("Mouse Position is at: (%f, %f),",
@@ -176,7 +184,7 @@ namespace Graphics {
         // ImGui::ShowDemoWindow();
     }
 
-    std::unique_ptr<GraphicsDevice> GraphicsDevice::Initialize(Maths::Vec2Int winSize) {
+    GraphicsDevice GraphicsDevice::Initialize(Maths::Vec2Int winSize) {
         /* Initialize the library */
         if (!glfwInit())
             ASSERT(false);
@@ -216,6 +224,6 @@ namespace Graphics {
         ImGui_ImplGlfw_InitForOpenGL(window, true);
         ImGui_ImplOpenGL3_Init((const char*)glGetString(GL_NUM_SHADING_LANGUAGE_VERSIONS));
         
-        return std::make_unique<GraphicsDevice>(window, winSize);
+        return GraphicsDevice(window, winSize);
     }
 }

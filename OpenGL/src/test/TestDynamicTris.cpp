@@ -3,8 +3,7 @@
 
 #include "imgui.h"
 
-namespace Test
-{
+namespace Test {
     Maths::Vector4 TestDynamicTris::COLORS[8] = {
         { 1.0f, 0.0f, 0.0f, 1.0f }, // red
         { 0.0f, 1.0f, 0.0f, 1.0f }, // green
@@ -20,86 +19,42 @@ namespace Test
         return Maths::Matrix3D::Transform({modelTranslation, 0.0f}, {modelScale, 1.0f}, {0.0f, 0.0f, modelRotation});
     }
 
-    TestDynamicTris::TestDynamicTris()
-        : projection(Maths::Matrix3D::OrthoProjection(-320.f, 320.0f, -240.0f, 240.0f, -1.0f, 1.0f)) {
-        va = new Graphics::VertexArray();
-        vb = new Graphics::DynamicVertexBuffer<VertexColor3D>(MAX_TRIS * 3);
+    void TestDynamicTris::OnInit(Graphics::GraphicsDevice& gdevice) {
+        render = gdevice.CreateNewRender<VertexColor3D>(3 * 8, 8);
+
+        gdevice.UseShader(Graphics::Shader::StdColored);
+        gdevice.SetProjection(projection);
         
-        va->AddBuffer(*vb);
+        tris.push_back(NewTri());
+        tris.back().Bind(*render);
+    }
 
-        ib = new Graphics::DynamicIndexBuffer(MAX_TRIS * 3);
-        shader = new Graphics::Shader(Graphics::Shader::StdColored);
-        shader->Bind();
+    void TestDynamicTris::OnRender(Graphics::GraphicsDevice& gdevice) {
+        Test::OnRender(gdevice);
 
-        shader->SetUniformMatrix4x4("u_MVP", projection);
+        tris.back().SetTransform(ModelMatrix());
         
-        va->Unbind();
-        vb->Unbind();
-        ib->Unbind();
-        shader->Unbind();
-
-        std::vector vc3 = {
-            VertexColor3D { { +00.0f, +50.0f, 0.0f }, COLORS[0]},
-            VertexColor3D { { -50.0f, -50.0f, 0.0f }, COLORS[0]},
-            VertexColor3D { { +50.0f, -50.0f, 0.0f }, COLORS[0]},
-        };
-        
-        currentTri = Graphics::Mesh(vc3, { { 0, 1, 2 } });
+        render->ResetData<VertexColor3D>();
+        render->Render();
     }
 
-    TestDynamicTris::~TestDynamicTris() {
-        delete va;
-        delete vb;
-        delete ib;
-        delete shader;
-    }
-
-    void TestDynamicTris::OnUpdate(float deltaTime) {
-        Test::OnUpdate(deltaTime);
-    }
-
-    void TestDynamicTris::OnRender(Graphics::Renderer& renderer) {
-        Test::OnRender(renderer);
-
-        vb->ClearData();
-        ib->ClearData();
-
-        for (unsigned int i = 0; i < triCount - 1; ++i) tris[i].AddTo(*vb, *ib);
-        currentTri.SetTransform(ModelMatrix());
-        currentTri.AddTo(*vb, *ib);
-
-        renderer.Draw(*va, *ib, *shader);
-    }
-
-    void TestDynamicTris::OnImGuiRender() {
-        Test::OnImGuiRender();
+    void TestDynamicTris::OnImGuiRender(Graphics::GraphicsDevice& gdevice) {
+        Test::OnImGuiRender(gdevice);
 
         ImGui::DragFloat2("Current Tri Translation", modelTranslation       );
         ImGui::DragFloat2("Current Tri Scale      ", modelScale      , 0.10f);
         ImGui::DragFloat ("Current Tri Rotation   ", &modelRotation  , 0.05f);
 
+        uint triCount = tris.size();
+
         if (ImGui::Button("Add Tri") && !isMax) {
-            if (triCount >= MAX_TRIS) {
-                isMax = true;
-            } else {
-                tris[triCount - 1] = std::move(currentTri);
-                std::vector vc3 = {
-                    VertexColor3D { { +00.0f, +50.0f, 0.0f }, COLORS[triCount]},
-                    VertexColor3D { { -50.0f, -50.0f, 0.0f }, COLORS[triCount]},
-                    VertexColor3D { { +50.0f, -50.0f, 0.0f }, COLORS[triCount]},
-                };
-                currentTri = Graphics::Primitives::Tri(
-                    { +00.0f, +50.0f, 0.0f },
-                    { -50.0f, -50.0f, 0.0f },
-                    { +50.0f, -50.0f, 0.0f }
-                ).IntoMesh<VertexColor3D>();
-                currentTri.ApplyMaterial(&VertexColor3D::Color, COLORS[triCount]);
+            if (triCount >= MAX_TRIS) { isMax = true; } else {
+                tris.push_back(NewTri());
+                tris.back().Bind(*render);
                 // Graphics::Mesh(vc3, { { 0, 1, 2 } });
                 modelTranslation = { 0.0f, 0.0f };
                 modelScale = { 1.0f, 1.0f };
                 modelRotation = 0.0f;
-                
-                ++triCount;
                 
                 isMin = false;
             }
@@ -107,23 +62,32 @@ namespace Test
         
         if (isMax) ImGui::Text("Too Many Tris! (Limit: %i)", MAX_TRIS); 
         
-        if (ImGui::Button("Remove Tri") && !isMin)
-        {
-            if (triCount <= 1) { isMin = true; } else
-            {
-                currentTri = std::move(tris[triCount - 2]);
+        if (ImGui::Button("Remove Tri") && !isMin) {
+            if (triCount <= 1) { isMin = true; } else {
+                tris.back().Unbind();
+                tris.pop_back();
                 modelTranslation = { 0.0f, 0.0f };
                 modelScale = { 1.0f, 1.0f };
                 modelRotation = 0.0f;
-                --triCount;
                 
                 isMax = false;
-
-                vb->ClearData(false);
-                ib->ClearData(false);
             }
         }
 
         if (isMin) ImGui::Text("Can't Delete All Tris!");
+    }
+
+    void TestDynamicTris::OnDestroy(Graphics::GraphicsDevice& gdevice) {
+        Test::OnDestroy(gdevice);
+        render->Destroy();
+    }
+
+    Graphics::Mesh<VertexColor3D> TestDynamicTris::NewTri() {
+        return Graphics::Primitives::Tri(
+            { +00.0f, +50.0f, 0.0f },
+            { -50.0f, -50.0f, 0.0f },
+            { +50.0f, -50.0f, 0.0f }
+        ).IntoMesh<VertexColor3D>()
+         .ApplyMaterial(&VertexColor3D::Color, COLORS[tris.size()]);
     }
 }

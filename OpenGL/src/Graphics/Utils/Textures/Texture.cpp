@@ -3,6 +3,8 @@
 #include "../vendor/stb_image/stb_image.h"
 
 namespace Graphics {
+    Texture::Texture() : rendererID(0), width(0), height(0), BPPixel(0) {}
+
     Texture::Texture(const uchar* datpng, int len, bool useLinear)
         : rendererID(0), width(0), height(0), BPPixel(0) {
         //flips texture
@@ -38,7 +40,18 @@ namespace Graphics {
         if (img) stbi_image_free((void*)img);
     }
 
-    void Texture::Bind(unsigned int slot/*default = 0*/) const {
+    Texture& Texture::Transfer(Texture& dest, Texture&& from) {
+        dest.rendererID = from.rendererID;
+        from.rendererID = 0;
+
+        dest.width = from.width;
+        dest.height = from.height;
+        dest.BPPixel = from.BPPixel;
+
+        return dest;
+    }
+
+    void Texture::Bind(uint slot/*default = 0*/) const {
         GLCALL(glActiveTexture(GL_TEXTURE0 + slot));
         GLCALL(glBindTexture(GL_TEXTURE_2D, rendererID));
     }

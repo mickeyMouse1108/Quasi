@@ -1,11 +1,9 @@
 ﻿#include "TestDynamicQuadGeometry.h"
-#include "TestDynamicQuadGeometry.h"
-#include "TestDynamicQuadGeometry.h"
+#include "Quad.h"
 
 #include "imgui.h"
 
-namespace Test
-{
+namespace Test {
     Maths::Vector4 TestDynamicQuadGeometry::COLORS[8] = {
         { 1.0f, 0.0f, 0.0f, 1.0f }, // red
         { 0.0f, 1.0f, 0.0f, 1.0f }, // green
@@ -17,88 +15,38 @@ namespace Test
         { 0.5f, 0.0f, 1.0f, 1.0f }, // purple
     };
     
-    TestDynamicQuadGeometry::TestDynamicQuadGeometry()
-    : projection( Maths::Matrix3D::OrthoProjection(-320.0f, 320.0f, -240.0f, 240.0f, -1.0f, 1.0f) )
-    {
-        unsigned int indices[MAX_INDEX];
+    void TestDynamicQuadGeometry::OnInit(Graphics::GraphicsDevice& gdevice) {
+        render = gdevice.CreateNewRender<VertexColor3D>(8 * 4, 8 * 2);
 
-        for (int i = 0, v = 0; i < MAX_INDEX; i += 6, v += 4)
-        {
-            indices[i    ] = v;
-            indices[i + 1] = v + 1;
-            indices[i + 2] = v + 2;
-            indices[i + 3] = v + 2;
-            indices[i + 4] = v + 3;
-            indices[i + 5] = v;
-        }       
-        
-        va = new Graphics::VertexArray();
-        vb = new Graphics::DynamicVertexBuffer<VertexColor3D>(MAX_VERTEX);
-        
-        va->AddBuffer(*vb);
+        gdevice.UseShader(Graphics::Shader::StdColored);
+        gdevice.SetProjection(projection);
 
-        ib = new Graphics::IndexBuffer(indices, MAX_INDEX);
-        shader = new Graphics::Shader(Graphics::Shader::StdColored);
-        shader->Bind();
-
-        shader->SetUniformMatrix4x4("u_MVP", projection);
-        
-        va->Unbind();
-        vb->Unbind();
-        ib->Unbind();
-        shader->Unbind();
-
-        for (int i = 4; i < MAX_VERTEX; i++) vertexes[i] = { {0,0,0}, {0,0,0} };
-
-        vertexes[0] = { { -50.0f, -50.0f }, COLORS[0] };
-        vertexes[1] = { { +50.0f, -50.0f }, COLORS[0] };
-        vertexes[2] = { { +50.0f, +50.0f }, COLORS[0] };
-        vertexes[3] = { { -50.0f, +50.0f }, COLORS[0] };
-        quads = 1;
+        quads.push_back(NewQuad());
+        quads.back().Bind(*render);
     }
 
-    TestDynamicQuadGeometry::~TestDynamicQuadGeometry()
-    {
-        delete va;
-        delete vb;
-        delete ib;
-        delete shader;
+    void TestDynamicQuadGeometry::OnRender(Graphics::GraphicsDevice& gdevice) {
+        Test::OnRender(gdevice);
+
+        render->ResetData<VertexColor3D>();
+        render->Render();
     }
 
-    void TestDynamicQuadGeometry::OnUpdate(float deltaTime)
-    {
-        Test::OnUpdate(deltaTime);
-    }
+    void TestDynamicQuadGeometry::OnImGuiRender(Graphics::GraphicsDevice& gdevice) {
+        Test::OnImGuiRender(gdevice);
 
-    void TestDynamicQuadGeometry::OnRender(Graphics::Renderer& renderer)
-    {
-        Test::OnRender(renderer);
-        
-        vb->SetData(vertexes, quads * 4);
-        renderer.Draw(*va, *ib, *shader);
-    }
+        uint quadCount = quads.size();
 
-    void TestDynamicQuadGeometry::OnImGuiRender()
-    {
-        Test::OnImGuiRender();
+        auto& verts = quads.back().GetVerticies();
+        ImGui::DragFloat3("Quad Vertex 1", verts[0].Position);
+        ImGui::DragFloat3("Quad Vertex 2", verts[1].Position);
+        ImGui::DragFloat3("Quad Vertex 3", verts[2].Position);
+        ImGui::DragFloat3("Quad Vertex 4", verts[3].Position);
 
-        ImGui::DragFloat3("Quad Vertex 1", (float*)(vertexes + quads * 4 - 4));
-        ImGui::DragFloat3("Quad Vertex 2", (float*)(vertexes + quads * 4 - 3));
-        ImGui::DragFloat3("Quad Vertex 3", (float*)(vertexes + quads * 4 - 2));
-        ImGui::DragFloat3("Quad Vertex 4", (float*)(vertexes + quads * 4 - 1));
-
-        if (ImGui::Button("Add Quad") && !isMax)
-        {
-            if (quads >= MAX_QUAD)
-            {
-                isMax = true;
-            } else
-            {
-                vertexes[quads * 4    ] = { { -50.0f, -50.0f }, COLORS[quads] };
-                vertexes[quads * 4 + 1] = { { +50.0f, -50.0f }, COLORS[quads] };
-                vertexes[quads * 4 + 2] = { { +50.0f, +50.0f }, COLORS[quads] };
-                vertexes[quads * 4 + 3] = { { -50.0f, +50.0f }, COLORS[quads] };
-                quads++;
+        if (ImGui::Button("Add Quad") && !isMax) {
+            if (quadCount >= MAX_QUAD) { isMax = true; } else {
+                quads.push_back(NewQuad());
+                quads.back().Bind(*render);
 
                 isMin = false;
             }
@@ -106,22 +54,25 @@ namespace Test
         
         if (isMax) ImGui::Text("Too Many Quads! (Limit: %i)", MAX_QUAD); 
         
-        if (ImGui::Button("Remove Quad") && !isMin)
-        {
-            if (quads <= 1) { isMin = true; } else
-            {
-                vertexes[quads * 4 - 4] = { { 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f, 0.0f } };
-                vertexes[quads * 4 - 3] = { { 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f, 0.0f } };
-                vertexes[quads * 4 - 2] = { { 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f, 0.0f } }; 
-                vertexes[quads * 4 - 1] = { { 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f, 0.0f } };
-                quads--;
-
+        if (ImGui::Button("Remove Quad") && !isMin) {
+            if (quadCount <= 1) { isMin = true; } else {
+                quads.back().Unbind();
+                quads.pop_back();
                 isMax = false;
-
-                vb->SetData(vertexes, (quads + 1) * 4);
             }
         }
 
         if (isMin) ImGui::Text("Can't Delete All Quads!");
+    }
+
+    void TestDynamicQuadGeometry::OnDestroy(Graphics::GraphicsDevice& gdevice) {
+        Test::OnDestroy(gdevice);
+        render->Destroy();
+    }
+
+    Graphics::Mesh<VertexColor3D> TestDynamicQuadGeometry::NewQuad() {
+        Graphics::Primitives::Quad quad = { 0, { 50, 0 }, { 0, 50 } };
+        return quad.IntoMesh<VertexColor3D>()
+                   .ApplyMaterial(&VertexColor3D::Color, COLORS[quads.size()]);
     }
 }

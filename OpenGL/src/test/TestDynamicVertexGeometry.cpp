@@ -2,13 +2,14 @@
 
 #include "imgui.h"
 
-namespace Test
-{
-    TestDynamicVertexGeometry::TestDynamicVertexGeometry()
-     : projection( Maths::Matrix3D::OrthoProjection(-320.0f, 320.0f, -240.0f, 240.0f, -1.0f, 1.0f) )
-    {
-        vertexes = new VertexColor3D[8]
-        {
+namespace Test {
+    void TestDynamicVertexGeometry::OnInit(Graphics::GraphicsDevice& gdevice) {
+        render = gdevice.CreateNewRender<VertexColor3D>(8, 4);
+
+        gdevice.UseShader(Graphics::Shader::StdColored);
+        gdevice.SetProjection(projection);
+
+        VertexColor3D vertices[] = {
             { { -240.0f, -80.0f, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
             { { -80.00f, -80.0f, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
             { { -80.00f, +80.0f, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } },
@@ -19,65 +20,44 @@ namespace Test
             { { +240.0f, +80.0f, 0.0f }, { 0.0f, 1.0f, 1.0f, 1.0f } },
             { { +80.00f, +80.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } },
         };
-        
-        const unsigned int indices[6 * 2] = {
-            0, 1, 2,  2, 3, 0,
-            4, 5, 6,  6, 7, 4
+
+        Graphics::TriIndicies indices[4] = {
+            { 0, 1, 2 },  { 2, 3, 0 },
+            { 4, 5, 6 },  { 6, 7, 4 }
         };
-        
-        va = new Graphics::VertexArray();
-        vb = new Graphics::DynamicVertexBuffer<VertexColor3D>(8);
-        
-        va->AddBuffer(*vb);
 
-        ib = new Graphics::IndexBuffer(indices, 12);
-        shader = new Graphics::Shader(Graphics::Shader::StdColored);
-        shader->Bind();
+        mesh = Graphics::Mesh<VertexColor3D>(
+            std::vector(vertices, vertices + 8),
+            std::vector(indices, indices + 4)
+        );
 
-        shader->SetUniformMatrix4x4("u_MVP", projection);
-        
-        va->Unbind();
-        vb->Unbind();
-        ib->Unbind();
-        shader->Unbind();
+        render->BindMeshes(&mesh, 1);
     }
 
-    TestDynamicVertexGeometry::~TestDynamicVertexGeometry()
-    {
-        delete va;
-        delete vb;
-        delete ib;
-        delete shader;
-        delete[] vertexes;
+    void TestDynamicVertexGeometry::OnRender(Graphics::GraphicsDevice& gdevice) {
+        Test::OnRender(gdevice);
+
+        render->ResetData<VertexColor3D>();
+        render->Render();
     }
 
-    void TestDynamicVertexGeometry::OnUpdate(float deltaTime)
-    {
-        Test::OnUpdate(deltaTime);
+    void TestDynamicVertexGeometry::OnImGuiRender(Graphics::GraphicsDevice& gdevice) {
+        Test::OnImGuiRender(gdevice);
+
+        VertexColor3D* vertices = mesh.GetVerticies().data();
+        ImGui::DragFloat3("Red    Vertex [0]", vertices[0].Position);
+        ImGui::DragFloat3("Green  Vertex [1]", vertices[1].Position);
+        ImGui::DragFloat3("Blue   Vertex [2]", vertices[2].Position);
+        ImGui::DragFloat3("Gray   Vertex [3]", vertices[3].Position);
+
+        ImGui::DragFloat3("Purple Vertex [4]", vertices[4].Position);
+        ImGui::DragFloat3("Yellow Vertex [5]", vertices[5].Position);
+        ImGui::DragFloat3("Cyan   Vertex [6]", vertices[6].Position);
+        ImGui::DragFloat3("White  Vertex [7]", vertices[7].Position);
     }
 
-    void TestDynamicVertexGeometry::OnRender(Graphics::Renderer& renderer)
-    {
-        Test::OnRender(renderer);
-        
-        vb->SetData(vertexes, 8);
-        
-        renderer.Draw(*va, *ib, *shader);
-    }
-
-    void TestDynamicVertexGeometry::OnImGuiRender()
-    {
-        Test::OnImGuiRender();
-
-        //constexpr unsigned int size = sizeof(VertexColor3D);
-        ImGui::DragFloat3("Red    Vertex [0]", (float*)(vertexes + 0));
-        ImGui::DragFloat3("Green  Vertex [1]", (float*)(vertexes + 1));
-        ImGui::DragFloat3("Blue   Vertex [2]", (float*)(vertexes + 2));
-        ImGui::DragFloat3("Gray   Vertex [3]", (float*)(vertexes + 3));
-
-        ImGui::DragFloat3("Purple Vertex [4]", (float*)(vertexes + 4));
-        ImGui::DragFloat3("Yellow Vertex [5]", (float*)(vertexes + 5));
-        ImGui::DragFloat3("Cyan   Vertex [6]", (float*)(vertexes + 6));
-        ImGui::DragFloat3("White  Vertex [7]", (float*)(vertexes + 7));
+    void TestDynamicVertexGeometry::OnDestroy(Graphics::GraphicsDevice& gdevice) {
+        Test::OnDestroy(gdevice);
+        render->Destroy();
     }
 }

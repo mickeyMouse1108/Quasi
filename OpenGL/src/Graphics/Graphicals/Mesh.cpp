@@ -1,11 +1,11 @@
 ﻿#include "Mesh.h"
 
 namespace Graphics::MeshUtils {
-    Mesh<> CubeMesh(Vec3 origin, float x, float y, float z) {
+    Mesh<VertexColor3D> CubeMesh(Vec3 origin, float x, float y, float z) {
         float hx = x / 2;
         float hy = y / 2;
         float hz = z / 2;
-        Vertex verticies[8] = {
+        VertexColor3D verticies[8] = {
             { origin + Maths::Vector3(-hx, -hy, -hz), { 0.0f, 0.0f, 0.0f, 1.0f } }, 
             { origin + Maths::Vector3(-hx, -hy, +hz), { 0.0f, 0.0f, 1.0f, 1.0f } }, 
             { origin + Maths::Vector3(-hx, +hy, -hz), { 0.0f, 1.0f, 0.0f, 1.0f } }, 
@@ -16,8 +16,8 @@ namespace Graphics::MeshUtils {
             { origin + Maths::Vector3(+hx, +hy, +hz), { 1.0f, 1.0f, 1.0f, 1.0f } }, 
         };
             
-        return Mesh<>(
-            std::vector<Vertex>(verticies, verticies + 8),
+        return Mesh<VertexColor3D>(
+            std::vector<VertexColor3D>(verticies, verticies + 8),
             std::vector<TriIndicies>(
                 { { 0, 1, 2 },
                   { 1, 2, 3 },

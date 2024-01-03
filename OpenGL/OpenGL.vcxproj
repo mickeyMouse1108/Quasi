@@ -163,7 +163,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Graphics\GLs\DynamicIndexBuffer.cpp" />
+    <ClCompile Include="src\Graphics\GLs\DynamicVertexBuffer.cpp" />
     <ClCompile Include="src\Graphics\GLs\IndexBuffer.cpp" />
+    <ClCompile Include="src\Graphics\Graphicals\GenericMesh.cpp" />
+    <ClCompile Include="src\Graphics\Graphicals\RenderData.cpp" />
     <ClCompile Include="src\Graphics\GLs\Renderer.cpp" />
     <ClCompile Include="src\Graphics\GLs\Shader.cpp" />
     <ClCompile Include="src\Graphics\GLs\VertexArray.cpp" />
@@ -207,6 +210,8 @@
     <ClInclude Include="src\Graphics\GLs\DynamicIndexBuffer.h" />
     <ClInclude Include="src\Graphics\GLs\DynamicVertexBuffer.h" />
     <ClInclude Include="src\Graphics\GLs\IndexBuffer.h" />
+    <ClInclude Include="src\Graphics\Graphicals\GenericMesh.h" />
+    <ClInclude Include="src\Graphics\Graphicals\RenderData.h" />
     <ClInclude Include="src\Graphics\GLs\Renderer.h" />
     <ClInclude Include="src\Graphics\GLs\Shader.h" />
     <ClInclude Include="src\Graphics\GLs\VertexArray.h" />

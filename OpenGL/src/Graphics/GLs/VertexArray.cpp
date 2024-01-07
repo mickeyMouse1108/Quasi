@@ -11,11 +11,9 @@ namespace Graphics {
         GLCALL(glDeleteVertexArrays(1, &rendererID));
     }
 
-    VertexArray& VertexArray::Transfer(VertexArray& dest, VertexArray&& from) {
+    void VertexArray::Transfer(VertexArray& dest, VertexArray&& from) {
         dest.rendererID = from.rendererID;
         from.rendererID = 0;
-
-        return dest;
     }
 
     void VertexArray::AddBuffer(const VertexBufferLayout& layout) {

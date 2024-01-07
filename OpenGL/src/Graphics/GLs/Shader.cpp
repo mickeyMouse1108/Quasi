@@ -6,8 +6,6 @@
 #include "Debugging.h"
 
 namespace Graphics {
-    Shader::Shader() {}
-
     Shader::Shader(const std::string& program) {
         ShaderProgramSource shadersrc = ParseShader(program);
         rendererID = CreateShader(shadersrc.vertexShader, shadersrc.fragmentShader);
@@ -18,15 +16,15 @@ namespace Graphics {
     }
 
     Shader::~Shader() {
-        GLCALL(glDeleteProgram(rendererID));
+        if (rendererID) {
+            GLCALL(glDeleteProgram(rendererID));
+        }
     }
 
-    Shader& Shader::Transfer(Shader& dest, Shader&& from) {
+    void Shader::Transfer(Shader& dest, Shader&& from) {
         dest.rendererID = from.rendererID;
         from.rendererID = 0;
         dest.uniformCache = std::move(from.uniformCache);
-
-        return dest;
     }
 
     void Shader::Bind() const {
@@ -82,7 +80,7 @@ namespace Graphics {
         Shader s {};
         ShaderProgramSource shadersrc = ParseFromFile(filepath);
         s.rendererID = CreateShader(shadersrc.vertexShader, shadersrc.fragmentShader);
-        return std::move(s);
+        return s;
     }
     
     uint Shader::CompileShader(stringr source, uint type) {

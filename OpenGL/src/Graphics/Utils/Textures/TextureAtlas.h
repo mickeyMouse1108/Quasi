@@ -6,16 +6,16 @@ namespace Graphics {
     class TextureAtlas {
         private:
             Texture texture;
-            Maths::Vec2UInt atlasSize;
-            Maths::Vec2UInt subTextureSize;
+            Maths::uvec2 atlasSize;
+            Maths::uvec2 subTextureSize;
         public:
-            OPENGL_API TextureAtlas(const std::string& filename, uint xSize, uint ySize);
+            OPENGL_API explicit TextureAtlas(const std::string& filename, uint xSize, uint ySize);
 
-            [[nodiscard]] Maths::Vec2UInt GetTextureSize()    const { return { texture.GetWidth(), texture.GetHeight() }; }
-            [[nodiscard]] Maths::Vec2UInt GetAtlasSize()      const { return atlasSize; }
-            [[nodiscard]] Maths::Vec2UInt GetSubTextureSize() const { return subTextureSize; }
+            [[nodiscard]] Maths::uvec2 GetTextureSize()    const { return { texture.GetWidth(), texture.GetHeight() }; }
+            [[nodiscard]] Maths::uvec2 GetAtlasSize()      const { return atlasSize; }
+            [[nodiscard]] Maths::uvec2 GetSubTextureSize() const { return subTextureSize; }
 
-            void Bind(unsigned int slot = 0) const { texture.Bind(slot); }
-            void Unbind()                    const { texture.Unbind(); }
+            void Bind(uint slot = 0) const { texture.Bind(slot); }
+            void Unbind()            const { texture.Unbind(); }
     };
 }

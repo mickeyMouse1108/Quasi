@@ -14,19 +14,19 @@ namespace Graphics {
 
     class Shader {
         private:
-            uint rendererID = 0;
+            glID rendererID = GL_NULL;
             std::unordered_map<std::string, int> uniformCache;
         public:
-            OPENGL_API Shader();
-            OPENGL_API Shader(const std::string& program);
-            OPENGL_API Shader(const std::string& vert, const std::string& frag);
+            OPENGL_API Shader() = default;
+            OPENGL_API explicit Shader(const std::string& program);
+            OPENGL_API explicit Shader(const std::string& vert, const std::string& frag);
             OPENGL_API ~Shader();
 
             Shader(const Shader&) = delete;
             OPENGL_API Shader& operator=(const Shader&) = delete;
-            OPENGL_API static Shader& Transfer(Shader& dest, Shader&& from);
+            OPENGL_API static void Transfer(Shader& dest, Shader&& from);
             Shader(Shader&& s) noexcept { Transfer(*this, std::move(s)); }
-            Shader& operator=(Shader&& s) noexcept { return Transfer(*this, std::move(s)); }
+            Shader& operator=(Shader&& s) noexcept { Transfer(*this, std::move(s)); return *this; }
 
             OPENGL_API void Bind() const;
             OPENGL_API void Unbind() const;
@@ -94,7 +94,7 @@ namespace Graphics {
 #undef SHADER_UNIF_FV
 #pragma endregion
 #pragma region Uniform Matricies
-#define SHADER_UNIF_MAT(s, m) GLCALL(glUniformMatrix##s##fv(GetUniformLocation(name), 1, GL_TRUE, m))
+#define SHADER_UNIF_MAT(s, m) GLCALL(glUniformMatrix##s##fv(GetUniformLocation(name), 1, GL_FALSE, m)) // column major
             void SetUniformMatrix2x2(stringr name, floatptr mat) { SHADER_UNIF_MAT(2, mat); }
             void SetUniformMatrix3x3(stringr name, floatptr mat) { SHADER_UNIF_MAT(3, mat); }
                 
@@ -105,7 +105,7 @@ namespace Graphics {
             void SetUniformMatrix3x4(stringr name, floatptr mat) { SHADER_UNIF_MAT(3x4, mat); }
             void SetUniformMatrix4x3(stringr name, floatptr mat) { SHADER_UNIF_MAT(4x3, mat); }
                 
-            void SetUniformMatrix4x4(stringr name, const Maths::Matrix3D& mat) { SHADER_UNIF_MAT(4, mat.GetInRow()); }
+            void SetUniformMatrix4x4(stringr name, const Maths::mat3D& mat) { SHADER_UNIF_MAT(4, mat.get_in_col()); }
 #undef SHADER_UNIF_MAT
 #pragma endregion
 

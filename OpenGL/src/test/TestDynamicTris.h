@@ -13,12 +13,12 @@ namespace Test {
         stdu::ref<Graphics::RenderData> render;
         std::vector<Graphics::Mesh<VertexColor3D>> tris;
         
-        Maths::Matrix3D projection = Maths::Matrix3D::OrthoProjection(-320.f, 320.0f, -240.0f, 240.0f, -1.0f, 1.0f);
-        Maths::Vector2 modelTranslation = {0.0f, 0.0f};
-        Maths::Vector2 modelScale = {1.0f, 1.0f};
+        Maths::mat3D projection = Maths::mat3D::ortho_projection(-320.f, 320.0f, -240.0f, 240.0f, -1.0f, 1.0f);
+        Maths::fvec2 modelTranslation = 0;
+        Maths::fvec2 modelScale = 1;
         float modelRotation = 0.0f;
 
-        Maths::Matrix3D ModelMatrix();
+        Maths::mat3D ModelMatrix();
     public:
         TestDynamicTris() {}
         ~TestDynamicTris() override {}
@@ -30,6 +30,6 @@ namespace Test {
 
         OPENGL_API Graphics::Mesh<VertexColor3D> NewTri();
 
-        static Maths::Vector4 COLORS[8];
+        static Maths::fvec4 COLORS[8];
     };
 }

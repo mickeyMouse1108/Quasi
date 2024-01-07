@@ -15,7 +15,7 @@ namespace Test {
         stdu::ref<Graphics::RenderData> render;
         std::vector<Graphics::Mesh<VertexColor3D>> quads;
 
-        Maths::Matrix3D projection = Maths::Matrix3D::OrthoProjection(-320.0f, 320.0f, -240.0f, 240.0f, -1.0f, 1.0f);
+        Maths::mat3D projection = Maths::mat3D::ortho_projection(-320.0f, 320.0f, -240.0f, 240.0f, -1.0f, 1.0f);
     public:
         TestDynamicQuadGeometry() {}
         ~TestDynamicQuadGeometry() override {}
@@ -27,6 +27,6 @@ namespace Test {
 
         OPENGL_API Graphics::Mesh<VertexColor3D> NewQuad();
         
-        static Maths::Vector4 COLORS[8];
+        static Maths::fvec4 COLORS[8];
     };
 }

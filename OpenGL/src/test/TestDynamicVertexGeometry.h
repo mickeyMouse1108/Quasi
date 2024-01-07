@@ -8,7 +8,7 @@ namespace Test {
         stdu::ref<Graphics::RenderData> render;
         Graphics::Mesh<VertexColor3D> mesh;
 
-        Maths::Matrix3D projection = Maths::Matrix3D::OrthoProjection(-320.0f, 320.0f, -240.0f, 240.0f, -1.0f, 1.0f);
+        Maths::mat3D projection = Maths::mat3D::ortho_projection(-320.0f, 320.0f, -240.0f, 240.0f, -1.0f, 1.0f);
     public:
         TestDynamicVertexGeometry() {}
         ~TestDynamicVertexGeometry() override {}

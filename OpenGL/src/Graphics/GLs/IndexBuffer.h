@@ -5,7 +5,7 @@
 namespace Graphics {
 	class IndexBuffer {
 		private:
-			uint rendererID = 0;
+			glID rendererID = GL_NULL;
 			uint length = 0;
 		public:
 			OPENGL_API IndexBuffer(const void* data, uint length);

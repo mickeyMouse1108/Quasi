@@ -4,22 +4,22 @@
 #include "imgui.h"
 
 namespace Test {
-    Maths::Vector4 TestDynamicQuadGeometry::COLORS[8] = {
-        { 1.0f, 0.0f, 0.0f, 1.0f }, // red
-        { 0.0f, 1.0f, 0.0f, 1.0f }, // green
-        { 0.0f, 0.0f, 1.0f, 1.0f }, // blue
-        { 1.0f, 1.0f, 0.0f, 1.0f }, // magenta
-        { 0.0f, 1.0f, 1.0f, 1.0f }, // yellow
-        { 1.0f, 0.0f, 1.0f, 1.0f }, // cyan
-        { 1.0f, 0.5f, 0.0f, 1.0f }, // orange 
-        { 0.5f, 0.0f, 1.0f, 1.0f }, // purple
+    Maths::fvec4 TestDynamicQuadGeometry::COLORS[8] = {
+        { 1.0f, 0.0f, 0.0f }, // red
+        { 0.0f, 1.0f, 0.0f }, // green
+        { 0.0f, 0.0f, 1.0f }, // blue
+        { 1.0f, 1.0f, 0.0f }, // magenta
+        { 0.0f, 1.0f, 1.0f }, // yellow
+        { 1.0f, 0.0f, 1.0f }, // cyan
+        { 1.0f, 0.5f, 0.0f }, // orange 
+        { 0.5f, 0.0f, 1.0f }, // purple
     };
     
     void TestDynamicQuadGeometry::OnInit(Graphics::GraphicsDevice& gdevice) {
         render = gdevice.CreateNewRender<VertexColor3D>(8 * 4, 8 * 2);
 
-        gdevice.UseShader(Graphics::Shader::StdColored);
-        gdevice.SetProjection(projection);
+        render->UseShader(Graphics::Shader::StdColored);
+        render->SetProjection(projection);
 
         quads.push_back(NewQuad());
         quads.back().Bind(*render);
@@ -37,7 +37,7 @@ namespace Test {
 
         uint quadCount = quads.size();
 
-        auto& verts = quads.back().GetVerticies();
+        auto& verts = quads.back().GetVertices();
         ImGui::DragFloat3("Quad Vertex 1", verts[0].Position);
         ImGui::DragFloat3("Quad Vertex 2", verts[1].Position);
         ImGui::DragFloat3("Quad Vertex 3", verts[2].Position);

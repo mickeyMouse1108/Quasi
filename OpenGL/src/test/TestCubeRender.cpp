@@ -1,8 +1,6 @@
 ﻿#include "TestCubeRender.h"
 #include "Quad.h"
 
-#include <algorithm>
-
 #include "imgui.h"
 
 namespace Test {
@@ -35,7 +33,7 @@ namespace Test {
 
         render->BindMeshes(&cube, 1);
 
-        gdevice.UseShader(
+        render->UseShader(
             "#shader vertex\n"
             "#version 330 core\n"
             "layout(location = 0) in vec4 position;\n"
@@ -60,19 +58,19 @@ namespace Test {
             "    color.a = v_alpha;\n"
             "}"
         );
-        gdevice.SetProjection(projection);
+        render->SetProjection(projection);
     }
 
     void TestCubeRender::OnRender(Graphics::GraphicsDevice& gdevice) {
         Test::OnRender(gdevice);
 
-        Maths::Matrix3D mat = Maths::Matrix3D::Transform(modelTranslation, modelScale, modelRotation);
+        Maths::mat3D mat = Maths::mat3D::transform(modelTranslation, modelScale, modelRotation);
         
         // std::sort(faceOrder, faceOrder + 6,
         // [&](unsigned int face1, unsigned int face2){ return (mat * faceAxis[face1]).z < (mat * faceAxis[face2]).z; });
-        gdevice.SetCamera(mat);
-        gdevice.GetShader().Bind();
-        gdevice.GetShader().SetUniform1F("u_alpha", alpha);
+        render->SetCamera(mat);
+        render->GetShader().Bind();
+        render->GetShader().SetUniform1F("u_alpha", alpha);
 
         render->ResetData<VertexColor3D>();
         render->Render();

@@ -8,17 +8,17 @@
 #define VERTEX_LAYOUT_OF(T) T::__VERTEX_LAYOUT
 
 struct VertexColorTexture3D {
-    Maths::Vector3 Position;
-    Maths::Vector4 Color;
-    Maths::Vector2 TextureCoordinate;
+    Maths::fvec3 Position;
+    Maths::fvec4 Color;
+    Maths::fvec2 TextureCoordinate;
     int TextureID = 0;
     
     VERTEX_STRUCT_LAYOUT = { VERTEX_COMP Vec3(), VERTEX_COMP Vec4(), VERTEX_COMP Vec2(), VERTEX_COMP Int() };
 };
 
 struct VertexColorTextureAtlas3D {
-    Maths::Vector3 Position;
-    Maths::Vector4 Color;
+    Maths::fvec3 Position;
+    Maths::fvec4 Color;
     int TextureAtlID = 0;
     int TextureCorner = 0;
 
@@ -26,20 +26,20 @@ struct VertexColorTextureAtlas3D {
 };
 
 struct VertexColor3D {
-    Maths::Vector3 Position;
-    Maths::Vector4 Color;
+    Maths::fvec3 Position;
+    Maths::fvec4 Color;
 
     VERTEX_STRUCT_LAYOUT = { VERTEX_COMP Vec3(), VERTEX_COMP Vec4() };
 };
 
-inline VertexColor3D operator*(const Maths::Matrix3D& transform, const VertexColor3D& vec) {
+inline VertexColor3D operator*(const Maths::mat3D& transform, const VertexColor3D& vec) {
     return { transform * vec.Position, vec.Color };
 }
 
-inline VertexColorTexture3D operator*(const Maths::Matrix3D& transform, const VertexColorTexture3D& vec) {
+inline VertexColorTexture3D operator*(const Maths::mat3D& transform, const VertexColorTexture3D& vec) {
     return { transform * vec.Position, vec.Color, vec.TextureCoordinate, vec.TextureID };
 }
 
-inline VertexColorTextureAtlas3D operator*(const Maths::Matrix3D& transform, const VertexColorTextureAtlas3D& vec) {
+inline VertexColorTextureAtlas3D operator*(const Maths::mat3D& transform, const VertexColorTextureAtlas3D& vec) {
     return { transform * vec.Position, vec.Color, vec.TextureAtlID, vec.TextureCorner };
 }

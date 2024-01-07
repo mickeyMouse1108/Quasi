@@ -10,12 +10,12 @@ namespace Test {
         Graphics::Mesh<VertexColorTexture3D> mesh;
         Graphics::Texture texture;
         
-        Maths::Vector4 color = Maths::Vector4::ONE;
+        Maths::fvec4 color = Maths::fvec4::ONE;
 
-        Maths::Matrix3D projection = Maths::Matrix3D::OrthoProjection(-320.0f, 320.0f, -240.0f, 240.0f, -1.0f, 1.0f);
-        Maths::Vector3  modelTranslation = 0;
-        Maths::Vector3  modelScale = Maths::Vector3::ONE;
-        Maths::Vector3  modelRotation = 0;
+        Maths::mat3D projection = Maths::mat3D::ortho_projection(-320.0f, 320.0f, -240.0f, 240.0f, -1.0f, 1.0f);
+        Maths::fvec3  modelTranslation = 0;
+        Maths::fvec3  modelScale = 1;
+        Maths::fvec3  modelRotation = 0;
     public:
         TestTexturedSquare() {}
         ~TestTexturedSquare() override {}

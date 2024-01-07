@@ -48,7 +48,7 @@ static bool GLCheckErrorDetailed(const char* fun, const char* file, int line) {
 #define GLCheckError(x) GLCheckErrorSimple()
 #endif
 
-#define LOG(x) std::cout << x << std::endl
+#define LOG(x) std::cout << x << std::endl  /* NOLINT(bugprone-macro-parentheses) */
 #define DEBUGFUN(x) (x)
 #define CHECKFUNERR(x) GLClearError(); (x); GLCheckError(x)
 
@@ -57,7 +57,7 @@ static bool GLCheckErrorDetailed(const char* fun, const char* file, int line) {
 #else
 #define ASSERT(x) (x)
 #endif
-#define GLCALL(x) GLClearError(); x; ASSERT(GLCheckError(x))
+#define GLCALL(x) GLClearError(); x; ASSERT(GLCheckError(x)) /* warning: this is not in a new scope. if this is in a loop/if statement, be sure to add braces */
 
 
 #else

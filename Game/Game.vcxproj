@@ -109,7 +109,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration);$(SolutionDir)Dependencies\GLFW\lib-vc2022\$(Platform);$(SolutionDir)Dependencies\GLEW\lib\Release\$(Platform)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(SolutionDir)bin\$(Platform)\$(Configuration)\OpenGL.lib;glew32s.lib;glfw3.lib;Opengl32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OpenGL.lib;glew32s.lib;glfw3.lib;Opengl32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>

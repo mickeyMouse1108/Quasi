@@ -5,8 +5,7 @@
 namespace stdu {
     template <class T, class TComp>
     class sorted_vector {
-        struct vector_index
-        {
+        struct vector_index {
             bool exists;
             int index;
         };
@@ -95,6 +94,7 @@ namespace stdu {
             }
             return {.exists = false, .index = l};
         }
+        
         template <class TMatch>
         [[nodiscard]] vector_index find_predicate(TMatch matcher, int start) const {
             auto fcomp = matcher(_items[start]);
@@ -140,21 +140,27 @@ namespace stdu {
             }
             return item.exists;
         }
+        
         bool exists(const T& val) const {
             return index_of(val).exists;
         }
+        
         void resort() {
             std::sort(_items.begin(), _items.end(), [&](const T& a, const T& b){ return _comparer(a) < _comparer(b); });
         }
+        
         void clear() {
             _items.clear();
         }
+        
         void resize(int total, const T& def) {
             _items.resize(total, def);
         }
+        
         void reserve(int num) {
             _items.reserve(num);
         }
+        
         // ! idk if this works or not
         void extend  (const sorted_vector& extend) {
             iter it1 = this-> end() - 1;

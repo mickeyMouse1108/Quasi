@@ -6,27 +6,27 @@ namespace Test {
     void TestDynamicVertexGeometry::OnInit(Graphics::GraphicsDevice& gdevice) {
         render = gdevice.CreateNewRender<VertexColor3D>(8, 4);
 
-        gdevice.UseShader(Graphics::Shader::StdColored);
-        gdevice.SetProjection(projection);
+        render->UseShader(Graphics::Shader::StdColored);
+        render->SetProjection(projection);
 
         VertexColor3D vertices[] = {
-            { { -240.0f, -80.0f, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
-            { { -80.00f, -80.0f, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
-            { { -80.00f, +80.0f, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } },
-            { { -240.0f, +80.0f, 0.0f }, { 0.5f, 0.5f, 0.5f, 1.0f } },
+            { { -240.0f, -80.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } },
+            { { -80.00f, -80.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
+            { { -80.00f, +80.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
+            { { -240.0f, +80.0f, 0.0f }, { 0.5f, 0.5f, 0.5f } },
             
-            { { +80.00f, -80.0f, 0.0f }, { 1.0f, 0.0f, 1.0f, 1.0f } },
-            { { +240.0f, -80.0f, 0.0f }, { 1.0f, 1.0f, 0.0f, 1.0f } },
-            { { +240.0f, +80.0f, 0.0f }, { 0.0f, 1.0f, 1.0f, 1.0f } },
-            { { +80.00f, +80.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } },
+            { { +80.00f, -80.0f, 0.0f }, { 1.0f, 0.0f, 1.0f } },
+            { { +240.0f, -80.0f, 0.0f }, { 1.0f, 1.0f, 0.0f } },
+            { { +240.0f, +80.0f, 0.0f }, { 0.0f, 1.0f, 1.0f } },
+            { { +80.00f, +80.0f, 0.0f }, { 1.0f, 1.0f, 1.0f } },
         };
 
-        Graphics::TriIndicies indices[4] = {
+        Graphics::TriIndices indices[4] = {
             { 0, 1, 2 },  { 2, 3, 0 },
             { 4, 5, 6 },  { 6, 7, 4 }
         };
 
-        mesh = Graphics::Mesh<VertexColor3D>(
+        mesh = Graphics::Mesh(
             std::vector(vertices, vertices + 8),
             std::vector(indices, indices + 4)
         );
@@ -44,7 +44,7 @@ namespace Test {
     void TestDynamicVertexGeometry::OnImGuiRender(Graphics::GraphicsDevice& gdevice) {
         Test::OnImGuiRender(gdevice);
 
-        VertexColor3D* vertices = mesh.GetVerticies().data();
+        VertexColor3D* vertices = mesh.GetVertices().data();
         ImGui::DragFloat3("Red    Vertex [0]", vertices[0].Position);
         ImGui::DragFloat3("Green  Vertex [1]", vertices[1].Position);
         ImGui::DragFloat3("Blue   Vertex [2]", vertices[2].Position);

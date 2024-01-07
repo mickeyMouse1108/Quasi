@@ -5,20 +5,20 @@ namespace Graphics::MeshUtils {
         float hx = x / 2;
         float hy = y / 2;
         float hz = z / 2;
-        VertexColor3D verticies[8] = {
-            { origin + Maths::Vector3(-hx, -hy, -hz), { 0.0f, 0.0f, 0.0f, 1.0f } }, 
-            { origin + Maths::Vector3(-hx, -hy, +hz), { 0.0f, 0.0f, 1.0f, 1.0f } }, 
-            { origin + Maths::Vector3(-hx, +hy, -hz), { 0.0f, 1.0f, 0.0f, 1.0f } }, 
-            { origin + Maths::Vector3(-hx, +hy, +hz), { 0.0f, 1.0f, 1.0f, 1.0f } }, 
-            { origin + Maths::Vector3(+hx, -hy, -hz), { 1.0f, 0.0f, 0.0f, 1.0f } }, 
-            { origin + Maths::Vector3(+hx, -hy, +hz), { 1.0f, 0.0f, 1.0f, 1.0f } }, 
-            { origin + Maths::Vector3(+hx, +hy, -hz), { 1.0f, 1.0f, 0.0f, 1.0f } }, 
-            { origin + Maths::Vector3(+hx, +hy, +hz), { 1.0f, 1.0f, 1.0f, 1.0f } }, 
+        VertexColor3D vertices[8] = {
+            { origin + Maths::fvec3(-hx, -hy, -hz), { 0.0f, 0.0f, 0.0f, 1.0f } }, 
+            { origin + Maths::fvec3(-hx, -hy, +hz), { 0.0f, 0.0f, 1.0f, 1.0f } }, 
+            { origin + Maths::fvec3(-hx, +hy, -hz), { 0.0f, 1.0f, 0.0f, 1.0f } }, 
+            { origin + Maths::fvec3(-hx, +hy, +hz), { 0.0f, 1.0f, 1.0f, 1.0f } }, 
+            { origin + Maths::fvec3(+hx, -hy, -hz), { 1.0f, 0.0f, 0.0f, 1.0f } }, 
+            { origin + Maths::fvec3(+hx, -hy, +hz), { 1.0f, 0.0f, 1.0f, 1.0f } }, 
+            { origin + Maths::fvec3(+hx, +hy, -hz), { 1.0f, 1.0f, 0.0f, 1.0f } }, 
+            { origin + Maths::fvec3(+hx, +hy, +hz), { 1.0f, 1.0f, 1.0f, 1.0f } }, 
         };
             
-        return Mesh<VertexColor3D>(
-            std::vector<VertexColor3D>(verticies, verticies + 8),
-            std::vector<TriIndicies>(
+        return Mesh(
+            std::vector(vertices, vertices + 8),
+            std::vector<TriIndices>(
                 { { 0, 1, 2 },
                   { 1, 2, 3 },
                   { 4, 5, 6 },

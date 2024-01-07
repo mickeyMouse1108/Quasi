@@ -1,5 +1,5 @@
 ﻿#include "TestBatchedTextured.h"
-#include "TriIndicies.h"
+#include "TriIndices.h"
 
 #include "imgui.h"
 #include "NumTypes.h"
@@ -10,6 +10,7 @@ namespace Test {
 
         // because i couldn't get rc files working and 
         // dlls/libs dont pack things like pngs into itself, im using these bytes instead
+#pragma region Texture Define
         uchar tex0[] = {
             0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a,0x00,0x00,0x00,0x0d,0x49,0x48,0x44,0x52,
             0x00,0x00,0x00,0x20,0x00,0x00,0x00,0x20,0x08,0x02,0x00,0x00,0x00,0xfc,0x18,0xed,
@@ -52,45 +53,46 @@ namespace Test {
             0x44,0xae,0x42,0x60,0x82
         };
         textures[1] = Graphics::Texture(tex1, sizeof(tex1) / sizeof(uchar), false);
+#pragma endregion
 
         gdevice.BindTexture(textures[0], 0);
         gdevice.BindTexture(textures[1], 1);
 
-        VertexColorTexture3D verticies[] = {
-            { { -240.0f, -80.0f }, Maths::Vector4::ONE, { 0.0f, 0.0f }, 0 },
-            { { -80.00f, -80.0f }, Maths::Vector4::ONE, { 1.0f, 0.0f }, 0 },
-            { { -80.00f, +80.0f }, Maths::Vector4::ONE, { 1.0f, 1.0f }, 0 },
-            { { -240.0f, +80.0f }, Maths::Vector4::ONE, { 0.0f, 1.0f }, 0 },
+        VertexColorTexture3D vertices[] = {
+            { { -240.0f, -80.0f }, 1, { 0.0f, 0.0f }, 0 },
+            { { -80.00f, -80.0f }, 1, { 1.0f, 0.0f }, 0 },
+            { { -80.00f, +80.0f }, 1, { 1.0f, 1.0f }, 0 },
+            { { -240.0f, +80.0f }, 1, { 0.0f, 1.0f }, 0 },
 
-            { { +80.00f, -80.0f }, Maths::Vector4::ONE, { 0.0f, 0.0f }, 1 },
-            { { +240.0f, -80.0f }, Maths::Vector4::ONE, { 1.0f, 0.0f }, 1 },
-            { { +240.0f, +80.0f }, Maths::Vector4::ONE, { 1.0f, 1.0f }, 1 },
-            { { +80.00f, +80.0f }, Maths::Vector4::ONE, { 0.0f, 1.0f }, 1 },
+            { { +80.00f, -80.0f }, 1, { 0.0f, 0.0f }, 1 },
+            { { +240.0f, -80.0f }, 1, { 1.0f, 0.0f }, 1 },
+            { { +240.0f, +80.0f }, 1, { 1.0f, 1.0f }, 1 },
+            { { +80.00f, +80.0f }, 1, { 0.0f, 1.0f }, 1 },
         };
 
-        Graphics::TriIndicies indicies[] = {
+        Graphics::TriIndices indices[] = {
             { 0, 1, 2 }, { 2, 3, 0 },
             { 4, 5, 6 }, { 6, 7, 4 }
         };
 
-        mesh = Graphics::Mesh<VertexColorTexture3D>(
-            std::vector(verticies, verticies + 8),
-            std::vector(indicies, indicies + 4)
+        mesh = Graphics::Mesh(
+            std::vector(vertices, vertices + 8),
+            std::vector(indices, indices + 4)
         );
 
         render->BindMeshes(&mesh, 1);
-        gdevice.SetProjection(projection);
+        render->SetProjection(projection);
 
-        gdevice.UseShader(Graphics::Shader::StdTextured);
+        render->UseShader(Graphics::Shader::StdTextured);
     }
 
     void TestBatchedTextured::OnRender(Graphics::GraphicsDevice& gdevice) {
         Test::OnRender(gdevice);
         //shader.SetUniform4F("u_Color", color);
-        Maths::Matrix3D mat = Maths::Matrix3D::Transform(modelTranslation,
+        Maths::mat3D mat = Maths::mat3D::transform(modelTranslation,
                                                          modelScale,
                                                          modelRotation);
-        gdevice.SetCamera(mat);
+        render->SetCamera(mat);
 
         render->ResetData<VertexColorTexture3D>();
         render->Render();

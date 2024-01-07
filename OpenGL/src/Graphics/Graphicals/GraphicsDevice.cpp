@@ -1,12 +1,12 @@
 ﻿// because gl.h cant be included before glew.h, weird ordering
-#include "Renderer.h"
-#include "GenericMesh.h"
+#include "Render.h"
 #include "GraphicsDevice.h"
+
+#include <algorithm>
 
 #include "IO.h"
 #include "Mouse.h"
 #include "Keyboard.h"
-
 
 #include <numeric>
 
@@ -15,40 +15,44 @@
 #include "imgui_impl_opengl3.h"
 
 namespace Graphics {
-    GraphicsDevice::GraphicsDevice(GLFWwindow* window, Maths::Vec2Int winSize) : 
-        renders(), _renderer(), _windowSize(winSize), _mainWindow{ window }
-    {
+    GraphicsDevice::GraphicsDevice(GLFWwindow* window, Maths::ivec2 winSize) : 
+        windowSize(winSize), mainWindow{ window } {
         Instance = *this;
         IO::Init(*this);
     }
 
-    GraphicsDevice::~GraphicsDevice() {
+    void GraphicsDevice::Quit() {
+        DeleteAllRenders(); // delete gl objects
+        
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
 
-        glfwDestroyWindow(_mainWindow);
+        glfwDestroyWindow(mainWindow);
         glfwTerminate();
+
+        mainWindow = nullptr; // mark as terminated
+    }
+
+    GraphicsDevice::~GraphicsDevice() {
+        if (!IsClosed())
+            Quit();
     }
 
     void GraphicsDevice::BeginRender() {
-        _renderer.Clear();
+        if (IsClosed()) return;
+        
+        Render::Clear();
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-    }
-    
-    void GraphicsDevice::EnableShader() {
-        _currentShader.Bind();
-        _currentShader.SetUniformMatrix4x4("u_projection", _projection);
-        _currentShader.SetUniformMatrix4x4("u_view", _camera);
-    }
-    
-    void GraphicsDevice::DisableShader() {
-        _currentShader.Unbind();
+
+        SetRenderWireframe(useWireRender);
     }
 
     void GraphicsDevice::EndRender() {
+        if (IsClosed()) return;
+        
         ImGui::Render();
         // glClear(GL_COLOR_BUFFER_BIT);
         
@@ -56,73 +60,54 @@ namespace Graphics {
             
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
             
-        glfwSwapBuffers(_mainWindow);
+        glfwSwapBuffers(mainWindow);
     }
-
-    /*void GraphicsDevice::RegisterMeshes() {
-        for (stdu::ref mesh : _meshes) mesh->AddTo(_vertexBuffer, _indexBuffer);
-    }
-
-    void GraphicsDevice::RegisterNewMeshes(const Mesh<>* meshes, uint count) {
-        for (uint i = 0; i < count; ++i) meshes[i].AddTo(_vertexBuffer, _indexBuffer);
-    }
-
-    void GraphicsDevice::RenderRegistered() const {
-        _renderer.Draw(_vertexArray, _indexBuffer, _currentShader);
-    }*/
-
-    /*void GraphicsDevice::UnbindMesh(int index) {
-        _meshes.erase(_meshes.begin() + index);
-        UpdateMeshIndicies();
-    }
-
-    void GraphicsDevice::UnbindMeshes(int indexStart, int indexEnd) {
-        _meshes.erase(_meshes.begin() + indexStart, _meshes.begin() + indexEnd);
-        UpdateMeshIndicies();
-    }
-
-    void GraphicsDevice::UpdateMeshIndicies() {
-        for (uint i = 0; i < _meshes.size(); ++i)
-            _meshes[i].deviceIndex() = i;
-    }*/
-
+    
     void GraphicsDevice::BindRender(RenderData& render) {
         render.device = this;
         render.deviceIndex = renders.size() - 1;
     }
 
-    void GraphicsDevice::DeleteRender(int index) {
-        renders.erase(renders.begin() + index);
+    void GraphicsDevice::DeleteRender(uint index) {
+        renders[index].device = nullptr;
+        renders.erase(renders.begin() + (int)index);
     }
 
-    RenderData& GraphicsDevice::GetRender(int index) {
+    void GraphicsDevice::DeleteAllRenders() {
+        std::ranges::for_each(renders, [](RenderData& r){ r.device = nullptr; });
+        renders.clear();
+    }
+
+    RenderData& GraphicsDevice::GetRender(uint index) {
         return renders[index];
     }
 
     void GraphicsDevice::Render(RenderData& r) {
-        EnableShader();
-        _renderer.Draw(r, _currentShader);
+        r.EnableShader();
+        Render::Draw(r, r.shader);
     }
 
     void GraphicsDevice::BindTexture(Texture& texture, uint slot) {
         texture.Bind(slot);
     }
 
-    void GraphicsDevice::ClearColor(const Maths::Vector4& color) {
-        glClearColor(color.x, color.y, color.z, color.w);
+    void GraphicsDevice::ClearColor(const Maths::fvec4& color) {
+        Render::SetClearColor(color);
     }
 
-    Renderer& GraphicsDevice::GetRenderer() { return _renderer; }
-    const Renderer& GraphicsDevice::GetRenderer() const { return _renderer; }
+    bool GraphicsDevice::WindowIsOpen() const {
+        if (mainWindow) return !glfwWindowShouldClose(mainWindow);
+        return false;
+    }
 
     void GraphicsDevice::DebugMenu() {
         static bool enabled = false;
         if (ImGui::Button(enabled ? "Hide Debug Menu" : "Show Debug Menu")) enabled = !enabled;
 
-        if (!enabled) return;
+        if (!enabled) goto skipDebugs; // i know goto is not great but its more readable imo  // NOLINT(cppcoreguidelines-avoid-goto, hicpp-avoid-goto)
+        
         ImGui::Text("Application Averages %fms/frame (~%f FPS)", 1000.0 / (double)ImGui::GetIO().Framerate, (double)ImGui::GetIO().Framerate);
-        static bool drawWireframe = false;
-        if (ImGui::Button(drawWireframe ? "Draw Fill" : "Draw Wireframe")) { SetRenderWireframe(drawWireframe); }
+        if (ImGui::Button(useWireRender ? "Draw Fill" : "Draw Wireframe")) { useWireRender = !useWireRender; }
 
         if (ImGui::CollapsingHeader("Mouse Input")) {
             ImGui::Text("Mouse Position is at: (%f, %f),",
@@ -170,21 +155,14 @@ namespace Graphics {
                 ImGui::Text("   %s", IO::KeyboardT::KeyToStr(key));
             }
         }
-        
-        if (ImGui::CollapsingHeader("Perspective Mode")) {
-            static Maths::Matrix3D projMat = Maths::Matrix3D::PerspectiveProjectionFOV(45.0f, 4.0f / 3, 0.1f, 100.0f);
-            static Maths::Matrix3D orthMat = Maths::Matrix3D::OrthoProjection(-4, 4, -3, 3, 0.1f, 100);
-            static bool matMode = true; // proj / orth
-        
-            if (ImGui::Button(matMode ? "Use Projection Mode" : "Use Orthographic Mode")) {
-                matMode = !matMode;
-                SetProjection(matMode ? orthMat : projMat);
-            }
-        }
         // ImGui::ShowDemoWindow();
+
+        skipDebugs:
+        if (ImGui::Button("Quit Application"))
+            Quit();
     }
 
-    GraphicsDevice GraphicsDevice::Initialize(Maths::Vec2Int winSize) {
+    GraphicsDevice GraphicsDevice::Initialize(Maths::ivec2 winSize) {
         /* Initialize the library */
         if (!glfwInit())
             ASSERT(false);

@@ -6,15 +6,14 @@ namespace Graphics {
 		if (ptr)
 			ptr->render = nullptr;
 	}
-
-	GenericMesh& GenericMesh::Transfer(GenericMesh& dest, GenericMesh&& from) {
+    
+	void GenericMesh::Transfer(GenericMesh& dest, GenericMesh&& from) {
 		dest.ptr = from.ptr;
 		from.ptr = nullptr;
-		return dest;
 	}
 
-	void GenericMesh::Set(void* ptr) {
-		this->ptr = (Mesh<singlebyte>*)ptr;
+	void GenericMesh::Set(void* mesh) {
+		ptr = (Mesh<singlebyte>*)mesh;
 	}
 
 	uint& GenericMesh::deviceIndex() { return ptr->deviceIndex; }

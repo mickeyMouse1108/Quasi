@@ -3,60 +3,54 @@
 #include "opengl.h"
 #include "Vector.h"
 
-namespace Maths
-{
-    class Matrix3D
-    {
-    private:
-        float m11, m12, m13, m14;
-        float m21, m22, m23, m24;
-        float m31, m32, m33, m34;
-        float m41, m42, m43, m44;
+namespace Maths {
+    // column major mat
+    class mat4x4 : public vec4<fvec4> {
     public:
-        Matrix3D() : m11(1.0f), m12(0.0f), m13(0.0f), m14(0.0f),
-                     m21(0.0f), m22(1.0f), m23(0.0f), m24(0.0f),
-                     m31(0.0f), m32(0.0f), m33(1.0f), m34(0.0f),
-                     m41(0.0f), m42(0.0f), m43(0.0f), m44(1.0f) {}
-        OPENGL_API Matrix3D(float vals[16], bool horizontalPacking = true);
-        OPENGL_API Matrix3D(float m11, float m12, float m13, float m14,
-                 float m21, float m22, float m23, float m24,
-                 float m31, float m32, float m33, float m34,
-                 float m41, float m42, float m43, float m44,
-                 bool horizontalPacking = true);
-        OPENGL_API Matrix3D(Vector4 arrs[4], bool verticalPacking = true);
-        OPENGL_API Matrix3D(const Vector4& r1, const Vector4& r2, const Vector4& r3, const Vector4& r4, bool verticalPacking = true);
+        OPENGL_API mat4x4(const fvec4& _x = { 1.0f, 0.0f, 0.0f, 0.0f },
+                          const fvec4& _y = { 0.0f, 1.0f, 0.0f, 0.0f },
+                          const fvec4& _z = { 0.0f, 0.0f, 1.0f, 0.0f },
+                          const fvec4& _w = { 0.0f, 0.0f, 0.0f, 1.0f })
+                    : vec4(_x, _y, _z, _w) {}
 
-        OPENGL_API const float* GetInRow() const;
-        OPENGL_API const Vector4* GetRows() const;
+        OPENGL_API const float* get_in_col() const;
+        OPENGL_API const fvec4* get_cols() const;
 
-        OPENGL_API void Translate(const Vector3& translation);
-        OPENGL_API static Matrix3D TranslateMat(const Vector3& translation, const Matrix3D& mat = {});
-        OPENGL_API void Scale(const Vector3& scale);
-        OPENGL_API static Matrix3D ScaleMat(const Vector3& scale, const Matrix3D& mat = {});
-        OPENGL_API void Rotate(const Vector3& rotation);
-        OPENGL_API static Matrix3D RotateMat(const Vector3& rotation, const Matrix3D& mat = {});
+        OPENGL_API void translate(const fvec3& translation);
+        OPENGL_API static mat4x4 translate_mat(const fvec3& translation, const mat4x4& mat = {});
+        OPENGL_API void scale(const fvec3& scale);
+        OPENGL_API static mat4x4 scale_mat(const fvec3& scale, const mat4x4& mat = {});
+        OPENGL_API void rotate(const fvec3& rotation);
+        OPENGL_API static mat4x4 rotate_mat(const fvec3& rotation, const mat4x4& mat = {});
+        OPENGL_API static mat4x4 rotate_identity(const fvec3& rotation);
+        OPENGL_API static mat4x4 rotate_x(float roll);
+        OPENGL_API static mat4x4 rotate_y(float pitch);
+        OPENGL_API static mat4x4 rotate_z(float yaw);
 
-        OPENGL_API static Matrix3D OrthoProjection(float left, float right, float down, float up, float near, float front);
-        OPENGL_API static Matrix3D PerspectiveProjection(float left, float right, float down, float up, float near, float far);
-        OPENGL_API static Matrix3D PerspectiveProjectionFOV(float fovDeg, float aspect, float near, float far);
-        OPENGL_API static Matrix3D Transform(const Vector3& translate, const Vector3& scale, const Vector3& rotate);
+        OPENGL_API static mat4x4 ortho_projection(float left, float right, float down, float up, float near, float front);
+        OPENGL_API static mat4x4 perspective_projection(float left, float right, float down, float up, float near, float far);
+        OPENGL_API static mat4x4 perspective_fov(float fovDeg, float aspect, float near, float far);
+        OPENGL_API static mat4x4 transform(const fvec3& translate, const fvec3& scale, const fvec3& rotate);
 
-        OPENGL_API [[nodiscard]] Matrix3D Transpose() const;
-        OPENGL_API [[nodiscard]] float Determinate() const;
-        OPENGL_API [[nodiscard]] Matrix3D Adjugate() const;
-        OPENGL_API [[nodiscard]] Matrix3D Inverse() const;
+        OPENGL_API [[nodiscard]] mat4x4 transpose() const;
+        OPENGL_API [[nodiscard]] float det() const; // determinate
+        OPENGL_API [[nodiscard]] mat4x4 adjugate() const;
+        OPENGL_API [[nodiscard]] mat4x4 inv() const; // inverse
 
-        OPENGL_API static Matrix3D UnitAxis(Direction3D x, Direction3D y, Direction3D z);
+        OPENGL_API static mat4x4 unit_axis(Direction3D xd, Direction3D yd, Direction3D zd);
 
         OPENGL_API float operator[](unsigned i) { return *((float*)this + i); }
 
-        OPENGL_API Vector3 operator* (const Vector3& v) const;
-        OPENGL_API Vector4 operator* (const Vector4& v) const;
-        OPENGL_API Matrix3D operator* (const Matrix3D& m) const;
-        OPENGL_API Matrix3D operator* (float x) const;
+        OPENGL_API fvec3 operator* (const fvec3& v) const;
+        OPENGL_API fvec4 operator* (const fvec4& v) const;
+        OPENGL_API mat4x4 operator* (const mat4x4& m) const;
+        OPENGL_API mat4x4 operator* (float s) const;
+        mat4x4& operator*=(const mat4x4& m) { *this = *this * m; return *this; }
         
-        friend OPENGL_API std::ostream& operator<<(std::ostream& stream, const Matrix3D& mat);
+        friend OPENGL_API std::ostream& operator<<(std::ostream& stream, const mat4x4& mat);
     };
 
-    OPENGL_API std::ostream& operator<<(std::ostream& stream, const Matrix3D& mat);
+    using mat3D = mat4x4;
+
+    OPENGL_API std::ostream& operator<<(std::ostream& stream, const mat4x4& mat);
 }

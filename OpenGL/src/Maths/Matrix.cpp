@@ -4,212 +4,150 @@
 #include <iomanip>
 
 namespace Maths {
-    Matrix3D::Matrix3D(float vals[16], bool horizontalPacking) {
-        if (horizontalPacking) {
-            m11 = vals[0 +0]; m12 = vals[0 +1]; m13 = vals[0 +2]; m14 = vals[0 +3];
-            m21 = vals[4 +0]; m22 = vals[4 +1]; m23 = vals[4 +2]; m24 = vals[4 +3];
-            m31 = vals[8 +0]; m32 = vals[8 +1]; m33 = vals[8 +2]; m34 = vals[8 +3];
-            m41 = vals[12+0]; m42 = vals[12+1]; m43 = vals[12+2]; m44 = vals[12+3];
-        } else {
-            m11 = vals[0 +0]; m21 = vals[0 +1]; m31 = vals[0 +2]; m41 = vals[0 +3];
-            m12 = vals[4 +4]; m22 = vals[4 +5]; m32 = vals[4 +6]; m42 = vals[4 +7];
-            m13 = vals[8 +4]; m23 = vals[8 +5]; m33 = vals[8 +6]; m43 = vals[8 +7];
-            m14 = vals[12+4]; m24 = vals[12+5]; m34 = vals[12+6]; m44 = vals[12+7];
-        }
-    }
-
-    Matrix3D::Matrix3D(float _m11, float _m12, float _m13, float _m14,
-                       float _m21, float _m22, float _m23, float _m24,
-                       float _m31, float _m32, float _m33, float _m34,
-                       float _m41, float _m42, float _m43, float _m44, bool horizontalPacking) {
-        if (horizontalPacking) {
-            m11 = _m11; m12 = _m12; m13 = _m13; m14 = _m14;
-            m21 = _m21; m22 = _m22; m23 = _m23; m24 = _m24;
-            m31 = _m31; m32 = _m32; m33 = _m33; m34 = _m34;
-            m41 = _m41; m42 = _m42; m43 = _m43; m44 = _m44;
-        } else {
-            m11 = _m11; m21 = _m21; m31 = _m31; m41 = _m41;
-            m12 = _m12; m22 = _m22; m32 = _m32; m42 = _m42;
-            m13 = _m13; m23 = _m23; m33 = _m33; m43 = _m43;
-            m14 = _m14; m24 = _m24; m34 = _m34; m44 = _m44;
-        }
-    }
-
-    Matrix3D::Matrix3D(Vector4 arrs[4], bool verticalPacking) {
-        if (!verticalPacking) {
-            m11 = arrs[0].x; m12 = arrs[0].y; m13 = arrs[0].z; m14 = arrs[0].w;
-            m21 = arrs[1].x; m22 = arrs[1].y; m23 = arrs[1].z; m24 = arrs[1].w;
-            m31 = arrs[2].x; m32 = arrs[2].y; m33 = arrs[2].z; m34 = arrs[2].w;
-            m41 = arrs[3].x; m42 = arrs[3].y; m43 = arrs[3].z; m44 = arrs[3].w;
-        } else {
-            m11 = arrs[0].x; m21 = arrs[0].y; m31 = arrs[0].z; m41 = arrs[0].w;
-            m12 = arrs[1].x; m22 = arrs[1].y; m32 = arrs[1].z; m42 = arrs[1].w;
-            m13 = arrs[2].x; m23 = arrs[2].y; m33 = arrs[2].z; m43 = arrs[2].w;
-            m14 = arrs[3].x; m24 = arrs[3].y; m34 = arrs[3].z; m44 = arrs[3].w;
-        }
-    }
-
-    Matrix3D::Matrix3D(const Vector4& r1, const Vector4& r2, const Vector4& r3, const Vector4& r4, bool verticalPacking) {
-        if (!verticalPacking) {
-            m11 = r1.x; m12 = r1.y; m13 = r1.z; m14 = r1.w;
-            m21 = r2.x; m22 = r2.y; m23 = r2.z; m24 = r2.w;
-            m31 = r3.x; m32 = r3.y; m33 = r3.z; m34 = r3.w;
-            m41 = r4.x; m42 = r4.y; m43 = r4.z; m44 = r4.w;
-        } else {
-            m11 = r1.x; m21 = r1.y; m31 = r1.z; m41 = r1.w;
-            m12 = r2.x; m22 = r2.y; m32 = r2.z; m42 = r2.w;
-            m13 = r3.x; m23 = r3.y; m33 = r3.z; m43 = r3.w;
-            m14 = r4.x; m24 = r4.y; m34 = r4.z; m44 = r4.w;
-        }
-    }
-
-    const float* Matrix3D::GetInRow() const {
+    const float* mat4x4::get_in_col() const {
         return (const float*)this;
     }
 
-    const Vector4* Matrix3D::GetRows() const {
-        return (const Vector4*)this;
+    const fvec4* mat4x4::get_cols() const {
+        return (const fvec4*)this;
     }
 
-    void Matrix3D::Translate(const Vector3& translation) {
-        //{{1, 0, 0, t x}, {0, 1, 0, t y}, {0, 0, 1, t z}, {0, 0, 0, 1}} . {{a, b, c, d}, {e, f, g, h}, {I, j, k, l}, {0, 0, 0, 1}}
-        m14 += translation.x;
-        m24 += translation.y;
-        m34 += translation.z;
+    void mat4x4::translate(const fvec3& translation) {
+        w += fvec4(translation, 0);
     }
 
-    Matrix3D Matrix3D::TranslateMat(const Vector3& translation, const Matrix3D& mat) {
-        return { mat.m11, mat.m12, mat.m13, mat.m14 + translation.x,
-                 mat.m21, mat.m22, mat.m23, mat.m24 + translation.y,
-                 mat.m31, mat.m32, mat.m33, mat.m34 + translation.z,
-                 mat.m41, mat.m42, mat.m43, mat.m44                  };
+    mat4x4 mat4x4::translate_mat(const fvec3& translation, const mat4x4& mat) {
+        return { mat.x, mat.y, mat.z, mat.w + fvec4(translation, 0) };
     }
 
-    void Matrix3D::Scale(const Vector3& scale) {
-        m11 *= scale.x; m12 *= scale.x; m13 *= scale.x; m14 *= scale.x;
-        m21 *= scale.y; m22 *= scale.y; m23 *= scale.y; m24 *= scale.y;
-        m31 *= scale.z; m32 *= scale.z; m33 *= scale.z; m34 *= scale.z;
+    void mat4x4::scale(const fvec3& scale) {
+        x *= scale.x;
+        y *= scale.y;
+        z *= scale.z;
     }
 
-    Matrix3D Matrix3D::ScaleMat(const Vector3& scale, const Matrix3D& mat) {
-        return { mat.m11 * scale.x, mat.m12 * scale.x, mat.m13 * scale.x, mat.m14 * scale.x,
-                 mat.m21 * scale.y, mat.m22 * scale.y, mat.m23 * scale.y, mat.m24 * scale.y,
-                 mat.m31 * scale.z, mat.m32 * scale.z, mat.m33 * scale.z, mat.m34 * scale.z,
-                 mat.m41,           mat.m42,           mat.m43,           mat.m44            };
+    mat4x4 mat4x4::scale_mat(const fvec3& scale, const mat3D& mat) {
+        return { mat.x * scale.x, mat.y * scale.y, mat.z * scale.z, mat.w };
     }
 
-    void Matrix3D::Rotate(const Vector3& rotation) {
+    void mat4x4::rotate(const fvec3& rotation) {
+        *this = rotate_identity(rotation) * *this;
+    }
+
+    mat4x4 mat4x4::rotate_mat(const fvec3& rotation, const mat3D& mat) {
+        return rotate_identity(rotation) * mat;
+    }
+
+    mat4x4 mat4x4::rotate_identity(const fvec3& rotation) {
         // https://en.wikipedia.org/wiki/Rotation_matrix
-        const float cx = cos(rotation.x);
-        const float sx = sin(rotation.x);
-        const float cy = cos(rotation.y);
-        const float sy = sin(rotation.y);
-        const float cz = cos(rotation.z);
-        const float sz = sin(rotation.z);
-        Matrix3D rotm = { cy * cz, sx * sy * cz - cx * sz, cx * sy * cz + sx * sz, 0,
-                          cy * sz, sx * sy * sz + cx * cz, cx * sy * sz - sx * cz, 0,
-                         -sy     , sx * cy               , cx * cy               , 0,
-                          0      , 0                     , 0                     , 1 };
-        *this = rotm * *this;
+        // not most efficient but i hate math so...
+        return rotate_z(rotation.z) * rotate_y(rotation.y) * rotate_x(rotation.x);
     }
 
-    Matrix3D Matrix3D::RotateMat(const Vector3& rotation, const Matrix3D& mat) {
-        const float cx = cos(rotation.x);
-        const float sx = sin(rotation.x);
-        const float cy = cos(rotation.y);
-        const float sy = sin(rotation.y);
-        const float cz = cos(rotation.z);
-        const float sz = sin(rotation.z);
-        Matrix3D rotm = { cy * cz, sx * sy * cz - cx * sz, cx * sy * cz + sx * sz, 0,
-                          cy * sz, sx * sy * sz + cx * cz, cx * sy * sz - sx * cz, 0,
-                         -sy     , sx * cy               , cx * cy               , 0,
-                          0      , 0                     , 0                     , 1};
-        return rotm * mat;
+    mat4x4 mat4x4::rotate_x(float roll) {
+        const float sx = sinf(roll);
+        const float cx = cosf(roll);
+        return { { 1, 0,   0,  0 },
+                 { 0, cx, -sx, 0 },
+                 { 0, sx,  cx, 0 } };
     }
 
-    Matrix3D Matrix3D::OrthoProjection(float l, float r, float d, float u, float n, float f) {
+    mat4x4 mat4x4::rotate_y(float pitch) {
+        const float sy = sinf(pitch);
+        const float cy = cosf(pitch);
+        return { { cy, 0, -sy, 0 },
+                 { 0,  1,  0,  0 },
+                 { sy, 0,  cy, 0 } };
+    }
+
+    mat4x4 mat4x4::rotate_z(float yaw) {
+        const float sz = sinf(yaw);
+        const float cz = cosf(yaw);
+        return { {  cz, sz, 0, 0 },
+                 { -sz, cz, 0, 0 },
+                 {  0,   0, 1, 0 } };
+    }
+
+    mat4x4 mat4x4::ortho_projection(float l, float r, float d, float u, float n, float f) {
         const float dx = r - l; 
         const float dy = u - d; 
         const float dz = f - n; 
-        return {
-            2.0f / dx, 0.0f,      0.0f,      -(r + l) / dx,
-            0.0f,      2.0f / dy, 0.0f,      -(u + d) / dy,
-            0.0f,      0.0f,     -2.0f / dz, -(f + n) / dz,
-            0.0f,      0.0f,      0.0f,       1.0f
-        };
+        return { { +2 / dx,        0,             0,            0 },
+                 { 0,             +2 / dy,        0,            0 },
+                 { 0,              0,            -2 / dz,       0 },
+                 { -(r + l) / dx, -(u + d) / dy, -(f + n) / dz, 1 } };
     }
 
-    Matrix3D Matrix3D::PerspectiveProjection(float l, float r, float d, float u, float n, float f) {
+    mat4x4 mat4x4::perspective_projection(float l, float r, float d, float u, float n, float f) {
         // heres the math: http://www.songho.ca/opengl/gl_projectionmatrix.html
         const float dx = r - l;
         const float dy = u - d;
         const float dz = f - n;
-        return {
-            2 * n / dx, 0.0f,       (r + l) / dx,  0.0f,
-            0.0f,       2 * n / dy, (u + d) / dy,  0.0f,
-            0.0f,       0.0f,      -(n + f) / dz, -2 * n * f / dz,
-            0.0f,       0.0f,      -1.0f,          0.0f
-        };
+        return { { 2 * n / dx,   0,            0,               0 },
+                 { 0,            2 * n / dy,   0,               0 },
+                 { (r + l) / dx, (u + d) / dx, -(n + f) / dx,  -1 },
+                 { 0,            0,            -2 * n * f / dz, 0 } };
     }
 
-    Matrix3D Matrix3D::PerspectiveProjectionFOV(float fovDeg, float aspect, float near, float far) {
+    mat4x4 mat4x4::perspective_fov(float fovDeg, float aspect, float near, float far) {
         constexpr float PI = 3.14159265358979323846f;
         float fovRad = fovDeg * PI / 180.0f;
         float y = 1.0f / std::tan(fovRad / 2);
         float x = y / aspect;
         float dz = far - near;
-        return {
-            x,    0.0f,  0.0f,               0.0f,
-            0.0f, y,     0.0f,               0.0f,
-            0.0f, 0.0f, -(far + near) / dz, -2 * far * near / dz,
-            0.0f, 0.0f, -1.0f,               0.0f
+        float zsum  = (far + near) / dz;
+        float zprod = (far * near) / dz;
+        return { { x, 0,  0,         0 },
+                 { 0, y,  0,         0 },
+                 { 0, 0, -zsum,     -1 },
+                 { 0, 0, -2 * zprod, 0 }
         };
     }
 
-    Matrix3D Matrix3D::Transform(const Vector3& translate, const Vector3& scale, const Vector3& rotate) {
-        return TranslateMat(translate) * RotateMat(rotate) * ScaleMat(scale);
+    mat4x4 mat4x4::transform(const fvec3& translate, const fvec3& scale, const fvec3& rotate) {
+        return translate_mat(translate) * rotate_mat(rotate) * scale_mat(scale);
     }
 
-    Matrix3D Matrix3D::Transpose() const {
-#define MROW4(Y) m1##Y, m2##Y, m3##Y, m4##Y
-        return { MROW4(1), MROW4(2), MROW4(3), MROW4(4) };
-#undef MROW4
+    // * warning! LOTS OF MACROS AHEAD!
+#define MROW4(U) { x.U, y.U, z.U, w.U }
+    mat4x4 mat4x4::transpose() const {
+        return { MROW4(x), MROW4(y), MROW4(z), MROW4(w) };
     }
+#undef MROW4
 
 #define EXPAND(X) X
-#define DET3_(E11, E12, E13, E21, E22, E23, E31, E32, E33) E11 * E22 * E33 + E12 * E23 * E31 + E13 * E21 * E32 - \
-                                                           E13 * E22 * E31 - E12 * E21 * E33 - E11 * E23 * E32
+#define DET3_(E11, E12, E13, E21, E22, E23, E31, E32, E33) E11 * E22 * E33 + E12 * E23 * E31 + E13 * E21 * E32 - /* NOLINT(bugprone-macro-parentheses) */ \
+                                                           E13 * E22 * E31 - E12 * E21 * E33 - E11 * E23 * E32   /* NOLINT(bugprone-macro-parentheses) */
 #define DET3(...) EXPAND(DET3_(__VA_ARGS__))
-#define DETROW3(R1, R2, R3) (DET3(m##R1##2, m##R1##3, m##R1##4, m##R2##2, m##R2##3, m##R2##4, m##R3##2, m##R3##3, m##R3##4))
+#define DETMAT3(R1, R2, R3) (DET3(y.R1, z.R1, w.R1, y.R2, z.R2, w.R2, y.R3, z.R3, w.R3)) /* NOLINT(bugprone-macro-parentheses) */
 
     // https://semath.info/src/inverse-cofactor-ex4.html for matrix math
-    float Matrix3D::Determinate() const {
-        return m11 * DETROW3(2, 3, 4) - m21 * DETROW3(1, 3, 4) + m31 * DETROW3(1, 2, 4) - m41 * DETROW3(1, 2, 3);
+    float mat4x4::det() const {
+        return x.x * DETMAT3(y, z, w) - x.y * DETMAT3(x, z, w) + x.z * DETMAT3(x, y, w) - x.w * DETMAT3(x, y, z);
     }
 
-// doing this because c++, i guess
+    // doing this because c++, i guess
+    // * haha macro hacks go brrrrr
 #define CAT_LIT(A, B) A ## B
 #define CAT(A, B) CAT_LIT(A, B)
 #define IGNORE(I) CAT(IGNORE_, I)
-#define IGNORE_1 2, 3, 4
-#define IGNORE_2 1, 3, 4
-#define IGNORE_3 1, 2, 4
-#define IGNORE_4 1, 2, 3
+#define IGNORE_x y, z, w
+#define IGNORE_y x, z, w
+#define IGNORE_z x, y, w
+#define IGNORE_w x, y, z
 #define IGNORE_ELEM(I, J) IGNORE(I), IGNORE(J)
-#define SUBMAT_(I1, I2, I3, J1, J2, J3) CAT(m, CAT(I1, J1)), CAT(m, CAT(I1, J2)), CAT(m, CAT(I1, J3)), CAT(m, CAT(I2, J1)), CAT(m, CAT(I2, J2)), CAT(m, CAT(I2, J3)), CAT(m, CAT(I3, J1)), CAT(m, CAT(I3, J2)), CAT(m, CAT(I3, J3))
+#define DOT(X, I1, I2, I3) I1.X, I2.X, I3.X /* NOLINT(bugprone-macro-parentheses) */
+#define SUBMAT_(I1, I2, I3, J1, J2, J3) DOT(I1, J1, J2, J3), DOT(I2, J1, J2, J3), DOT(I3, J1, J2, J3)
 #define SUBMAT(...) EXPAND(SUBMAT_(__VA_ARGS__))
 #define ADJUGATE_ELEM(I, J) (DET3(SUBMAT(IGNORE_ELEM(J, I))))
+#define ADJUGATE_VEC(U) { ADJUGATE_ELEM(x, U), ADJUGATE_ELEM(y, U), ADJUGATE_ELEM(z, U), ADJUGATE_ELEM(w, U) }
     
-    Matrix3D Matrix3D::Adjugate() const {
-        return {  ADJUGATE_ELEM(1, 1), -ADJUGATE_ELEM(1, 2),  ADJUGATE_ELEM(1, 3), -ADJUGATE_ELEM(1, 4),
-                 -ADJUGATE_ELEM(2, 1),  ADJUGATE_ELEM(2, 2), -ADJUGATE_ELEM(2, 3),  ADJUGATE_ELEM(2, 4),
-                  ADJUGATE_ELEM(3, 1), -ADJUGATE_ELEM(3, 2),  ADJUGATE_ELEM(3, 3), -ADJUGATE_ELEM(3, 4),
-                 -ADJUGATE_ELEM(4, 1),  ADJUGATE_ELEM(4, 2), -ADJUGATE_ELEM(4, 3),  ADJUGATE_ELEM(4, 4) };
+    mat4x4 mat4x4::adjugate() const {
+        return { ADJUGATE_VEC(x), ADJUGATE_VEC(y), ADJUGATE_VEC(z), ADJUGATE_VEC(w) };
     }
 
-    Matrix3D Matrix3D::Inverse() const {
-        float det = Determinate();
-        return Adjugate() * (1 / det);
+    mat4x4 mat4x4::inv() const {
+        return adjugate() * (1 / det());
     }
 
 #undef CAT_LIT
@@ -220,54 +158,48 @@ namespace Maths {
 #undef IGNORE_3
 #undef IGNORE_4
 #undef IGNORE_ELEM
+#undef DOT
 #undef SUBMAT_
 #undef SUBMAT
 #undef ADJUGATE_ELEM
+#undef ADJUGATE_VEC
 
 #undef DET3_
 #undef DET3
-#undef DETROW3
+#undef DETMAT3
+#undef EXPAND
 
-    Matrix3D Matrix3D::UnitAxis(Direction3D x, Direction3D y, Direction3D z) {
-        return { Vector4 { x, 0 }, Vector4 { y, 0 }, Vector4 { z, 0 }, { 0, 0, 0, 1 } };
+    mat4x4 mat4x4::unit_axis(Direction3D xd, Direction3D yd, Direction3D zd) {
+        return { fvec4 { xd, 0 }, fvec4 { yd, 0 }, fvec4 { zd, 0 } };
     }
 
-    Vector3 Matrix3D::operator*(const Vector3& v) const {
-        return { m11 * v.x + m12 * v.y + m13 * v.z + m14,
-                 m21 * v.x + m22 * v.y + m23 * v.z + m24,
-                 m31 * v.x + m32 * v.y + m33 * v.z + m34  };
+#define VECADD(U) x.U * v.x + y.U * v.y + z.U * v.z + w.U /* NOLINT(bugprone-macro-parentheses) */
+    fvec3 mat4x4::operator*(const fvec3& v) const {
+        return { VECADD(x), VECADD(y), VECADD(z) };
     }
 
-    Vector4 Matrix3D::operator*(const Vector4& v) const {
-        return { m11 * v.x + m12 * v.y + m13 * v.z + m14 * v.w,
-                 m21 * v.x + m22 * v.y + m23 * v.z + m24 * v.w,
-                 m31 * v.x + m32 * v.y + m33 * v.z + m34 * v.w,
-                 m41 * v.x + m42 * v.y + m43 * v.z + m44 * v.w  };
+    fvec4 mat4x4::operator*(const fvec4& v) const {
+        return { VECADD(x) * v.w,   // * NOTE! this might break as this uses
+                 VECADD(y) * v.w,   // * the fact that VECADD is not inclosed
+                 VECADD(z) * v.w,   // * in brackets. expand and you'll see  
+                 VECADD(w) * v.w }; // * how it hacks the compiler
+    }
+#undef VECADD
+    
+    mat4x4 mat4x4::operator*(const mat4x4& m) const {
+        return { m * x, m * y, m * z, m * w };
     }
 
-    Matrix3D Matrix3D::operator*(const Matrix3D& m) const {
-#define MATMUL4(X, Y) m##Y##1 * m.m1##X + m##Y##2 * m.m2##X + m##Y##3 * m.m3##X + m##Y##4 * m.m4##X
-#define MATMUL4R(Y) MATMUL4(1, Y), MATMUL4(2, Y), MATMUL4(3, Y), MATMUL4(4, Y)
-        
-        return { MATMUL4R(1), MATMUL4R(2), MATMUL4R(3), MATMUL4R(4) };
-
-#undef MATMUL4
-#undef MATMUL4R
+    mat4x4 mat4x4::operator*(float s) const {
+        return { x * s, y * s, z * s, w * s };
     }
 
-    Matrix3D Matrix3D::operator*(float x) const {
-        return { m11 * x, m12 * x, m13 * x, m14 * x,
-                 m21 * x, m22 * x, m23 * x, m24 * x,
-                 m31 * x, m32 * x, m33 * x, m34 * x,
-                 m41 * x, m42 * x, m43 * x, m44 * x };
-    }
-
-    std::ostream& operator<<(std::ostream& stream, const Matrix3D& mat) {
+    std::ostream& operator<<(std::ostream& stream, const mat4x4& mat) {
         stream << std::fixed << std::setprecision(3);
-        stream << '[' << mat.m11 << ',' << mat.m12 << ',' << mat.m13 << ',' << mat.m14 << ']' << '\n';
-        stream << '[' << mat.m21 << ',' << mat.m22 << ',' << mat.m23 << ',' << mat.m24 << ']' << '\n';
-        stream << '[' << mat.m31 << ',' << mat.m32 << ',' << mat.m33 << ',' << mat.m34 << ']' << '\n';
-        stream << '[' << mat.m41 << ',' << mat.m42 << ',' << mat.m43 << ',' << mat.m44 << ']';// << '\n'
+        stream << '[' << mat.x.x << ',' << mat.y.x << ',' << mat.z.x << ',' << mat.w.x << ']' << '\n';
+        stream << '[' << mat.x.y << ',' << mat.y.y << ',' << mat.z.y << ',' << mat.w.y << ']' << '\n';
+        stream << '[' << mat.x.z << ',' << mat.y.z << ',' << mat.z.z << ',' << mat.w.z << ']' << '\n';
+        stream << '[' << mat.x.w << ',' << mat.y.w << ',' << mat.z.w << ',' << mat.w.w << ']';// << '\n'
         stream << std::setprecision(-1);
         return stream;
     }

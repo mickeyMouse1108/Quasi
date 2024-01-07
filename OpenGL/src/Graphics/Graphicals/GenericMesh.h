@@ -17,12 +17,12 @@ namespace Graphics {
 		GenericMesh(const GenericMesh&) = delete;
 		GenericMesh& operator=(const GenericMesh&) = delete;
 
-		OPENGL_API static GenericMesh& Transfer(GenericMesh& dest, GenericMesh&& from);
+		OPENGL_API static void Transfer(GenericMesh& dest, GenericMesh&& from);
 		GenericMesh(GenericMesh&& mesh) noexcept { Transfer(*this, std::move(mesh)); }
-		GenericMesh& operator=(GenericMesh&& mesh) noexcept { return Transfer(*this, std::move(mesh)); }
+		GenericMesh& operator=(GenericMesh&& mesh) noexcept { Transfer(*this, std::move(mesh)); return *this; }
 
 		template <class T> static GenericMesh From(Mesh<T>* m) {
-			return GenericMesh{ (Mesh<singlebyte>*)m };
+			return GenericMesh { (Mesh<singlebyte>*)m };
 		}
 
 		template <class T> Mesh<T>& As() {
@@ -30,8 +30,8 @@ namespace Graphics {
 		}
 
 		OPENGL_API void Set(void* ptr);
-		template <class T> void Set(Mesh<T>* ptr) {
-			Set((void*)ptr);
+		template <class T> void Set(Mesh<T>* mesh) {
+			Set((void*)mesh);
 		}
 
 		OPENGL_API uint& deviceIndex();

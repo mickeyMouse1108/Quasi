@@ -3,6 +3,8 @@
 #include "DynamicVertexBuffer.h"
 #include "DynamicIndexBuffer.h"
 #include "GenericMesh.h"
+#include "Shader.h"
+#include "VertexElement.h"
 
 namespace Graphics {
 	class GraphicsDevice;
@@ -14,13 +16,17 @@ namespace Graphics {
 
 		std::vector<GenericMesh> meshes {};
 
+	    Maths::mat3D projection = Maths::mat3D::ortho_projection(-4, 4, -3, 3, 0.1f, 100);
+	    Maths::mat3D camera {};
+	    Shader shader = {}; // shader can be null if renderId is 0
+
 		GraphicsDevice* device = nullptr;
 		uint deviceIndex = 0;
 		friend GraphicsDevice;
 	public:
-		RenderData(uint vsize, uint isize, uint vertSize,
+		explicit RenderData(uint vsize, uint isize, uint vertSize,
 				   std::type_index vertType, const VertexBufferLayout& layout) :
-			varray(), vbo(vsize, vertSize, vertType), ibo(isize) {
+			vbo(vsize, vertSize, vertType), ibo(isize) {
 			varray.Bind();
 			varray.AddBuffer(layout);
 		}
@@ -28,11 +34,11 @@ namespace Graphics {
 		RenderData(const RenderData&) = delete;
 		RenderData& operator=(const RenderData&) = delete;
 
-		static void Transfer(RenderData& dest, RenderData&& from);
+		OPENGL_API static void Transfer(RenderData& dest, RenderData&& from);
 		RenderData(RenderData&& rd) noexcept { Transfer(*this, std::move(rd)); }
 		RenderData& operator=(RenderData&& rd) noexcept { Transfer(*this, std::move(rd)); return *this; }
 
-		~RenderData();
+		OPENGL_API ~RenderData();
 
 		template <class T> static RenderData Create(uint vsize, uint isize);
 
@@ -47,7 +53,7 @@ namespace Graphics {
 		template <class T> void AddVert(const T& arr)              { vbo.AddData(arr); }
 		void ClearVert(bool shallowClear = true) { vbo.ClearData(shallowClear); }
 		[[nodiscard]] uint GetVertLength() const { return vbo.GetLength(); }
-
+	    
 		template <class T> void SetInd(const T* data, uint count) { ibo.SetData(data, count); }
 		template <class T> void SetInd(const T& arr)              { ibo.SetData(arr); }
 		template <class T> void AddInd(const T* data, uint count) { ibo.AddData(data, count); }
@@ -72,12 +78,23 @@ namespace Graphics {
 		OPENGL_API void Render();
 		template <class T> void AddNewMeshes(const Mesh<T>* meshes, uint count);
 		template <class T> void AddNewMeshes(const T& arr) { AddNewMeshes(arr.begin(), (uint)arr.size()); }
-		template <class T> void AddBoundMeshes() { AddNewMeshes(&meshes.begin()->As<T>(), (uint)meshes.size()); }
+		template <class T> void AddBoundMeshes() { AddNewMeshes(&meshes.begin()->As<T>(), meshes.size()); }
 		template <class T> void ResetData(bool shallowClear = true) { ClearData(shallowClear); AddBoundMeshes<T>(); }
 		OPENGL_API void UnbindMesh(int index);
 		OPENGL_API void UnbindMeshes(int indexStart, int indexEnd);
-		OPENGL_API void UpdateMeshIndicies();
+		OPENGL_API void UpdateMeshIndices();
 		OPENGL_API void Destroy();
+
+	    void SetCamera(const Maths::mat3D& cam) { camera = cam; }
+	    void SetProjection(const Maths::mat3D& proj) { projection = proj; }
+
+	    Shader& GetShader() { return shader; }
+	    [[nodiscard]] const Shader& GetShader() const { return shader; }
+	    
+	    void UseShader(const std::string& code) { shader = Shader { code }; }
+	    void UseShaderFromFile(const std::string& file) { shader = Shader::FromFile(file); }
+	    OPENGL_API void EnableShader();
+	    OPENGL_API void DisableShader();
 	};
 
 	template <class T>

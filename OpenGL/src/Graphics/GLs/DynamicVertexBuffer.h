@@ -5,12 +5,11 @@
 
 #include <typeindex>
 #include <vector>
-#include <initializer_list>
 
 namespace Graphics {
     class DynamicVertexBuffer {
         private:
-            uint rendererID = 0;
+            glID rendererID = GL_NULL;
             uint dataOffset = 0;
             uint bufferSize = 0;
 
@@ -23,15 +22,15 @@ namespace Graphics {
                 return false;
             }
         public:
-            DynamicVertexBuffer() {}
-            OPENGL_API DynamicVertexBuffer(uint size, uint typeSize, std::type_index type);
+            DynamicVertexBuffer() = default;
+            OPENGL_API explicit DynamicVertexBuffer(uint size, uint typeSize, std::type_index type);
             OPENGL_API ~DynamicVertexBuffer();
 
             DynamicVertexBuffer(const DynamicVertexBuffer&) = delete;
             DynamicVertexBuffer& operator=(const DynamicVertexBuffer&) = delete;
-            OPENGL_API static DynamicVertexBuffer& Transfer(DynamicVertexBuffer& dest, DynamicVertexBuffer&& from);
+            OPENGL_API static void Transfer(DynamicVertexBuffer& dest, DynamicVertexBuffer&& from);
             DynamicVertexBuffer(DynamicVertexBuffer&& vbo) noexcept { Transfer(*this, std::move(vbo)); }
-            DynamicVertexBuffer& operator=(DynamicVertexBuffer&& vbo) noexcept { return Transfer(*this, std::move(vbo)); }
+            DynamicVertexBuffer& operator=(DynamicVertexBuffer&& vbo) noexcept { Transfer(*this, std::move(vbo)); return *this; }
 
             template <class T> static DynamicVertexBuffer of(uint size) { 
                 return DynamicVertexBuffer(size, sizeof(T), typeid(T));
@@ -43,13 +42,13 @@ namespace Graphics {
             [[nodiscard]] uint GetLength() const { return bufferSize; }
             [[nodiscard]] std::type_index GetType() const { return vertType; }
 
-            OPENGL_API void SetDataUnchecked(const void* data, uint vertSize, uint count);
+            OPENGL_API void SetDataUnchecked(const void* data, uint vertexSize, uint count);
             template <class T> void SetData(const T* data, uint size);
             template <class T> void SetData(const T& arr) { SetData(arr.data(), (uint)(arr.size())); }
         
             OPENGL_API void ClearData(bool shallowClear = true);
         
-            OPENGL_API void AddDataUnchecked(const void* data, uint vertSize, uint count);
+            OPENGL_API void AddDataUnchecked(const void* data, uint vertexSize, uint count);
             template <class T> void AddData(const T* data, uint size = 1);
             template <class T> void AddData(const T& arr) { AddData(arr.data(), (uint)(arr.size())); }
     };

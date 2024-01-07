@@ -16,8 +16,11 @@ namespace Graphics {
 	}
 
 	RenderData::~RenderData() {
-		if (device)
-			device->DeleteRender(deviceIndex);
+		if (device) {
+		    GraphicsDevice* gd = device;
+		    device = nullptr;
+		    gd->DeleteRender(deviceIndex);
+		}
 	}
 
 	void RenderData::Bind() const {
@@ -43,15 +46,15 @@ namespace Graphics {
 
 	void RenderData::UnbindMesh(int index) {
 		meshes.erase(meshes.begin() + index);
-		UpdateMeshIndicies();
+		UpdateMeshIndices();
 	}
 
 	void RenderData::UnbindMeshes(int indexStart, int indexEnd) {
 		meshes.erase(meshes.begin() + indexStart, meshes.begin() + indexEnd);
-		UpdateMeshIndicies();
+		UpdateMeshIndices();
 	}
 
-	void RenderData::UpdateMeshIndicies() {
+	void RenderData::UpdateMeshIndices() {
 		for (uint i = 0; i < meshes.size(); ++i)
 			meshes[i].deviceIndex() = i;
 	}
@@ -61,5 +64,15 @@ namespace Graphics {
 		device = nullptr;
 		prev->DeleteRender(deviceIndex);
 		deviceIndex = 0;
+	}
+
+    void RenderData::EnableShader() {
+	    shader.Bind();
+	    shader.SetUniformMatrix4x4("u_projection", projection);
+	    shader.SetUniformMatrix4x4("u_view", camera);
+	}
+
+    void RenderData::DisableShader() {
+	    shader.Unbind();
 	}
 };

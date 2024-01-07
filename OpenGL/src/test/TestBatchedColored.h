@@ -9,10 +9,10 @@ namespace Test {
         stdu::ref<Graphics::RenderData> render;
         Graphics::Mesh<VertexColor3D> mesh;
 
-        Maths::Matrix3D projection = Maths::Matrix3D::OrthoProjection(-320.0f, 320.0f, -240.0f, 240.0f, -1.0f, 1.0f);
-        Maths::Vector3  modelTranslation = 0;
-        Maths::Vector3  modelScale = Maths::Vector3::ONE;
-        Maths::Vector3  modelRotation = 0;
+        Maths::mat3D projection = Maths::mat3D::ortho_projection(-320.0f, 320.0f, -240.0f, 240.0f, -1.0f, 1.0f);
+        Maths::fvec3  modelTranslation = 0;
+        Maths::fvec3  modelScale = 1;
+        Maths::fvec3  modelRotation = 0;
     public:
         TestBatchedColored() {}
         ~TestBatchedColored() override {}

@@ -2,21 +2,20 @@
 #include "DynamicVertexBuffer.h"
 #include "VertexBuffer.h"
 #include "VertexBufferLayout.h"
-#include "VertexElement.h"
 
 namespace Graphics {
     class VertexArray {
         private:
-            uint rendererID = 0;
+            glID rendererID = GL_NULL;
         public:
             OPENGL_API VertexArray();
             OPENGL_API ~VertexArray();
 
             VertexArray(const VertexArray&) = delete;
             VertexArray& operator=(const VertexArray&) = delete;
-            OPENGL_API static VertexArray& Transfer(VertexArray& dest, VertexArray&& from);
+            OPENGL_API static void Transfer(VertexArray& dest, VertexArray&& from);
             VertexArray(VertexArray&& va) noexcept { Transfer(*this, std::move(va)); }
-            VertexArray& operator=(VertexArray&& va) noexcept { return Transfer(*this, std::move(va)); }
+            VertexArray& operator=(VertexArray&& va) noexcept { Transfer(*this, std::move(va)); return *this; }
 
             OPENGL_API void AddBuffer(const VertexBufferLayout& layout);
             OPENGL_API void AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout);

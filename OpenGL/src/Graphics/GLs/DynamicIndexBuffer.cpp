@@ -15,15 +15,13 @@ namespace Graphics {
         glDeleteBuffers(1, &rendererID);
     }
 
-    DynamicIndexBuffer& DynamicIndexBuffer::Transfer(DynamicIndexBuffer& dest, DynamicIndexBuffer&& from) {
+    void DynamicIndexBuffer::Transfer(DynamicIndexBuffer& dest, DynamicIndexBuffer&& from) {
         dest.rendererID = from.rendererID;
-        from.rendererID = 0;
+        from.rendererID = GL_NULL;
 
         dest.bufferSize = from.bufferSize;
         dest.dataOffset = from.dataOffset;
         dest.indexOffset = from.indexOffset;
-
-        return dest;
     }
 
     void DynamicIndexBuffer::Bind() const {

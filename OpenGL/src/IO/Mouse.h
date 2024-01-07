@@ -29,8 +29,8 @@ namespace IO {
 
         OPENGL_API void Update();
 
-        OPENGL_API Maths::Vec2d GetMousePosPx();
-        OPENGL_API Maths::Vec2d GetMousePos();
+        OPENGL_API Maths::dvec2 GetMousePosPx();
+        OPENGL_API Maths::dvec2 GetMousePos();
         OPENGL_API bool IsInWindow();
         
         OPENGL_API [[nodiscard]] int  PressedState()         const;

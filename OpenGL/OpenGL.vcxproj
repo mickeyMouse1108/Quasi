@@ -104,6 +104,9 @@
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\GLFW\lib-vc2022\$(Platform);$(SolutionDir)Dependencies\GLEW\lib\Release\$(Platform)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32s.lib;glfw3.lib;Opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(SolutionDir)bin\$(Platform)\$(Configuration)\*.dll" "$(SolutionDir)out\$(Configuration)\$(Platform)\out"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -167,7 +170,7 @@
     <ClCompile Include="src\Graphics\GLs\IndexBuffer.cpp" />
     <ClCompile Include="src\Graphics\Graphicals\GenericMesh.cpp" />
     <ClCompile Include="src\Graphics\Graphicals\RenderData.cpp" />
-    <ClCompile Include="src\Graphics\GLs\Renderer.cpp" />
+    <ClCompile Include="src\Graphics\GLs\Render.cpp" />
     <ClCompile Include="src\Graphics\GLs\Shader.cpp" />
     <ClCompile Include="src\Graphics\GLs\VertexArray.cpp" />
     <ClCompile Include="src\Graphics\GLs\VertexBuffer.cpp" />
@@ -212,7 +215,7 @@
     <ClInclude Include="src\Graphics\GLs\IndexBuffer.h" />
     <ClInclude Include="src\Graphics\Graphicals\GenericMesh.h" />
     <ClInclude Include="src\Graphics\Graphicals\RenderData.h" />
-    <ClInclude Include="src\Graphics\GLs\Renderer.h" />
+    <ClInclude Include="src\Graphics\GLs\Render.h" />
     <ClInclude Include="src\Graphics\GLs\Shader.h" />
     <ClInclude Include="src\Graphics\GLs\VertexArray.h" />
     <ClInclude Include="src\Graphics\GLs\VertexBuffer.h" />
@@ -220,7 +223,7 @@
     <ClInclude Include="src\Graphics\GLs\VertexElement.h" />
     <ClInclude Include="src\Graphics\Graphicals\GraphicsDevice.h" />
     <ClInclude Include="src\Graphics\Graphicals\Mesh.h" />
-    <ClInclude Include="src\Graphics\Graphicals\TriIndicies.h" />
+    <ClInclude Include="src\Graphics\Graphicals\TriIndices.h" />
     <ClInclude Include="src\Graphics\Primitives\Quad.h" />
     <ClInclude Include="src\Graphics\Primitives\Tri.h" />
     <ClInclude Include="src\Graphics\Utils\Textures\Texture.h" />

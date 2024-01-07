@@ -12,16 +12,14 @@ namespace Graphics {
         GLCALL(glDeleteBuffers(1, &rendererID));
     }
 
-    DynamicVertexBuffer& DynamicVertexBuffer::Transfer(DynamicVertexBuffer& dest, DynamicVertexBuffer&& from) {
+    void DynamicVertexBuffer::Transfer(DynamicVertexBuffer& dest, DynamicVertexBuffer&& from) {
         dest.rendererID = from.rendererID;
-        from.rendererID = 0;
+        from.rendererID = GL_NULL;
         dest.dataOffset = from.dataOffset;
         dest.bufferSize = from.bufferSize;
 
         dest.vertSize = from.vertSize;
         dest.vertType = from.vertType;
-
-        return dest;
     }
 
     void DynamicVertexBuffer::Bind() const {
@@ -31,10 +29,10 @@ namespace Graphics {
     void DynamicVertexBuffer::Unbind() const {
         GLCALL(glBindBuffer(GL_ARRAY_BUFFER, 0));
     }
-
-    void DynamicVertexBuffer::SetDataUnchecked(const void* data, uint vertSize, uint count) {
+    
+    void DynamicVertexBuffer::SetDataUnchecked(const void* data, uint vertexSize, uint count) {
         Bind();
-        glBufferSubData(GL_ARRAY_BUFFER, 0, count * vertSize, data);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, (int)(count * vertexSize), data);
     }
 
     void DynamicVertexBuffer::ClearData(bool shallowClear) {
@@ -42,11 +40,11 @@ namespace Graphics {
         dataOffset = 0;
         if (shallowClear) return;
         const std::vector<uchar> clear(bufferSize * vertSize, 0);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, bufferSize * vertSize, clear.data());
+        glBufferSubData(GL_ARRAY_BUFFER, 0, (int)(bufferSize * vertSize), clear.data());
     }
 
-    void DynamicVertexBuffer::AddDataUnchecked(const void* data, uint vertSize, uint count) {
-        glBufferSubData(GL_ARRAY_BUFFER, dataOffset * vertSize, count * vertSize, data);
+    void DynamicVertexBuffer::AddDataUnchecked(const void* data, uint vertexSize, uint count) {
+        glBufferSubData(GL_ARRAY_BUFFER, (int)(dataOffset * vertexSize), (int)(count * vertexSize), data);
         dataOffset += count;
     }
 }

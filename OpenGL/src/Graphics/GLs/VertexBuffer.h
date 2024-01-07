@@ -5,7 +5,7 @@
 namespace Graphics {
 	class VertexBuffer {
 	    private:
-		    uint rendererID = 0;
+		    glID rendererID = 0;
 	    public:
 		    OPENGL_API VertexBuffer(const void* data, uint size);
 		    OPENGL_API ~VertexBuffer();

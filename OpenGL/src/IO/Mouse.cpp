@@ -18,13 +18,13 @@ namespace IO {
         }
     }
 
-    Maths::Vec2d MouseT::GetMousePosPx() {
-        Maths::Vec2d pos;
+    Maths::dvec2 MouseT::GetMousePosPx() {
+        Maths::dvec2 pos;
         glfwGetCursorPos(inputWindow(), &pos.x, &pos.y);
         return pos;
     }
 
-    Maths::Vec2d MouseT::GetMousePos() {
+    Maths::dvec2 MouseT::GetMousePos() {
         auto r01 = GetMousePosPx() / graphicsDevice->GetWindowSize(); // range 0 - 1
         return r01 * 2.0 - 1.0;
     }

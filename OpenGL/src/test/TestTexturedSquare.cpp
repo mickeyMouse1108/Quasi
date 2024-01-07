@@ -6,9 +6,10 @@ namespace Test {
     void TestTexturedSquare::OnInit(Graphics::GraphicsDevice& gdevice) {
         render = gdevice.CreateNewRender<VertexColorTexture3D>(4, 2);
 
-        gdevice.UseShader(Graphics::Shader::StdTextured);
-        gdevice.SetProjection(projection);
+        render->UseShader(Graphics::Shader::StdTextured);
+        render->SetProjection(projection);
 
+#pragma region Texture Define
         // see testbatchedtextured.cpp
         uchar tex[] = {
             0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a,0x00,0x00,0x00,0x0d,0x49,0x48,0x44,0x52,
@@ -71,23 +72,24 @@ namespace Test {
             0xec,0xfb,0xf8,0x07,0x05,0x62,0x5d,0x32,0x60,0x16,0x00,0x28,0x00,0x00,0x00,0x00,
             0x49,0x45,0x4e,0x44,0xae,0x42,0x60,0x82
         };
-
+#pragma endregion
+        
         texture = Graphics::Texture(tex, sizeof(tex) / sizeof(uchar), false);
         texture.Bind(0);
 
         VertexColorTexture3D vertices[] = { 
-            { { -50.0f, -50.0f }, Maths::Vector4::ONE, { 0.0f, 0.0f }, 0 },
-            { { +50.0f, -50.0f }, Maths::Vector4::ONE, { 1.0f, 0.0f }, 0 },
-            { { +50.0f, +50.0f }, Maths::Vector4::ONE, { 1.0f, 1.0f }, 0 },
-            { { -50.0f, +50.0f }, Maths::Vector4::ONE, { 0.0f, 1.0f }, 0 },
+            { { -50.0f, -50.0f }, 1, { 0.0f, 0.0f }, 0 },
+            { { +50.0f, -50.0f }, 1, { 1.0f, 0.0f }, 0 },
+            { { +50.0f, +50.0f }, 1, { 1.0f, 1.0f }, 0 },
+            { { -50.0f, +50.0f }, 1, { 0.0f, 1.0f }, 0 },
         };
 
-        Graphics::TriIndicies indices[6] = {
+        Graphics::TriIndices indices[6] = {
             { 0, 1, 2 },
             { 2, 3, 0 }
         };
 
-        mesh = Graphics::Mesh<VertexColorTexture3D>(
+        mesh = Graphics::Mesh(
             std::vector(vertices, vertices + 4),
             std::vector(indices, indices + 2)
         );
@@ -97,10 +99,10 @@ namespace Test {
 
     void TestTexturedSquare::OnRender(Graphics::GraphicsDevice& gdevice) {
         Test::OnRender(gdevice);
-        Maths::Matrix3D mat = Maths::Matrix3D::Transform(modelTranslation,
+        Maths::mat3D mat = Maths::mat3D::transform(modelTranslation,
                                                          modelScale,
                                                          modelRotation);
-        gdevice.SetCamera(mat);
+        render->SetCamera(mat);
         mesh.ApplyMaterial(&VertexColorTexture3D::Color, color);
         //LOG(mat);
         render->ResetData<VertexColorTexture3D>();

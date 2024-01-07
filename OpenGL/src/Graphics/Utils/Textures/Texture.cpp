@@ -3,18 +3,16 @@
 #include "../vendor/stb_image/stb_image.h"
 
 namespace Graphics {
-    Texture::Texture() : rendererID(0), width(0), height(0), BPPixel(0) {}
-
     Texture::Texture(const uchar* datpng, int len, bool useLinear)
-        : rendererID(0), width(0), height(0), BPPixel(0) {
+        : rendererID(0) {
         //flips texture
         stbi_set_flip_vertically_on_load(1);
-        uchar* localTexture = stbi_load_from_memory((uchar*)datpng, len, &width, &height, &BPPixel, 4);
+        uchar* localTexture = stbi_load_from_memory(datpng, len, &width, &height, &BPPixel, 4);
         LoadTexture(localTexture, useLinear);
     }
 
     Texture::Texture(const std::string& filePath, bool useLinear)
-        : rendererID(0), width(0), height(0), BPPixel(0) {
+        : rendererID(0) {
         //flips texture
         stbi_set_flip_vertically_on_load(1);
         uchar* localTexture = stbi_load(filePath.c_str(), &width, &height, &BPPixel, 4);
@@ -40,15 +38,13 @@ namespace Graphics {
         if (img) stbi_image_free((void*)img);
     }
 
-    Texture& Texture::Transfer(Texture& dest, Texture&& from) {
+    void Texture::Transfer(Texture& dest, Texture&& from) {
         dest.rendererID = from.rendererID;
         from.rendererID = 0;
 
         dest.width = from.width;
         dest.height = from.height;
         dest.BPPixel = from.BPPixel;
-
-        return dest;
     }
 
     void Texture::Bind(uint slot/*default = 0*/) const {

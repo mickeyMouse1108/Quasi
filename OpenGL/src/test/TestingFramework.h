@@ -40,7 +40,8 @@ namespace Test {
     }
 
     inline TestManager::~TestManager() {
-        delete currentTest;
+        if (currentTest != menu.get())
+            delete currentTest;
     }
 
     inline void TestManager::OnUpdate(float deltaTime) {
@@ -58,22 +59,24 @@ namespace Test {
 
     inline void TestManager::OnImGuiRender(Graphics::GraphicsDevice& gdevice) {
         Test::OnImGuiRender(gdevice);
-        if (currentTest) {
-            ImGui::Begin("Test");
-            if (currentTest != menu.get() && ImGui::Button("<- Back")) {
-                currentTest->OnDestroy(gdevice);
-                delete currentTest;
-                currentTest = menu.get();
-                currentTest->OnInit(gdevice);
-            }
-            
-            currentTest->OnImGuiRender(gdevice);
-            
-            ImGui::Separator();
-            gdevice.DebugMenu();
-
-            ImGui::End();
+        if (!currentTest) return;
+        
+        ImGui::Begin("Test");
+        if (currentTest != menu.get() && ImGui::Button("<- Back")) {
+            currentTest->OnDestroy(gdevice);
+            delete currentTest;
+            currentTest = menu.get();
+            currentTest->OnInit(gdevice);
         }
-    }
+            
+        currentTest->OnImGuiRender(gdevice);
+            
+        ImGui::Separator();
+        gdevice.DebugMenu();
 
+        if (gdevice.IsClosed())
+            return;
+
+        ImGui::End();
+    }
 }

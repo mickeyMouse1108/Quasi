@@ -13,3 +13,6 @@ using uint64 = uint64_t;
 using uchar  = unsigned char;
 using uint   = unsigned int;
 using quadf  = long double;
+
+using glID = uint;
+constexpr glID GL_NULL = 0;

@@ -4,7 +4,7 @@
 #include "imgui.h"
 
 namespace Test {
-    Maths::Vector4 TestDynamicTris::COLORS[8] = {
+    Maths::fvec4 TestDynamicTris::COLORS[8] = {
         { 1.0f, 0.0f, 0.0f, 1.0f }, // red
         { 0.0f, 1.0f, 0.0f, 1.0f }, // green
         { 0.0f, 0.0f, 1.0f, 1.0f }, // blue
@@ -15,15 +15,15 @@ namespace Test {
         { 0.5f, 0.0f, 1.0f, 1.0f }, // purple
     };
 
-    Maths::Matrix3D TestDynamicTris::ModelMatrix() {
-        return Maths::Matrix3D::Transform({modelTranslation, 0.0f}, {modelScale, 1.0f}, {0.0f, 0.0f, modelRotation});
+    Maths::mat3D TestDynamicTris::ModelMatrix() {
+        return Maths::mat3D::transform({ modelTranslation, 0.0f }, { modelScale, 1.0f }, { 0.0f, 0.0f, modelRotation });
     }
 
     void TestDynamicTris::OnInit(Graphics::GraphicsDevice& gdevice) {
         render = gdevice.CreateNewRender<VertexColor3D>(3 * 8, 8);
 
-        gdevice.UseShader(Graphics::Shader::StdColored);
-        gdevice.SetProjection(projection);
+        render->UseShader(Graphics::Shader::StdColored);
+        render->SetProjection(projection);
         
         tris.push_back(NewTri());
         tris.back().Bind(*render);
@@ -52,8 +52,8 @@ namespace Test {
                 tris.push_back(NewTri());
                 tris.back().Bind(*render);
                 // Graphics::Mesh(vc3, { { 0, 1, 2 } });
-                modelTranslation = { 0.0f, 0.0f };
-                modelScale = { 1.0f, 1.0f };
+                modelTranslation = 0;
+                modelScale = 1;
                 modelRotation = 0.0f;
                 
                 isMin = false;
@@ -66,8 +66,8 @@ namespace Test {
             if (triCount <= 1) { isMin = true; } else {
                 tris.back().Unbind();
                 tris.pop_back();
-                modelTranslation = { 0.0f, 0.0f };
-                modelScale = { 1.0f, 1.0f };
+                modelTranslation = 0;
+                modelScale = 1;
                 modelRotation = 0.0f;
                 
                 isMax = false;

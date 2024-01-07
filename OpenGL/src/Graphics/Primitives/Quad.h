@@ -9,29 +9,29 @@
 namespace Graphics::Primitives {
     class Quad {
         private:
-            using Vec3 = Maths::Vector3;
-            Vec3 center, x, y;
+            using fvec3 = Maths::fvec3;
+            fvec3 center, x, y;
         public:
             Quad() = default;
-            Quad(Vec3 center, Vec3 x, Vec3 y) : center(center), x(x), y(y) {}
+            Quad(fvec3 center, fvec3 x, fvec3 y) : center(center), x(x), y(y) {}
             
-            OPENGL_API static Quad FromCornerToCorners(Vec3 corner, Vec3 toC1, Vec3 toC2);
-            OPENGL_API static Quad FromCenterToCorners(Vec3 center, Vec3 toC1, Vec3 toC2);
+            OPENGL_API static Quad FromCornerToCorners(fvec3 corner, fvec3 toC1, fvec3 toC2);
+            OPENGL_API static Quad FromCenterToCorners(fvec3 center, fvec3 toC1, fvec3 toC2);
                 
-            OPENGL_API std::array<Vec3, 4> GetVerticies() const;
+            OPENGL_API std::array<fvec3, 4> GetVertices() const;
 
-            OPENGL_API void Transform(const Maths::Matrix3D& transform);
-            friend OPENGL_API Quad operator*(const Maths::Matrix3D& transform, const Quad& mesh);
+            OPENGL_API void Transform(const Maths::mat3D& transform);
+            friend OPENGL_API Quad operator*(const Maths::mat3D& transform, const Quad& mesh);
 
-            template <class T> Mesh<T> IntoMesh(Vec3 T::* prop = &T::Position);
+            template <class T> Mesh<T> IntoMesh(fvec3 T::* prop = &T::Position);
     };
 
-    OPENGL_API Quad operator*(const Maths::Matrix3D& transform, const Quad& mesh);
+    OPENGL_API Quad operator*(const Maths::mat3D& transform, const Quad& mesh);
 
     template <class T>
-    Mesh<T> Quad::IntoMesh(Vec3 T::* prop) {
+    Mesh<T> Quad::IntoMesh(fvec3 T::* prop) {
         std::vector<T> vert;
-        auto v = GetVerticies();
+        auto v = GetVertices();
 
         vert.resize(4);
         vert[0].*prop = v[0];

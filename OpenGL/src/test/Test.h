@@ -22,7 +22,7 @@ namespace Test {
             std::function<Test*()> testConstruct;
         };
     private:
-        Test*& currentTest; // ref bc currtest could be a testmenu (this)
+        Test*& currentTest; // ref bc currtest could be a testmenu (this)  // NOLINT(cppcoreguidelines-avoid-const-or-ref-data-members)
         std::vector<TestMenuItem> menuItems;
     public:
         OPENGL_API TestMenu(Test*& currTest);

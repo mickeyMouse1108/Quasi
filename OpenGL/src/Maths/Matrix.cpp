@@ -3,6 +3,8 @@
 #include <complex>
 #include <iomanip>
 
+#include "Constants.h"
+
 namespace Maths {
     const float* mat4x4::get_in_col() const {
         return (const float*)this;
@@ -90,7 +92,6 @@ namespace Maths {
     }
 
     mat4x4 mat4x4::perspective_fov(float fovDeg, float aspect, float near, float far) {
-        constexpr float PI = 3.14159265358979323846f;
         float fovRad = fovDeg * PI / 180.0f;
         float y = 1.0f / std::tan(fovRad / 2);
         float x = y / aspect;

@@ -13,7 +13,7 @@ namespace Test {
 
     void TestClearColor::OnImGuiRender(Graphics::GraphicsDevice& gdevice) {
         Test::OnImGuiRender(gdevice);
-        ImGui::ColorEdit4("Clear Color", clearColor);
+        ImGui::ColorEdit4("Clear Color", &clearColor.x);
     }
 
     void TestClearColor::OnDestroy(Graphics::GraphicsDevice& gdevice) {

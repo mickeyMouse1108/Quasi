@@ -5,8 +5,8 @@
 namespace IO {
     MouseT Mouse { nullptr };
     
-    auto* MouseT::inputWindow() { return graphicsDevice->GetWindow(); }
-    const auto* MouseT::inputWindow() const { return graphicsDevice->GetWindow(); }
+    GLFWwindow* MouseT::inputWindow() { return graphicsDevice->GetWindow(); }
+    const GLFWwindow* MouseT::inputWindow() const { return graphicsDevice->GetWindow(); }
 
     MouseT::MouseT(Graphics::GraphicsDevice& gd) : graphicsDevice(gd) {}
 

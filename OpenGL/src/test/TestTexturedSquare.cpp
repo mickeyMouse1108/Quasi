@@ -1,4 +1,4 @@
-﻿#include "TestTexturedSquare.h"
+#include "TestTexturedSquare.h"
 
 #include "imgui.h"
 
@@ -100,8 +100,8 @@ namespace Test {
     void TestTexturedSquare::OnRender(Graphics::GraphicsDevice& gdevice) {
         Test::OnRender(gdevice);
         Maths::mat3D mat = Maths::mat3D::transform(modelTranslation,
-                                                         modelScale,
-                                                         modelRotation);
+                                                   modelScale,
+                                                   modelRotation);
         render->SetCamera(mat);
         mesh.ApplyMaterial(&VertexColorTexture3D::Color, color);
         //LOG(mat);
@@ -112,10 +112,10 @@ namespace Test {
     void TestTexturedSquare::OnImGuiRender(Graphics::GraphicsDevice& gdevice) {
         Test::OnImGuiRender(gdevice);
 
-        ImGui::ColorEdit4("Texture Color", color);
-        ImGui::DragFloat3("Translation", modelTranslation);
-        ImGui::DragFloat3("Scale",       modelScale      , 0.1f);
-        ImGui::DragFloat3("Rotation",    modelRotation   , 0.03f);
+        ImGui::ColorEdit4("Texture Color", &color.x);
+        ImGui::DragFloat3("Translation", &modelTranslation.x);
+        ImGui::DragFloat3("Scale",       &modelScale.x, 0.1f);
+        ImGui::DragFloat3("Rotation",    &modelRotation.x, 0.03f);
     }
 
     void TestTexturedSquare::OnDestroy(Graphics::GraphicsDevice& gdevice) {

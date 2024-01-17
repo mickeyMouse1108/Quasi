@@ -50,4 +50,4 @@
     ENUM_SELF_BINARY_OP(E, >>) \
 \
     ENUM_SELF_UNARY_OP(E, +) \
-    ENUM_SELF_UNARY_OP(E, -)
+    ENUM_SELF_UNARY_OP(E, -) \

@@ -97,6 +97,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ShowIncludes>false</ShowIncludes>
       <UseFullPaths>false</UseFullPaths>
+      <AdditionalOptions>/FS</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -231,6 +232,7 @@
     <ClInclude Include="src\IO\IO.h" />
     <ClInclude Include="src\IO\Keyboard.h" />
     <ClInclude Include="src\IO\Mouse.h" />
+    <ClInclude Include="src\Maths\Constants.h" />
     <ClInclude Include="src\Maths\Corner.h" />
     <ClInclude Include="src\Maths\Direction.h" />
     <ClInclude Include="src\Maths\NumTypes.h" />
@@ -271,6 +273,7 @@
     <Content Include="res\textures\simple_tm.png" />
     <Content Include="res\textures\test_atlas.png" />
     <Content Include="res\textures\UV.png" />
+    <ClCompile Include="src\Maths\ColorConstants.cpp" />
     <Content Include="src\test\res\standard_colored.glsl" />
     <Content Include="src\test\res\TestBatchedTextured\img1.png" />
     <Content Include="src\test\res\TestBatchedTextured\img2.png" />

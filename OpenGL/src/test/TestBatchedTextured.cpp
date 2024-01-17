@@ -101,9 +101,9 @@ namespace Test {
     void TestBatchedTextured::OnImGuiRender(Graphics::GraphicsDevice& gdevice) {
         Test::OnImGuiRender(gdevice);
         
-        ImGui::DragFloat3("Translation", modelTranslation);
-        ImGui::DragFloat3("Scale",       modelScale      , 0.1f);
-        ImGui::DragFloat3("Rotation",    modelRotation   , 0.03f);
+        ImGui::DragFloat3("Translation", &modelTranslation.x);
+        ImGui::DragFloat3("Scale",       &modelScale.x, 0.1f);
+        ImGui::DragFloat3("Rotation",    &modelRotation.x, 0.03f);
     }
 
     void TestBatchedTextured::OnDestroy(Graphics::GraphicsDevice& gdevice) {

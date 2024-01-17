@@ -79,9 +79,9 @@ namespace Test {
     void TestCubeRender::OnImGuiRender(Graphics::GraphicsDevice& gdevice) {
         Test::OnImGuiRender(gdevice);
 
-        ImGui::DragFloat3("Translation" , modelTranslation, 0.01f);
-        ImGui::DragFloat3("Scale"       , modelScale      , 0.01f);
-        ImGui::DragFloat3("Rotation"    , modelRotation   , 0.01f);
+        ImGui::DragFloat3("Translation" , &modelTranslation.x, 0.01f);
+        ImGui::DragFloat3("Scale"       , &modelScale.x, 0.01f);
+        ImGui::DragFloat3("Rotation"    , &modelRotation.x, 0.01f);
         ImGui::DragFloat ("Transparency", &alpha          , 0.01f);
     }
 

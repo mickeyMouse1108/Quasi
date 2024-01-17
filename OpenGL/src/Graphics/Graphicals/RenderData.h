@@ -7,8 +7,6 @@
 #include "VertexElement.h"
 
 namespace Graphics {
-	class GraphicsDevice;
-
 	class RenderData {
 		VertexArray varray;
 		DynamicVertexBuffer vbo;
@@ -20,7 +18,7 @@ namespace Graphics {
 	    Maths::mat3D camera {};
 	    Shader shader = {}; // shader can be null if renderId is 0
 
-		GraphicsDevice* device = nullptr;
+		class GraphicsDevice* device = nullptr;
 		uint deviceIndex = 0;
 		friend GraphicsDevice;
 	public:

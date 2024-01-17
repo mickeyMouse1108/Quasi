@@ -4,6 +4,8 @@
 #include "Vector.h"
 #include "stdu/ref.h"
 
+struct GLFWwindow;
+
 namespace Graphics {
     class GraphicsDevice;
 }
@@ -60,9 +62,9 @@ namespace IO {
         OPENGL_API static bool IsStandardMouseButton(int btn);
         OPENGL_API static bool IsValidMouseButton(int btn);
         OPENGL_API static const char* MouseButtonToStr(int btn);
-
+        
         private:
-            OPENGL_API auto* inputWindow();
-            OPENGL_API [[nodiscard]] const auto* inputWindow() const;
+            OPENGL_API GLFWwindow* inputWindow();
+            OPENGL_API [[nodiscard]] const GLFWwindow* inputWindow() const;
     };
 }

@@ -41,9 +41,9 @@ namespace Test {
     void TestDynamicTris::OnImGuiRender(Graphics::GraphicsDevice& gdevice) {
         Test::OnImGuiRender(gdevice);
 
-        ImGui::DragFloat2("Current Tri Translation", modelTranslation       );
-        ImGui::DragFloat2("Current Tri Scale      ", modelScale      , 0.10f);
-        ImGui::DragFloat ("Current Tri Rotation   ", &modelRotation  , 0.05f);
+        ImGui::DragFloat2("Current Tri Translation", &modelTranslation.x);
+        ImGui::DragFloat2("Current Tri Scale      ", &modelScale.x, 0.10f);
+        ImGui::DragFloat ("Current Tri Rotation   ", &modelRotation, 0.05f);
 
         uint triCount = tris.size();
 

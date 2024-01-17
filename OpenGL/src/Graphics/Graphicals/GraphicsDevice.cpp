@@ -48,6 +48,8 @@ namespace Graphics {
         ImGui::NewFrame();
 
         SetRenderWireframe(useWireRender);
+
+        IO::Mouse.Update();
     }
 
     void GraphicsDevice::EndRender() {

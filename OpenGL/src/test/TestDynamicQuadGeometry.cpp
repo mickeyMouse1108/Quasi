@@ -38,10 +38,10 @@ namespace Test {
         uint quadCount = quads.size();
 
         auto& verts = quads.back().GetVertices();
-        ImGui::DragFloat3("Quad Vertex 1", verts[0].Position);
-        ImGui::DragFloat3("Quad Vertex 2", verts[1].Position);
-        ImGui::DragFloat3("Quad Vertex 3", verts[2].Position);
-        ImGui::DragFloat3("Quad Vertex 4", verts[3].Position);
+        ImGui::DragFloat3("Quad Vertex 1", &verts[0].Position.x);
+        ImGui::DragFloat3("Quad Vertex 2", &verts[1].Position.x);
+        ImGui::DragFloat3("Quad Vertex 3", &verts[2].Position.x);
+        ImGui::DragFloat3("Quad Vertex 4", &verts[3].Position.x);
 
         if (ImGui::Button("Add Quad") && !isMax) {
             if (quadCount >= MAX_QUAD) { isMax = true; } else {

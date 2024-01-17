@@ -8,9 +8,6 @@
 #include "stdu/ref.h"
 
 namespace Graphics {
-    template <class T> class Mesh;
-    class GenericMesh;
-
     // TODO: make this changeable
     class GraphicsDevice {
         static constexpr unsigned int MAX_VERTEX_COUNT = 1000;

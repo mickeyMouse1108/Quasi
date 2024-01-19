@@ -93,7 +93,7 @@ namespace Graphics {
         texture.Bind(slot);
     }
 
-    void GraphicsDevice::ClearColor(const Maths::fvec4& color) {
+    void GraphicsDevice::ClearColor(const Maths::colorf& color) {
         Render::SetClearColor(color);
     }
 

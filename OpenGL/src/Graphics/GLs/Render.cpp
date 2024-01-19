@@ -23,7 +23,7 @@ namespace Graphics::Render {
         glPolygonMode(GL_FRONT_AND_BACK, isWireframe ? GL_LINE : GL_FILL);
     }
 
-    void SetClearColor(const Maths::fvec4& color) {
-        glClearColor(color.x, color.y, color.z, color.w);
+    void SetClearColor(const Maths::colorf& color) {
+        glClearColor(color.r, color.g, color.b, color.a);
     }
 }

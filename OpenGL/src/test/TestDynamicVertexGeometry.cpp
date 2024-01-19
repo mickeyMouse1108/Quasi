@@ -9,16 +9,17 @@ namespace Test {
         render->UseShader(Graphics::Shader::StdColored);
         render->SetProjection(projection);
 
+        using namespace Maths;
         VertexColor3D vertices[] = {
-            { { -240.0f, -80.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } },
-            { { -80.00f, -80.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } },
-            { { -80.00f, +80.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } },
-            { { -240.0f, +80.0f, 0.0f }, { 0.5f, 0.5f, 0.5f } },
+            { { -240.0f, -80.0f, 0.0f }, colorf::RED()   },
+            { { -80.00f, -80.0f, 0.0f }, colorf::GREEN() },
+            { { -80.00f, +80.0f, 0.0f }, colorf::BLUE()  },
+            { { -240.0f, +80.0f, 0.0f }, colorf::GRAY()  },
             
-            { { +80.00f, -80.0f, 0.0f }, { 1.0f, 0.0f, 1.0f } },
-            { { +240.0f, -80.0f, 0.0f }, { 1.0f, 1.0f, 0.0f } },
-            { { +240.0f, +80.0f, 0.0f }, { 0.0f, 1.0f, 1.0f } },
-            { { +80.00f, +80.0f, 0.0f }, { 1.0f, 1.0f, 1.0f } },
+            { { +80.00f, -80.0f, 0.0f }, colorf::MAGENTA() },
+            { { +240.0f, -80.0f, 0.0f }, colorf::YELLOW()  },
+            { { +240.0f, +80.0f, 0.0f }, colorf::CYAN()    },
+            { { +80.00f, +80.0f, 0.0f }, colorf::WHITE()   },
         };
 
         Graphics::TriIndices indices[4] = {

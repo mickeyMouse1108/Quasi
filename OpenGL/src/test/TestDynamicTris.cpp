@@ -4,15 +4,15 @@
 #include "imgui.h"
 
 namespace Test {
-    Maths::fvec4 TestDynamicTris::COLORS[8] = {
-        { 1.0f, 0.0f, 0.0f, 1.0f }, // red
-        { 0.0f, 1.0f, 0.0f, 1.0f }, // green
-        { 0.0f, 0.0f, 1.0f, 1.0f }, // blue
-        { 1.0f, 1.0f, 0.0f, 1.0f }, // magenta
-        { 0.0f, 1.0f, 1.0f, 1.0f }, // yellow
-        { 1.0f, 0.0f, 1.0f, 1.0f }, // cyan
-        { 1.0f, 0.5f, 0.0f, 1.0f }, // orange 
-        { 0.5f, 0.0f, 1.0f, 1.0f }, // purple
+    Maths::colorf TestDynamicTris::COLORS[8] = {
+        Maths::colorf::BETTER_RED(),
+        Maths::colorf::BETTER_GREEN(),
+        Maths::colorf::BETTER_BLUE(),
+        Maths::colorf::BETTER_MAGENTA(),
+        Maths::colorf::BETTER_YELLOW(),
+        Maths::colorf::BETTER_CYAN(),
+        Maths::colorf::BETTER_ORANGE(),
+        Maths::colorf::BETTER_PURPLE(),
     };
 
     Maths::mat3D TestDynamicTris::ModelMatrix() {

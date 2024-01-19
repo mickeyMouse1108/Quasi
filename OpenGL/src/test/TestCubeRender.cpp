@@ -8,26 +8,27 @@ namespace Test {
         render = gdevice.CreateNewRender<VertexColor3D>(4 * 6, 12);
 
         using Graphics::Primitives::Quad;
+        using namespace Maths;
 
         cube = Graphics::Mesh<VertexColor3D>::Combine<6>(std::array {
                 Quad({ +1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 })
                     .IntoMesh<VertexColor3D>()
-                    .ApplyMaterial(&VertexColor3D::Color, { 1, 0, 0, 1 }),
+                    .ApplyMaterial(&VertexColor3D::Color, colorf::RED()),
                 Quad({ -1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 })
                     .IntoMesh<VertexColor3D>()
-                    .ApplyMaterial(&VertexColor3D::Color, { 0, 1, 1, 1 }),
+                    .ApplyMaterial(&VertexColor3D::Color, colorf::CYAN()),
                 Quad({ 0, +1, 0 }, { 1, 0, 0 }, { 0, 0, 1 })
                     .IntoMesh<VertexColor3D>()
-                    .ApplyMaterial(&VertexColor3D::Color, { 0, 1, 0, 1 }),
+                    .ApplyMaterial(&VertexColor3D::Color, colorf::GREEN()),
                 Quad({ 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, 1 })
                     .IntoMesh<VertexColor3D>()
-                    .ApplyMaterial(&VertexColor3D::Color, { 1, 0, 1, 1 }),
+                    .ApplyMaterial(&VertexColor3D::Color, colorf::MAGENTA()),
                 Quad({ 0, 0, +1 }, { 1, 0, 0 }, { 0, 1, 0 })
                     .IntoMesh<VertexColor3D>()
-                    .ApplyMaterial(&VertexColor3D::Color, { 0, 0, 1, 1 }),
+                    .ApplyMaterial(&VertexColor3D::Color, colorf::BLUE()),
                 Quad({ 0, 0, -1 }, { 1, 0, 0 }, { 0, 1, 0 })
                     .IntoMesh<VertexColor3D>()
-                    .ApplyMaterial(&VertexColor3D::Color, { 1, 1, 0, 1 }),
+                    .ApplyMaterial(&VertexColor3D::Color, colorf::YELLOW()),
                 }
             );
 
@@ -80,9 +81,9 @@ namespace Test {
         Test::OnImGuiRender(gdevice);
 
         ImGui::DragFloat3("Translation" , &modelTranslation.x, 0.01f);
-        ImGui::DragFloat3("Scale"       , &modelScale.x, 0.01f);
-        ImGui::DragFloat3("Rotation"    , &modelRotation.x, 0.01f);
-        ImGui::DragFloat ("Transparency", &alpha          , 0.01f);
+        ImGui::DragFloat3("Scale"       , &modelScale.x,       0.01f);
+        ImGui::DragFloat3("Rotation"    , &modelRotation.x,    0.01f);
+        ImGui::DragFloat ("Transparency", &alpha,              0.01f);
     }
 
     void TestCubeRender::OnDestroy(Graphics::GraphicsDevice& gdevice) {

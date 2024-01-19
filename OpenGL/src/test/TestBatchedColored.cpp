@@ -38,8 +38,8 @@ namespace Test {
         Test::OnRender(gdevice);
         //shader.SetUniform4F("u_Color", color);
         Maths::mat3D mat = Maths::mat3D::transform(modelTranslation,
-                                                         modelScale,
-                                                         modelRotation);
+                                                   modelScale,
+                                                   modelRotation);
         render->SetCamera(mat);
 
         //LOG(mat);

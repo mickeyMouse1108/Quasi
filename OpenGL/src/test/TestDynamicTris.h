@@ -30,6 +30,6 @@ namespace Test {
 
         OPENGL_API Graphics::Mesh<VertexColor3D> NewTri();
 
-        static Maths::fvec4 COLORS[8];
+        static Maths::colorf COLORS[8];
     };
 }

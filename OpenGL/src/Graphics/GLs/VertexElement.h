@@ -8,17 +8,17 @@
 #define VERTEX_LAYOUT_OF(T) T::__VERTEX_LAYOUT
 
 struct VertexColorTexture3D {
-    Maths::fvec3 Position;
-    Maths::fvec4 Color;
-    Maths::fvec2 TextureCoordinate;
+    Maths::fvec3  Position;
+    Maths::colorf Color;
+    Maths::fvec2  TextureCoordinate;
     int TextureID = 0;
     
     VERTEX_STRUCT_LAYOUT = { VERTEX_COMP Vec3(), VERTEX_COMP Vec4(), VERTEX_COMP Vec2(), VERTEX_COMP Int() };
 };
 
 struct VertexColorTextureAtlas3D {
-    Maths::fvec3 Position;
-    Maths::fvec4 Color;
+    Maths::fvec3  Position;
+    Maths::colorf Color;
     int TextureAtlID = 0;
     int TextureCorner = 0;
 
@@ -26,8 +26,8 @@ struct VertexColorTextureAtlas3D {
 };
 
 struct VertexColor3D {
-    Maths::fvec3 Position;
-    Maths::fvec4 Color;
+    Maths::fvec3  Position;
+    Maths::colorf Color;
 
     VERTEX_STRUCT_LAYOUT = { VERTEX_COMP Vec3(), VERTEX_COMP Vec4() };
 };

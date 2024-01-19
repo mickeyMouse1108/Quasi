@@ -10,5 +10,5 @@ namespace Graphics::Render {
     inline void Draw(const RenderData& dat, const Shader& s) { Draw(dat.GetVertArr(), dat.GetIndObj(), s); }
 
     OPENGL_API void SetRenderWireframe(bool isWireframe);
-    OPENGL_API void SetClearColor(const Maths::fvec4& color);
+    OPENGL_API void SetClearColor(const Maths::colorf& color);
 }

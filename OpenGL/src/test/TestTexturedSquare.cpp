@@ -112,7 +112,7 @@ namespace Test {
     void TestTexturedSquare::OnImGuiRender(Graphics::GraphicsDevice& gdevice) {
         Test::OnImGuiRender(gdevice);
 
-        ImGui::ColorEdit4("Texture Color", &color.x);
+        ImGui::ColorEdit4("Texture Color", &color.r);
         ImGui::DragFloat3("Translation", &modelTranslation.x);
         ImGui::DragFloat3("Scale",       &modelScale.x, 0.1f);
         ImGui::DragFloat3("Rotation",    &modelRotation.x, 0.03f);

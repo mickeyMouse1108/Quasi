@@ -41,7 +41,7 @@ namespace Graphics {
 
         OPENGL_API void BindTexture(Texture& texture, uint slot);
 
-        OPENGL_API void ClearColor(const Maths::fvec4& color);
+        OPENGL_API void ClearColor(const Maths::colorf& color);
 
         [[nodiscard]] bool IsClosed() const { return !mainWindow; } // quit() sets mainwindow to nullptr 
         OPENGL_API [[nodiscard]] bool WindowIsOpen() const;

@@ -4,7 +4,7 @@
 namespace Test {
     class TestClearColor : public Test {
     private:
-        Maths::fvec4 clearColor = { 0.8f, 0.9f, 1.0f };
+        Maths::colorf clearColor = Maths::colorf::BETTER_BLUE();
     public:
         TestClearColor() {}
         ~TestClearColor() override {}

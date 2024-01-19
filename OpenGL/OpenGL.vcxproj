@@ -273,7 +273,7 @@
     <Content Include="res\textures\simple_tm.png" />
     <Content Include="res\textures\test_atlas.png" />
     <Content Include="res\textures\UV.png" />
-    <ClCompile Include="src\Maths\ColorConstants.cpp" />
+    <ClCompile Include="src\Maths\Color.cpp" />
     <Content Include="src\test\res\standard_colored.glsl" />
     <Content Include="src\test\res\TestBatchedTextured\img1.png" />
     <Content Include="src\test\res\TestBatchedTextured\img2.png" />

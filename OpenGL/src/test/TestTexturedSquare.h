@@ -10,7 +10,7 @@ namespace Test {
         Graphics::Mesh<VertexColorTexture3D> mesh;
         Graphics::Texture texture;
         
-        Maths::fvec4 color = Maths::fvec4::ONE;
+        Maths::colorf color = Maths::colorf::WHITE();
 
         Maths::mat3D projection = Maths::mat3D::ortho_projection(-320.0f, 320.0f, -240.0f, 240.0f, -1.0f, 1.0f);
         Maths::fvec3  modelTranslation = 0;

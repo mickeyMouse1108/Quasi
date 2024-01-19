@@ -8,12 +8,13 @@
 #include "Direction.h"
 #include "NumTypes.h"
 #include "opengl.h"
+#include "Debugging.h"
 
 namespace Maths {
 #pragma region Declaration
 #pragma region Concepts and Decls
     struct empty {
-        empty(auto ...x) {}
+        empty(auto ...) {}
     }; // used with [[no_unique_address]]
 
     template <class T> T neg_t(T x) { return -x; }
@@ -125,17 +126,17 @@ namespace Maths {
     
 #define S_ONLY(T) template <class S = scalar> std::enable_if_t<std::is_signed_v<S>, T>
     
-#define VEC2DEF(NAME, SCALAR, _X, _Y, DEF_OP, DEF_EQ, ...) \
+#define VEC2DEF(NAME, SCALAR, _X, _Y, DEF_OP, DEF_EQ, CEXPR, ...) \
     struct NAME { \
         using scalar = SCALAR; \
         static constexpr int dimension = 2; \
         \
         SCALAR _X, _Y; \
-        NAME (SCALAR s = 0) : _X(s), _Y(s) {} \
-        NAME (SCALAR _X, SCALAR _Y) : _X(_X), _Y(_Y) {} \
+        IF(CEXPR, constexpr) NAME (SCALAR s = 0) : _X(s), _Y(s) {} \
+        IF(CEXPR, constexpr) NAME (SCALAR _X, SCALAR _Y) : _X(_X), _Y(_Y) {} \
         \
         IF(DEF_OP, \
-        SCALAR operator[] (uint i) const { return ((const SCALAR*)this)[i]; } /* NOLINT(bugprone-macro-parentheses) */ \
+        IF(CEXPR, constexpr) SCALAR operator[] (uint i) const { return ((const SCALAR*)this)[i]; } /* NOLINT(bugprone-macro-parentheses) */ \
         \
         NAME operator+(R(NAME) v) const; NAME operator+(SCALAR v) const; /* NOLINT(bugprone-macro-parentheses) */ \
         NAME& operator+=(R(NAME) v); NAME& operator+=(SCALAR v); /* NOLINT(bugprone-macro-parentheses) */ \
@@ -157,8 +158,8 @@ namespace Maths {
         S_ONLY(NAME) operator-() const { return { -_X, -_Y }; } /* NOLINT(bugprone-macro-parentheses) */ \
         ) \
         \
-        bool operator==(const NAME& other) const { return _X == other._X && _Y == other._Y; } /* NOLINT(bugprone-macro-parentheses) */ \
-        bool operator!=(const NAME& other) const { return !(*this == other); } \
+        IF(CEXPR, constexpr) bool operator==(const NAME& other) const { return _X == other._X && _Y == other._Y; } /* NOLINT(bugprone-macro-parentheses) */ \
+        IF(CEXPR, constexpr) bool operator!=(const NAME& other) const { return !(*this == other); } \
         \
         IF(VECTOR_SWIZZLING, \
         static constexpr vector_swizzle_data<2> params = #_X#_Y; \
@@ -171,16 +172,16 @@ namespace Maths {
         __VA_ARGS__ /* extra declarations */ \
     }
 
-#define VEC3DEF(NAME, SCALAR, _X, _Y, _Z, DEF_OP, DEF_EQ, ...) \
+#define VEC3DEF(NAME, SCALAR, _X, _Y, _Z, DEF_OP, DEF_EQ, CEXPR, ...) \
     struct NAME { \
         using scalar = SCALAR; \
         static constexpr int dimension = 3; \
         \
         SCALAR _X, _Y, _Z; \
-        NAME (SCALAR s = 0) : _X(s), _Y(s), _Z(s) {} \
-        NAME (SCALAR _X, SCALAR _Y, SCALAR _Z) : _X(_X), _Y(_Y), _Z(_Z) {} \
+        IF(CEXPR, constexpr) NAME (SCALAR s = 0) : _X(s), _Y(s), _Z(s) {} \
+        IF(CEXPR, constexpr) NAME (SCALAR _X, SCALAR _Y, SCALAR _Z) : _X(_X), _Y(_Y), _Z(_Z) {} \
         \
-        SCALAR operator[] (uint i) const { return ((const SCALAR*)this)[i]; } /* NOLINT(bugprone-macro-parentheses) */ \
+        IF(CEXPR, constexpr) SCALAR operator[] (uint i) const { return ((const SCALAR*)this)[i]; } /* NOLINT(bugprone-macro-parentheses) */ \
         \
         IF(DEF_OP, \
         NAME operator+(R(NAME) v) const; NAME operator+(SCALAR v) const; /* NOLINT(bugprone-macro-parentheses) */ \
@@ -203,13 +204,13 @@ namespace Maths {
         ) \
         \
         IF(DEF_EQ, \
-        bool operator==(const NAME& other) const { return _X == other._X && _Y == other._Y && _Z == other._Z; } /* NOLINT(bugprone-macro-parentheses) */ \
-        bool operator!=(const NAME& other) const { return !(*this == other); } \
+        IF(CEXPR, constexpr) bool operator==(const NAME& other) const { return _X == other._X && _Y == other._Y && _Z == other._Z; } /* NOLINT(bugprone-macro-parentheses) */ \
+        IF(CEXPR, constexpr) bool operator!=(const NAME& other) const { return !(*this == other); } \
         ) \
         IF(VECTOR_SWIZZLING, \
         static constexpr vector_swizzle_data<3> params = #_X#_Y#_Z; \
         template <swizzle<3, params> S> \
-        typename vecn<S.N, SCALAR>::type get() { return swizzle_impl<SCALAR, 3, params, S>((SCALAR*)this); } \
+        IF(CEXPR, constexpr) typename vecn<S.N, SCALAR>::type get() { return swizzle_impl<SCALAR, 3, params, S>((SCALAR*)this); } \
         ) \
         \
         std::string str() const { return std::format("("#_X": {}, "#_Y": {}, "#_Z": {})", _X, _Y, _Z); } \
@@ -217,17 +218,17 @@ namespace Maths {
         __VA_ARGS__ /* extra declarations */ \
     }
 
-#define VEC4DEF(NAME, SCALAR, _X, _Y, _Z, _W, DEF_OP, DEF_EQ, DEF_W_VAL, ...) \
+#define VEC4DEF(NAME, SCALAR, _X, _Y, _Z, _W, DEF_OP, DEF_EQ, DEF_W_VAL, CEXPR, ...) \
     struct NAME { \
         using scalar = SCALAR; \
         static constexpr int dimension = 4; \
         \
         SCALAR _X, _Y, _Z, _W; \
-        NAME () : _X(0), _Y(0), _Z(0), _W(0) {} \
-        NAME (SCALAR s, SCALAR _W = DEF_W_VAL) : _X(s), _Y(s), _Z(s), _W(_W) {} \
-        NAME (SCALAR _X, SCALAR _Y, SCALAR _Z, SCALAR _W = DEF_W_VAL) : _X(_X), _Y(_Y), _Z(_Z), _W(_W) {} \
+        IF(CEXPR, constexpr) NAME () : _X(0), _Y(0), _Z(0), _W(0) {} \
+        IF(CEXPR, constexpr) NAME (SCALAR s, SCALAR _W = DEF_W_VAL) : _X(s), _Y(s), _Z(s), _W(_W) {} \
+        IF(CEXPR, constexpr) NAME (SCALAR _X, SCALAR _Y, SCALAR _Z, SCALAR _W = DEF_W_VAL) : _X(_X), _Y(_Y), _Z(_Z), _W(_W) {} \
         \
-        SCALAR operator[] (uint i) const { return ((const SCALAR*)this)[i]; } /* NOLINT(bugprone-macro-parentheses) */ \
+        IF(CEXPR, constexpr) SCALAR operator[] (uint i) const { return ((const SCALAR*)this)[i]; } /* NOLINT(bugprone-macro-parentheses) */ \
         \
         IF(DEF_OP, \
         NAME operator+(R(NAME) v) const; NAME operator+(SCALAR v) const; /* NOLINT(bugprone-macro-parentheses) */ \
@@ -250,13 +251,13 @@ namespace Maths {
         ) \
         \
         IF(DEF_EQ, \
-        bool operator==(const NAME& other) const { return _X == other._X && _Y == other._Y && _Z == other._Z && _W == other._W; } /* NOLINT(bugprone-macro-parentheses) */ \
-        bool operator!=(const NAME& other) const { return !(*this == other); } \
+        IF(CEXPR, constexpr) bool operator==(const NAME& other) const { return _X == other._X && _Y == other._Y && _Z == other._Z && _W == other._W; } /* NOLINT(bugprone-macro-parentheses) */ \
+        IF(CEXPR, constexpr) bool operator!=(const NAME& other) const { return !(*this == other); } \
         ) \
         IF(VECTOR_SWIZZLING, \
         static constexpr vector_swizzle_data<4> params = #_X#_Y#_Z#_W; \
         template <swizzle<4, params> S> \
-        typename vecn<S.N, SCALAR>::type get() { return swizzle_impl<SCALAR, 4, params, S>((SCALAR*)this); } \
+        IF(CEXPR, constexpr) typename vecn<S.N, SCALAR>::type get() { return swizzle_impl<SCALAR, 4, params, S>((SCALAR*)this); } \
         ) \
         \
         std::string str() const { return std::format("("#_X": {}, "#_Y": {}, "#_Z": {}, "#_W": {})", _X, _Y, _Z, _W); } \
@@ -295,7 +296,7 @@ namespace Maths {
     
 #pragma region Vec2
     template <class T>
-    VEC2DEF(vec2, T, x, y, 1, 1, \
+    VEC2DEF(vec2, T, x, y, 1, 1, 1, \
         vec2(const vec3<T>& xy); \
         vec2(const vec4<T>& xy); \
         vec2(Direction2D dir, T scale = 1); \
@@ -306,12 +307,12 @@ namespace Maths {
         template <vec_gt_t<vec2> V> operator V() const { return V { x, y }; } \
         template <class U> vec2<U> as() { return vec2<U>(*this); } \
         \
-        static const vec2           RIGHT; \
-        static const S_ONLY_U(vec2) LEFT;  \
-        static const vec2           UP;    \
-        static const S_ONLY_U(vec2) DOWN;  \
-        static const vec2           ZERO;  \
-        static const vec2           ONE;   \
+        static constexpr vec2           RIGHT() { return {  1,  0 }; } /* constexpr vars dont work with templates */ \
+        static constexpr S_ONLY_U(vec2) LEFT()  { return { -1,  0 }; } \
+        static constexpr vec2           UP()    { return {  0,  1 }; } \
+        static constexpr S_ONLY_U(vec2) DOWN()  { return {  0, -1 }; } \
+        static constexpr vec2           ZERO()  { return {  0,  0 }; } \
+        static constexpr vec2           ONE()   { return {  1,  1 }; } \
         \
         COMMON_VEC_MATH(vec2) \
         \
@@ -337,7 +338,7 @@ namespace Maths {
 #pragma endregion // vec2
 #pragma region Vec3
     template <class T>
-    VEC3DEF(vec3, T, x, y, z, 1, 1,
+    VEC3DEF(vec3, T, x, y, z, 1, 1, 1,
         vec3(const vec2<T>& xy, T z); \
         vec3(const vec4<T>& xyz); \
         vec3(Direction3D dir, T scale = 1); \
@@ -348,14 +349,14 @@ namespace Maths {
         template <vec_gt_t<vec3> V> operator V() const { return V { x, y, z }; } \
         template <class U> vec3<U> as() { return vec3<U>(*this); } \
         \
-        static const vec3           RIGHT; \
-        static const S_ONLY_U(vec3) LEFT;  \
-        static const vec3           UP;    \
-        static const S_ONLY_U(vec3) DOWN;  \
-        static const vec3           FRONT; \
-        static const S_ONLY_U(vec3) BACK;  \
-        static const vec3           ZERO;  \
-        static const vec3           ONE;   \
+        static constexpr vec3           RIGHT() { return {  1,  0,  0 }; }
+        static constexpr S_ONLY_U(vec3) LEFT()  { return { -1,  0,  0 }; }
+        static constexpr vec3           UP()    { return {  0,  1,  0 }; }
+        static constexpr S_ONLY_U(vec3) DOWN()  { return {  0, -1,  0 }; }
+        static constexpr vec3           FRONT() { return {  0,  0,  1 }; }
+        static constexpr S_ONLY_U(vec3) BACK()  { return {  0,  0, -1 }; }
+        static constexpr vec3           ZERO()  { return {  0,  0,  0 }; }
+        static constexpr vec3           ONE()   { return {  1,  1,  1 }; }
         \
         COMMON_VEC_MATH(vec3) \
         vec2<T> xy() const; \
@@ -385,7 +386,7 @@ namespace Maths {
 #pragma endregion // vec3
 #pragma region Vec4
     template <class T>
-    VEC4DEF(vec4, T, x, y, z, w, 1, 1, 1,
+    VEC4DEF(vec4, T, x, y, z, w, 1, 1, 1, 1,
         vec4(const vec2<T>& xy, T z, T w = 1); \
         vec4(const vec2<T>& xy, const vec2<T>& zw = { 0, 1 }); \
         vec4(const vec3<T>& xyz, T w = 1); \
@@ -397,16 +398,16 @@ namespace Maths {
         template <vec_gt_t<vec4> V> operator V() const { return V { x, y, z, w }; } \
         template <class U> vec4<U> as() { return vec4<U>(*this); } \
         \
-        static const vec4           RIGHT; \
-        static const S_ONLY_U(vec4) LEFT;  \
-        static const vec4           UP;    \
-        static const S_ONLY_U(vec4) DOWN;  \
-        static const vec4           FRONT; \
-        static const S_ONLY_U(vec4) BACK;  \
-        static const vec4           IN;    \
-        static const S_ONLY_U(vec4) OUT;   \
-        static const vec4           ZERO;  \
-        static const vec4           ONE;   \
+        static constexpr vec4           RIGHT() { return {  1,  0,  0,  0 }; }
+        static constexpr S_ONLY_U(vec4) LEFT()  { return { -1,  0,  0,  0 }; }
+        static constexpr vec4           UP()    { return {  0,  1,  0,  0 }; }
+        static constexpr S_ONLY_U(vec4) DOWN()  { return {  0, -1,  0,  0 }; }
+        static constexpr vec4           FRONT() { return {  0,  0,  1,  0 }; }
+        static constexpr S_ONLY_U(vec4) BACK()  { return {  0,  0, -1,  0 }; }
+        static constexpr vec4           IN()    { return {  0,  0,  0,  1 }; }
+        static constexpr S_ONLY_U(vec4) OUT()   { return {  0,  0,  0, -1 }; }
+        static constexpr vec4           ZERO()  { return {  0,  0,  0,  0 }; }
+        static constexpr vec4           ONE()   { return {  1,  1,  1,  1 }; }
         \
         COMMON_VEC_MATH(vec4) \
         vec3<T> xyz() const; \
@@ -420,7 +421,9 @@ namespace Maths {
 #pragma endregion // vec4
 
 #pragma region Color
-#define COLOR_COMMON(T, HAS_A) \
+#define COLOR_COMMON(T, HAS_A, C) \
+    constexpr T(const char (&hex)[1+6+1]); \
+    IF(HAS_A, constexpr T(const char (&hex)[1+8+1]);)\
     OPENGL_API float luminance() const; \
     \
     OPENGL_API bvec3 as_rgb()   const; \
@@ -444,76 +447,76 @@ namespace Maths {
     IF(HAS_A,      operator without_alpha_t() const;) \
     IF(NOT(HAS_A), operator with_alpha_t()    const;) \
     \
-    static const T BLACK;	   /* solid black: rgb(000, 000, 000) or #000000 */ \
-    static const T DARK_GRAY;  /*   25% white: rgb(064, 064, 064) or #404040 */ \
-    static const T GRAY;	   /*   50% white: rgb(128, 128, 128) or #808080 */ \
-    static const T LIGHT_GRAY; /*   75% white: rgb(192, 192, 192) or #c0c0c0 */ \
-    static const T WHITE;	   /* solid white: rgb(255, 255, 255) or #ffffff */ \
-    static const T& SILVER;    /* same as light_gray, rgb(192, 192, 192) or #c0c0c0 */ \
+    static constexpr T BLACK()      { return "#000000"; } /* solid black: rgb(000, 000, 000) or #000000 */ \
+    static constexpr T DARK_GRAY()  { return "#404040"; } /*   25% white: rgb(064, 064, 064) or #404040 */ \
+    static constexpr T GRAY()       { return "#808080"; } /*   50% white: rgb(128, 128, 128) or #808080 */ \
+    static constexpr T LIGHT_GRAY() { return "#c0c0c0"; } /*   75% white: rgb(192, 192, 192) or #c0c0c0 */ \
+    static constexpr T WHITE()      { return "#ffffff"; } /* solid white: rgb(255, 255, 255) or #ffffff */ \
+    static constexpr T SILVER() { return LIGHT_GRAY(); }  /* same as light_gray, rgb(192, 192, 192) or #c0c0c0 */ \
     \
-    static const T RED;     /* red    (100%   red):              rgb(255, 000, 000) or #ff0000 */ \
-    static const T ORANGE;  /* orange (100%   red +  50% green): rgb(255, 128, 000) or #ff8000 */ \
-    static const T YELLOW;  /* yellow (100%   red + 100% green): rgb(255, 255, 000) or #ffff00 */ \
-    static const T LIME;    /* lime   (100% green +  50%   red): rgb(128, 255, 000) or #80ff00 */ \
-    static const T GREEN;   /* green  (100% green):              rgb(000, 255, 000) or #00ff00 */ \
-    static const T SEAFOAM; /* seafoam(100% green +  50%  blue): rgb(000, 255, 128) or #00ff80 */ \
-    static const T CYAN;    /* cyan   (100% green + 100%  blue): rgb(000, 255, 255) or #00ffff */ \
-    static const T AZURE;   /* azure  (100%  blue +  50% green): rgb(000, 128, 255) or #0080ff */ \
-    static const T BLUE;    /* blue   (100%  blue):              rgb(000, 000, 255) or #0000ff */ \
-    static const T PURPLE;  /* purple (100%  blue +  50%   red): rgb(128, 000, 255) or #8000ff */ \
-    static const T MAGENTA; /* magenta(100%  blue + 100%   red): rgb(255, 000, 255) or #ff00ff */ \
-    static const T ROSE;    /* rose   (100%   red +  50%  blue): rgb(255, 000, 128) or #ff0080 */ \
+    static constexpr T RED()     { return "#ff0000"; } /* red    (100%   red):              rgb(255, 000, 000) or #ff0000 */ \
+    static constexpr T ORANGE()  { return "#ff8000"; } /* orange (100%   red +  50% green): rgb(255, 128, 000) or #ff8000 */ \
+    static constexpr T YELLOW()  { return "#ffff00"; } /* yellow (100%   red + 100% green): rgb(255, 255, 000) or #ffff00 */ \
+    static constexpr T LIME()    { return "#80ff00"; } /* lime   (100% green +  50%   red): rgb(128, 255, 000) or #80ff00 */ \
+    static constexpr T GREEN()   { return "#00ff00"; } /* green  (100% green):              rgb(000, 255, 000) or #00ff00 */ \
+    static constexpr T SEAFOAM() { return "#00ff80"; } /* seafoam(100% green +  50%  blue): rgb(000, 255, 128) or #00ff80 */ \
+    static constexpr T CYAN()    { return "#00ffff"; } /* cyan   (100% green + 100%  blue): rgb(000, 255, 255) or #00ffff */ \
+    static constexpr T AZURE()   { return "#0080ff"; } /* azure  (100%  blue +  50% green): rgb(000, 128, 255) or #0080ff */ \
+    static constexpr T BLUE()    { return "#0000ff"; } /* blue   (100%  blue):              rgb(000, 000, 255) or #0000ff */ \
+    static constexpr T PURPLE()  { return "#8000ff"; } /* purple (100%  blue +  50%   red): rgb(128, 000, 255) or #8000ff */ \
+    static constexpr T MAGENTA() { return "#ff00ff"; } /* magenta(100%  blue + 100%   red): rgb(255, 000, 255) or #ff00ff */ \
+    static constexpr T ROSE()    { return "#ff0080"; } /* rose   (100%   red +  50%  blue): rgb(255, 000, 128) or #ff0080 */ \
     \
-    static const T LIGHT_RED;     /* light_red    (100%   red +  50% green +  50%  blue): rgb(255, 128, 128) or #ff8080 */ \
-    static const T LIGHT_YELLOW;  /* light_yellow (100%   red + 100% green +  50%  blue): rgb(255, 255, 128) or #ffff80 */ \
-    static const T LIGHT_GREEN;   /* light_green  ( 50%   red + 100% green +  50%  blue): rgb(128, 255, 128) or #80ff80 */ \
-    static const T LIGHT_CYAN;    /* light_cyan   ( 50%   red + 100% green + 100%  blue): rgb(128, 255, 255) or #80ffff */ \
-    static const T LIGHT_BLUE;    /* light_blue   ( 50%   red +  50% green + 100%  blue): rgb(128, 128, 255) or #8080ff */ \
-    static const T LIGHT_MAGENTA; /* light_magenta(100%   red +  50% green + 100%  blue): rgb(255, 128, 255) or #ff80ff */ \
-    static const T& SALMON;       /* same as light_red,     rgb(255, 128, 128) or #ff8080 */ \
-    static const T& LEMON;        /* same as light_yellow,  rgb(255, 255, 128) or #ffff80 */ \
-    static const T& MINT;         /* same as light_green,   rgb(128, 255, 128) or #80ff80 */ \
-    static const T& SKY;          /* same as light_cyan,    rgb(128, 255, 255) or #80ffff */ \
-    static const T& CORNFLOWER;   /* same as light_blue,    rgb(128, 128, 255) or #8080ff */ \
-    static const T& PINK;         /* same as light_magenta, rgb(255, 128, 255) or #ff80ff */ \
+    static constexpr T LIGHT_RED()     { return "#ff8080"; } /* light_red    (100%   red +  50% green +  50%  blue): rgb(255, 128, 128) or #ff8080 */ \
+    static constexpr T LIGHT_YELLOW()  { return "#ffff80"; } /* light_yellow (100%   red + 100% green +  50%  blue): rgb(255, 255, 128) or #ffff80 */ \
+    static constexpr T LIGHT_GREEN()   { return "#80ff80"; } /* light_green  ( 50%   red + 100% green +  50%  blue): rgb(128, 255, 128) or #80ff80 */ \
+    static constexpr T LIGHT_CYAN()    { return "#80ffff"; } /* light_cyan   ( 50%   red + 100% green + 100%  blue): rgb(128, 255, 255) or #80ffff */ \
+    static constexpr T LIGHT_BLUE()    { return "#8080ff"; } /* light_blue   ( 50%   red +  50% green + 100%  blue): rgb(128, 128, 255) or #8080ff */ \
+    static constexpr T LIGHT_MAGENTA() { return "#ff80ff"; } /* light_magenta(100%   red +  50% green + 100%  blue): rgb(255, 128, 255) or #ff80ff */ \
+    static constexpr T SALMON()     { return LIGHT_RED();     } /* same as light_red,     rgb(255, 128, 128) or #ff8080 */ \
+    static constexpr T LEMON()      { return LIGHT_YELLOW();  } /* same as light_yellow,  rgb(255, 255, 128) or #ffff80 */ \
+    static constexpr T MINT()       { return LIGHT_GREEN();   } /* same as light_green,   rgb(128, 255, 128) or #80ff80 */ \
+    static constexpr T SKY()        { return LIGHT_CYAN();    } /* same as light_cyan,    rgb(128, 255, 255) or #80ffff */ \
+    static constexpr T CORNFLOWER() { return LIGHT_BLUE();    } /* same as light_blue,    rgb(128, 128, 255) or #8080ff */ \
+    static constexpr T PINK()       { return LIGHT_MAGENTA(); } /* same as light_magenta, rgb(255, 128, 255) or #ff80ff */ \
     \
-    static const T DARK_RED;     /* dark_red   ( 50%   red):              rgb(128, 000, 000) or #800000 */ \
-    static const T DARK_YELLOW;  /* dark_yellow( 50%   red +  50% green): rgb(128, 128, 000) or #808000 */ \
-    static const T DARK_GREEN;   /* dark_green ( 50% green):              rgb(000, 128, 000) or #008000 */ \
-    static const T DARK_CYAN;    /* dark_cyan  ( 50% green +  50%  blue): rgb(000, 128, 128) or #008080 */ \
-    static const T DARK_BLUE;    /* dark_blue  ( 50%  blue):              rgb(000, 000, 128) or #000080 */ \
-    static const T DARK_MAGENTA; /* dark_purple( 50%  blue +  50%   red): rgb(128, 000, 128) or #800080 */ \
-    static const T& MAROON;      /* same as dark_red,    rgb(128, 000, 000) or #800000 */ \
-    static const T& OLIVE;       /* same as dark_yellow, rgb(128, 128, 000) or #808000 */ \
-    static const T& AVOCADO;     /* same as dark_green,  rgb(000, 128, 000) or #008000 */ \
-    static const T& TEAL;        /* same as dark_cyan,   rgb(000, 128, 128) or #008080 */ \
-    static const T& NAVY;        /* same as dark_blue,   rgb(000, 000, 128) or #000080 */ \
-    static const T& VIOLET;      /* same as dark_purple, rgb(128, 000, 128) or #800080 */ \
+    static constexpr T DARK_RED()     { return "#800000"; } /* dark_red   ( 50%   red):              rgb(128, 000, 000) or #800000 */ \
+    static constexpr T DARK_YELLOW()  { return "#808000"; } /* dark_yellow( 50%   red +  50% green): rgb(128, 128, 000) or #808000 */ \
+    static constexpr T DARK_GREEN()   { return "#008000"; } /* dark_green ( 50% green):              rgb(000, 128, 000) or #008000 */ \
+    static constexpr T DARK_CYAN()    { return "#008080"; } /* dark_cyan  ( 50% green +  50%  blue): rgb(000, 128, 128) or #008080 */ \
+    static constexpr T DARK_BLUE()    { return "#000080"; } /* dark_blue  ( 50%  blue):              rgb(000, 000, 128) or #000080 */ \
+    static constexpr T DARK_MAGENTA() { return "#800080"; } /* dark_purple( 50%  blue +  50%   red): rgb(128, 000, 128) or #800080 */ \
+    static constexpr T MAROON()  { return DARK_RED();     } /* same as dark_red,    rgb(128, 000, 000) or #800000 */ \
+    static constexpr T OLIVE()   { return DARK_YELLOW();  } /* same as dark_yellow, rgb(128, 128, 000) or #808000 */ \
+    static constexpr T AVOCADO() { return DARK_GREEN();   } /* same as dark_green,  rgb(000, 128, 000) or #008000 */ \
+    static constexpr T TEAL()    { return DARK_CYAN();    } /* same as dark_cyan,   rgb(000, 128, 128) or #008080 */ \
+    static constexpr T NAVY()    { return DARK_BLUE();    } /* same as dark_blue,   rgb(000, 000, 128) or #000080 */ \
+    static constexpr T VIOLET()  { return DARK_MAGENTA(); } /* same as dark_purple, rgb(128, 000, 128) or #800080 */ \
     \
-    static const T BETTER_RED;        /* more appealing red:     rgb(255, 048, 048) or #ff3030 */ \
-    static const T BETTER_ORANGE;     /* more appealing orange:  rgb(255, 128, 043) or #ff802b */ \
-    static const T BETTER_YELLOW;     /* more appealing yellow:  rgb(255, 192, 020) or #ffc014 */ \
-    static const T BETTER_LIME;       /* more appealing lime:    rgb(135, 247, 037) or #87f725 */ \
-    static const T BETTER_GREEN;      /* more appealing green:   rgb(012, 133, 001) or #0c8501 */ \
-    static const T BETTER_AQUA;       /* more appealing aqua:    rgb(040, 206, 247) or #28cef7 */ \
-    static const T BETTER_CYAN;       /* more appealing cyan:    rgb(023, 160, 179) or #17a0b3 */ \
-    static const T BETTER_BLUE;       /* more appealing blue:    rgb(016, 065, 227) or #1041e3 */ \
-    static const T BETTER_PURPLE;     /* more appealing purple:  rgb(120, 024, 237) or #7818ed */ \
-    static const T BETTER_MAGENTA;    /* more appealing magenta: rgb(203, 042, 235) or #cb2aeb */ \
-    static const T BETTER_PINK;       /* more appealing pink:    rgb(250, 087, 198) or #fa57c6 */ \
-    static const T BETTER_BROWN;      /* more appealing brown:   rgb(069, 032, 013) or #45200d */ \
-    static const T BETTER_BLACK;      /* more appealing black:   rgb(022, 025, 029) or #16191d */ \
-    static const T BETTER_DARK_GRAY;  /* more appealing gray:    rgb(076, 075, 093) or #4c4b5d */ \
-    static const T BETTER_GRAY;       /* more appealing gray:    rgb(116, 126, 134) or #747e86 */ \
-    static const T BETTER_LIGHT_GRAY; /* more appealing gray:    rgb(175, 186, 193) or #afbac1 */ \
-    static const T BETTER_WHITE;      /* more appealing white:   rgb(232, 247, 249) or #e8f7f9 */ \
+    static constexpr T BETTER_RED()        { return "#ff3030"; } /* more appealing red:     rgb(255, 048, 048) or #ff3030 */ \
+    static constexpr T BETTER_ORANGE()     { return "#ff802b"; } /* more appealing orange:  rgb(255, 128, 043) or #ff802b */ \
+    static constexpr T BETTER_YELLOW()     { return "#ffc014"; } /* more appealing yellow:  rgb(255, 192, 020) or #ffc014 */ \
+    static constexpr T BETTER_LIME()       { return "#87f725"; } /* more appealing lime:    rgb(135, 247, 037) or #87f725 */ \
+    static constexpr T BETTER_GREEN()      { return "#0c8501"; } /* more appealing green:   rgb(012, 133, 001) or #0c8501 */ \
+    static constexpr T BETTER_AQUA()       { return "#28cef7"; } /* more appealing aqua:    rgb(040, 206, 247) or #28cef7 */ \
+    static constexpr T BETTER_CYAN()       { return "#17a0b3"; } /* more appealing cyan:    rgb(023, 160, 179) or #17a0b3 */ \
+    static constexpr T BETTER_BLUE()       { return "#1041e3"; } /* more appealing blue:    rgb(016, 065, 227) or #1041e3 */ \
+    static constexpr T BETTER_PURPLE()     { return "#7818ed"; } /* more appealing purple:  rgb(120, 024, 237) or #7818ed */ \
+    static constexpr T BETTER_MAGENTA()    { return "#cb2aeb"; } /* more appealing magenta: rgb(203, 042, 235) or #cb2aeb */ \
+    static constexpr T BETTER_PINK()       { return "#fa57c6"; } /* more appealing pink:    rgb(250, 087, 198) or #fa57c6 */ \
+    static constexpr T BETTER_BROWN()      { return "#45200d"; } /* more appealing brown:   rgb(069, 032, 013) or #45200d */ \
+    static constexpr T BETTER_BLACK()      { return "#16191d"; } /* more appealing black:   rgb(022, 025, 029) or #16191d */ \
+    static constexpr T BETTER_DARK_GRAY()  { return "#4c4b5d"; } /* more appealing gray:    rgb(076, 075, 093) or #4c4b5d */ \
+    static constexpr T BETTER_GRAY()       { return "#747e86"; } /* more appealing gray:    rgb(116, 126, 134) or #747e86 */ \
+    static constexpr T BETTER_LIGHT_GRAY() { return "#afbac1"; } /* more appealing gray:    rgb(175, 186, 193) or #afbac1 */ \
+    static constexpr T BETTER_WHITE()      { return "#e8f7f9"; } /* more appealing white:   rgb(232, 247, 249) or #e8f7f9 */ \
     \
-    IF(HAS_A, static const T CLEAR;	/* complete transparency. RGBA is (0, 0, 0, 0). */) \
+    IF(HAS_A, static constexpr T CLEAR() { return "#00000000"; } /* complete transparency. RGBA is (0, 0, 0, 0). */) \
     
-    VEC3DEF(color3f, float, r, g, b,    0, 0,      OPENGL_API operator color3 () const; using with_alpha_t    = colorf;  COLOR_COMMON(color3f, 0));
-    VEC3DEF(color3,  uchar, r, g, b,    0, 1,      OPENGL_API operator color3f() const; using with_alpha_t    = color;   COLOR_COMMON(color3,  0));
-    VEC4DEF(colorf,  float, r, g, b, a, 0, 0, 1,   OPENGL_API operator color  () const; using without_alpha_t = color3f; COLOR_COMMON(colorf,  1));
-    VEC4DEF(color,   uchar, r, g, b, a, 0, 1, 255, OPENGL_API operator colorf () const; using without_alpha_t = color3;  COLOR_COMMON(color,   1));
+    VEC3DEF(color3f, float, r, g, b,    0, 0,      1, OPENGL_API operator color3 () const; using with_alpha_t    = colorf;  COLOR_COMMON(color3f, 0, 255.0f));
+    VEC3DEF(color3,  uchar, r, g, b,    0, 1,      1, OPENGL_API operator color3f() const; using with_alpha_t    = color;   COLOR_COMMON(color3,  0, 1));
+    VEC4DEF(colorf,  float, r, g, b, a, 0, 0, 1,   1, OPENGL_API operator color  () const; using without_alpha_t = color3f; COLOR_COMMON(colorf,  1, 255.0f));
+    VEC4DEF(color,   uchar, r, g, b, a, 0, 1, 255, 1, OPENGL_API operator colorf () const; using without_alpha_t = color3;  COLOR_COMMON(color,   1, 1));
 #pragma endregion // color
     
 #undef COLOR_COMMON
@@ -556,7 +559,7 @@ namespace Maths {
     VEC2_IMPL(vec2<T>,  towards,      1)(const vec2& other, float max_d) const { auto u = (other - *this).norm(); return *this +  u * max_d; }
     VEC2_IMPL(vec2<T>&, move_towards, 1)(const vec2& other, float max_d)       { auto u = (other - *this).norm();        *this += u * max_d; return *this; }
     
-    VEC2_IMPL(vec2<T>,  clamped, 1)() const { return clamp(ZERO, ONE, *this); }
+    VEC2_IMPL(vec2<T>,  clamped, 1)() const { return clamp(ZERO(), ONE(), *this); }
     VEC2_IMPL(vec2<T>,  max    , 0)(const vec2& a, const vec2& b) { return { std::max(a.x, b.x), std::max(a.y, b.y) }; }
     VEC2_IMPL(vec2<T>,  min    , 0)(const vec2& a, const vec2& b) { return { std::min(a.x, b.x), std::min(a.y, b.y) }; }
     VEC2_IMPL(vec2<T>,  clamp  , 0)(const vec2& rmin, const vec2& rmax, const vec2& x) { return min(rmax, max(rmin, x)); }
@@ -581,13 +584,6 @@ namespace Maths {
     VEC2_IMPL(vec2<T>&, reflect,      1)(const vec2& normal)       { reflect(normal.norm()); return *this; }
     VEC2_IMPL(vec2<T>,  reflected_uc, 1)(const vec2& normal) const { return *this - 2 * dot(normal) * normal; } /* this assumes normal is normalized */
     VEC2_IMPL(vec2<T>&, reflect_uc,   1)(const vec2& normal)       { *this = reflected_uc(normal); return *this; } /* this assumes normal is normalized */
-
-    VEC2_IMPL(const vec2<T>,           RIGHT, 0) = {  1,  0 };
-    VEC2_IMPL(const S_ONLY_U(vec2<T>), LEFT,  0) = { -1,  0 };
-    VEC2_IMPL(const vec2<T>,           UP,    0) = {  0,  1 };
-    VEC2_IMPL(const S_ONLY_U(vec2<T>), DOWN,  0) = {  0, -1 };
-    VEC2_IMPL(const vec2<T>,           ZERO,  0) = {  0,  0 };
-    VEC2_IMPL(const vec2<T>,           ONE,   0) = {  1,  1 };
     
 #define IMPL_VEC2_OP(OP) VEC2_IMPL(vec2<T>,  operator OP,    0)(const vec2& other) const { return { (T)(x OP other.x), (T)(y OP other.y) }; } /* NOLINT(bugprone-macro-parentheses) */ \
                          VEC2_IMPL(vec2<T>,  operator OP,    0)(T other)           const { return { (T)(x OP other),   (T)(y OP other)   }; } /* NOLINT(bugprone-macro-parentheses) */ \
@@ -645,7 +641,7 @@ namespace Maths {
     VEC3_IMPL(vec3<T>,  towards,      1)(const vec3& other, float max_d) const { auto u = (other - *this).norm(max_d); return *this + u; }
     VEC3_IMPL(vec3<T>&, move_towards, 1)(const vec3& other, float max_d)       { auto u = (other - *this).norm(max_d); *this += u; return *this; }
     
-    VEC3_IMPL(vec3<T>,  clamped, 1)() const { return clamp(ZERO, ONE, *this); }
+    VEC3_IMPL(vec3<T>,  clamped, 1)() const { return clamp(ZERO(), ONE(), *this); }
     VEC3_IMPL(vec3<T>,  max,     0)(const vec3& a, const vec3& b) { return { std::max(a.x, b.x), std::max(a.y, b.y), std::max(a.z, b.z) }; }
     VEC3_IMPL(vec3<T>,  min,     0)(const vec3& a, const vec3& b) { return { std::min(a.x, b.x), std::min(a.y, b.y), std::min(a.z, b.z) }; }
     VEC3_IMPL(vec3<T>,  clamp,   0)(const vec3& rmin, const vec3& rmax, const vec3& x) { return min(rmax, max(rmin, x)); }
@@ -673,15 +669,6 @@ namespace Maths {
     
     VEC3_IMPL(vec2<T>, xy,     0)()    const { return { x, y }; }
     VEC3_IMPL(vec4<T>, with_w, 0)(T w) const { return { x, y, z, w }; }
-    
-    VEC3_IMPL(const vec3<T>,           RIGHT, 0) = {  1,  0,  0 };
-    VEC3_IMPL(const S_ONLY_U(vec3<T>), LEFT,  0) = { -1,  0,  0 };
-    VEC3_IMPL(const vec3<T>,           UP,    0) = {  0,  1,  0 };
-    VEC3_IMPL(const S_ONLY_U(vec3<T>), DOWN,  0) = {  0, -1,  0 };
-    VEC3_IMPL(const vec3<T>,           FRONT, 0) = {  0,  0,  1 };
-    VEC3_IMPL(const S_ONLY_U(vec3<T>), BACK,  0) = {  0,  0, -1 };
-    VEC3_IMPL(const vec3<T>,           ZERO,  0) = {  0,  0,  0 };
-    VEC3_IMPL(const vec3<T>,           ONE,   0) = {  1,  1,  1 };
      
 #define IMPL_VEC3_OP(OP) VEC3_IMPL(vec3<T>,  operator OP,    0)(const vec3& other) const { return { (T)(x OP other.x), (T)(y OP other.y), (T)(z OP other.z) }; } /* NOLINT(bugprone-macro-parentheses) */ \
                          VEC3_IMPL(vec3<T>,  operator OP,    0)(T other)           const { return { (T)(x OP other),   (T)(y OP other),   (T)(z OP other)   }; } /* NOLINT(bugprone-macro-parentheses) */ \
@@ -745,7 +732,7 @@ namespace Maths {
     
     VEC4_IMPL(float,    angle, 1)(const vec4& other) const { return std::acos(dot(other) / (len() * other.len())); }
     
-    VEC4_IMPL(vec4<T>,  clamped, 1)() const { return clamp(ZERO, ONE, *this); }
+    VEC4_IMPL(vec4<T>,  clamped, 1)() const { return clamp(ZERO(), ONE(), *this); }
     VEC4_IMPL(vec4<T>,  max,     0)(const vec4& a, const vec4& b) { return { std::max(a.x, b.x), std::max(a.y, b.y), std::max(a.z, b.z), std::max(a.w, b.w) }; }
     VEC4_IMPL(vec4<T>,  min,     0)(const vec4& a, const vec4& b) { return { std::min(a.x, b.x), std::min(a.y, b.y), std::min(a.z, b.z), std::min(a.w, b.w) }; }
     VEC4_IMPL(vec4<T>,  clamp,   0)(const vec4& rmin, const vec4& rmax, const vec4& x) { return min(rmax, max(rmin, x)); }
@@ -755,17 +742,6 @@ namespace Maths {
     
     VEC4_IMPL(vec2<T>, xy,  0)() const { return { x, y }; }
     VEC4_IMPL(vec3<T>, xyz, 0)() const { return { x, y, z }; }
-
-    VEC4_IMPL(const vec4<T>,           RIGHT, 0) = {  1,  0,  0,  0 };
-    VEC4_IMPL(const S_ONLY_U(vec4<T>), LEFT,  0) = { -1,  0,  0,  0 };
-    VEC4_IMPL(const vec4<T>,           UP,    0) = {  0,  1,  0,  0 };
-    VEC4_IMPL(const S_ONLY_U(vec4<T>), DOWN,  0) = {  0, -1,  0,  0 };
-    VEC4_IMPL(const vec4<T>,           FRONT, 0) = {  0,  0,  1,  0 };
-    VEC4_IMPL(const S_ONLY_U(vec4<T>), BACK,  0) = {  0,  0, -1,  0 };
-    VEC4_IMPL(const vec4<T>,           IN,    0) = {  0,  0,  0,  1 };
-    VEC4_IMPL(const S_ONLY_U(vec4<T>), OUT,   0) = {  0,  0,  0, -1 };
-    VEC4_IMPL(const vec4<T>,           ZERO,  0) = {  0,  0,  0,  0 };
-    VEC4_IMPL(const vec4<T>,           ONE,   0) = {  1,  1,  1,  1 };
 
 #define IMPL_VEC4_OP(OP) VEC4_IMPL(vec4<T>,  operator OP,    0)(const vec4& other) const { return { (T)(x OP other.x), (T)(y OP other.y), (T)(z OP other.z), (T)(w OP other.w) }; } /* NOLINT(bugprone-macro-parentheses) */ \
                          VEC4_IMPL(vec4<T>,  operator OP,    0)(T other)           const { return { (T)(x OP other),   (T)(y OP other),   (T)(z OP other),   (T)(w OP other)   }; } /* NOLINT(bugprone-macro-parentheses) */ \
@@ -804,6 +780,48 @@ namespace Maths {
     
 #undef VEC4_IMPL
 #pragma endregion // vec4
+#pragma region Color Constructors
+    // 'a'-10 = W, '9'+1 = ':'
+    static constexpr uchar hexcode(char D0, char D1) {
+        return (uchar)((D0 - (D0 < ':' ? '0' : 'W')) << 4 | (D1 - (D1 < ':' ? '0' : 'W')));
+    }
+
+    constexpr color::color(const char (&hex)[10])
+        : r(hexcode(hex[1], hex[2])), g(hexcode(hex[3], hex[4])),
+          b(hexcode(hex[5], hex[6])), a(hexcode(hex[7], hex[8])) {
+        ASSERT(hex[0] == '#');
+    }
+
+    constexpr color::color(const char (&hex)[8])
+        : r(hexcode(hex[1], hex[2])), g(hexcode(hex[3], hex[4])),
+          b(hexcode(hex[5], hex[6])), a(255) {
+        ASSERT(hex[0] == '#');
+    }
+
+    constexpr colorf::colorf(const char (&hex)[10])
+        : r((float)hexcode(hex[1], hex[2]) / 255.0f), g((float)hexcode(hex[3], hex[4]) / 255.0f),
+          b((float)hexcode(hex[5], hex[6]) / 255.0f), a((float)hexcode(hex[7], hex[8]) / 255.0f) {
+        ASSERT(hex[0] == '#');
+    }
+
+    constexpr colorf::colorf(const char (&hex)[8])
+        : r((float)hexcode(hex[1], hex[2]) / 255.0f), g((float)hexcode(hex[3], hex[4]) / 255.0f),
+          b((float)hexcode(hex[5], hex[6]) / 255.0f), a(1) {
+        ASSERT(hex[0] == '#');
+    }
+
+    constexpr color3::color3(const char (&hex)[8])
+        : r(hexcode(hex[1], hex[2])), g(hexcode(hex[3], hex[4])),
+          b(hexcode(hex[5], hex[6])) {
+        ASSERT(hex[0] == '#');
+    }
+
+    constexpr color3f::color3f(const char (&hex)[8])
+        : r((float)hexcode(hex[1], hex[2]) / 255.0f), g((float)hexcode(hex[3], hex[4]) / 255.0f),
+          b((float)hexcode(hex[5], hex[6]) / 255.0f) {
+        ASSERT(hex[0] == '#');
+    }
+#pragma endregion // color constructors
 #pragma endregion // implementation
 
     template struct vec2<float>;

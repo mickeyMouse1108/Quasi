@@ -150,77 +150,77 @@ namespace Maths {
 #undef NOT1
 #undef NOT
     
-#define COLOR_CONSTANT(T, C) \
-    const T T::BLACK 	  = { 0   / C, 0   / C, 0   / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::DARK_GRAY  = { 64  / C, 64  / C, 64  / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::GRAY 	  = { 128 / C, 128 / C, 128 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::LIGHT_GRAY = { 192 / C, 192 / C, 192 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::WHITE 	  = { 255 / C, 255 / C, 255 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T& T::SILVER = T::LIGHT_GRAY; \
-    \
-    const T T::RED     = { 255 / C, 0   / C, 0   / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::ORANGE  = { 255 / C, 128 / C, 0   / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::YELLOW  = { 255 / C, 255 / C, 0   / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::LIME    = { 128 / C, 255 / C, 0   / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::GREEN   = { 0   / C, 255 / C, 0   / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::SEAFOAM = { 0   / C, 255 / C, 128 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::CYAN    = { 0   / C, 255 / C, 255 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::AZURE   = { 0   / C, 128 / C, 255 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::BLUE    = { 0   / C, 0   / C, 255 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::PURPLE  = { 128 / C, 0   / C, 255 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::MAGENTA = { 255 / C, 0   / C, 255 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::ROSE    = { 255 / C, 0   / C, 128 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    \
-    const T T::LIGHT_RED     = { 255 / C, 128 / C, 128 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::LIGHT_YELLOW  = { 255 / C, 255 / C, 128 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::LIGHT_GREEN   = { 128 / C, 255 / C, 128 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::LIGHT_CYAN    = { 128 / C, 255 / C, 255 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::LIGHT_BLUE    = { 128 / C, 128 / C, 255 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::LIGHT_MAGENTA = { 255 / C, 128 / C, 255 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T& T::SALMON     = T::LIGHT_RED;     \
-    const T& T::LEMON      = T::LIGHT_YELLOW;  \
-    const T& T::MINT       = T::LIGHT_GREEN;   \
-    const T& T::SKY        = T::LIGHT_CYAN;    \
-    const T& T::CORNFLOWER = T::LIGHT_BLUE;    \
-    const T& T::PINK       = T::LIGHT_MAGENTA; \
-    \
-    const T T::DARK_RED     = { 128 / C, 0   / C, 0   / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::DARK_YELLOW  = { 128 / C, 128 / C, 0   / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::DARK_GREEN   = { 0   / C, 128 / C, 0   / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::DARK_CYAN    = { 0   / C, 128 / C, 128 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::DARK_BLUE    = { 0   / C, 0   / C, 128 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::DARK_MAGENTA = { 128 / C, 0   / C, 128 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T& T::MAROON  = DARK_RED;     \
-    const T& T::OLIVE   = DARK_YELLOW;  \
-    const T& T::AVOCADO = DARK_GREEN;   \
-    const T& T::TEAL    = DARK_CYAN;    \
-    const T& T::NAVY    = DARK_BLUE;    \
-    const T& T::VIOLET  = DARK_MAGENTA; \
-    \
-    const T T::BETTER_RED        = { 255 / C, 48  / C, 48  / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::BETTER_ORANGE     = { 255 / C, 128 / C, 043 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::BETTER_YELLOW     = { 255 / C, 192 / C, 020 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::BETTER_LIME       = { 135 / C, 247 / C, 037 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::BETTER_GREEN      = { 12  / C, 133 / C, 1   / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::BETTER_AQUA       = { 40  / C, 206 / C, 247 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::BETTER_CYAN       = { 23  / C, 160 / C, 179 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::BETTER_BLUE       = { 16  / C, 65  / C, 227 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::BETTER_PURPLE     = { 120 / C, 24  / C, 237 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::BETTER_MAGENTA    = { 203 / C, 42  / C, 235 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::BETTER_PINK       = { 250 / C, 87  / C, 198 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::BETTER_BROWN      = { 69  / C, 32  / C, 13  / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::BETTER_BLACK      = { 22  / C, 25  / C, 29  / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::BETTER_DARK_GRAY  = { 76  / C, 75  / C, 93  / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::BETTER_GRAY       = { 116 / C, 126 / C, 134 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::BETTER_LIGHT_GRAY = { 175 / C, 186 / C, 193 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
-    const T T::BETTER_WHITE      = { 232 / C, 247 / C, 249 / C }  /* NOLINT(bugprone-macro-parentheses) */ \
-
-    COLOR_CONSTANT(color, 1);
-    COLOR_CONSTANT(color3, 1);
-    COLOR_CONSTANT(colorf, 255.0f);
-    COLOR_CONSTANT(color3f, 255.0f);
-
-    const colorf colorf::CLEAR = { 0, 0, 0, 1   };
-    const color  color ::CLEAR = { 0, 0, 0, 255 };
-#undef COLOR_CONSTANT
+// #define COLOR_CONSTANT(T, C) \
+//     const T T::BLACK 	  = { 0   / C, 0   / C, 0   / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::DARK_GRAY  = { 64  / C, 64  / C, 64  / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::GRAY 	  = { 128 / C, 128 / C, 128 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::LIGHT_GRAY = { 192 / C, 192 / C, 192 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::WHITE 	  = { 255 / C, 255 / C, 255 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T& T::SILVER = T::LIGHT_GRAY; \
+//     \
+//     const T T::RED     = { 255 / C, 0   / C, 0   / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::ORANGE  = { 255 / C, 128 / C, 0   / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::YELLOW  = { 255 / C, 255 / C, 0   / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::LIME    = { 128 / C, 255 / C, 0   / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::GREEN   = { 0   / C, 255 / C, 0   / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::SEAFOAM = { 0   / C, 255 / C, 128 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::CYAN    = { 0   / C, 255 / C, 255 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::AZURE   = { 0   / C, 128 / C, 255 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::BLUE    = { 0   / C, 0   / C, 255 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::PURPLE  = { 128 / C, 0   / C, 255 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::MAGENTA = { 255 / C, 0   / C, 255 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::ROSE    = { 255 / C, 0   / C, 128 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     \
+//     const T T::LIGHT_RED     = { 255 / C, 128 / C, 128 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::LIGHT_YELLOW  = { 255 / C, 255 / C, 128 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::LIGHT_GREEN   = { 128 / C, 255 / C, 128 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::LIGHT_CYAN    = { 128 / C, 255 / C, 255 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::LIGHT_BLUE    = { 128 / C, 128 / C, 255 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::LIGHT_MAGENTA = { 255 / C, 128 / C, 255 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T& T::SALMON     = T::LIGHT_RED;     \
+//     const T& T::LEMON      = T::LIGHT_YELLOW;  \
+//     const T& T::MINT       = T::LIGHT_GREEN;   \
+//     const T& T::SKY        = T::LIGHT_CYAN;    \
+//     const T& T::CORNFLOWER = T::LIGHT_BLUE;    \
+//     const T& T::PINK       = T::LIGHT_MAGENTA; \
+//     \
+//     const T T::DARK_RED     = { 128 / C, 0   / C, 0   / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::DARK_YELLOW  = { 128 / C, 128 / C, 0   / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::DARK_GREEN   = { 0   / C, 128 / C, 0   / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::DARK_CYAN    = { 0   / C, 128 / C, 128 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::DARK_BLUE    = { 0   / C, 0   / C, 128 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::DARK_MAGENTA = { 128 / C, 0   / C, 128 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T& T::MAROON  = DARK_RED;     \
+//     const T& T::OLIVE   = DARK_YELLOW;  \
+//     const T& T::AVOCADO = DARK_GREEN;   \
+//     const T& T::TEAL    = DARK_CYAN;    \
+//     const T& T::NAVY    = DARK_BLUE;    \
+//     const T& T::VIOLET  = DARK_MAGENTA; \
+//     \
+//     const T T::BETTER_RED        = { 255 / C, 48  / C, 48  / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::BETTER_ORANGE     = { 255 / C, 128 / C, 043 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::BETTER_YELLOW     = { 255 / C, 192 / C, 020 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::BETTER_LIME       = { 135 / C, 247 / C, 037 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::BETTER_GREEN      = { 12  / C, 133 / C, 1   / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::BETTER_AQUA       = { 40  / C, 206 / C, 247 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::BETTER_CYAN       = { 23  / C, 160 / C, 179 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::BETTER_BLUE       = { 16  / C, 65  / C, 227 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::BETTER_PURPLE     = { 120 / C, 24  / C, 237 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::BETTER_MAGENTA    = { 203 / C, 42  / C, 235 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::BETTER_PINK       = { 250 / C, 87  / C, 198 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::BETTER_BROWN      = { 69  / C, 32  / C, 13  / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::BETTER_BLACK      = { 22  / C, 25  / C, 29  / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::BETTER_DARK_GRAY  = { 76  / C, 75  / C, 93  / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::BETTER_GRAY       = { 116 / C, 126 / C, 134 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::BETTER_LIGHT_GRAY = { 175 / C, 186 / C, 193 / C }; /* NOLINT(bugprone-macro-parentheses) */ \
+//     const T T::BETTER_WHITE      = { 232 / C, 247 / C, 249 / C }  /* NOLINT(bugprone-macro-parentheses) */ \
+//
+//     COLOR_CONSTANT(color, 1);
+//     COLOR_CONSTANT(color3, 1);
+//     COLOR_CONSTANT(colorf, 255.0f);
+//     COLOR_CONSTANT(color3f, 255.0f);
+//
+//     const colorf colorf::CLEAR = { 0, 0, 0, 1   };
+//     const color  color ::CLEAR = { 0, 0, 0, 255 };
+// #undef COLOR_CONSTANT
 }

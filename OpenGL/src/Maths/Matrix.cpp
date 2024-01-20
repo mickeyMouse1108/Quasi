@@ -15,11 +15,11 @@ namespace Maths {
     }
 
     void mat4x4::translate(const fvec3& translation) {
-        w += fvec4(translation, 0);
+        w += translation.with_w(0);
     }
 
     mat4x4 mat4x4::translate_mat(const fvec3& translation, const mat4x4& mat) {
-        return { mat.x, mat.y, mat.z, mat.w + fvec4(translation, 0) };
+        return { mat.x, mat.y, mat.z, mat.w + translation.with_w(0) };
     }
 
     void mat4x4::scale(const fvec3& scale) {
@@ -106,7 +106,7 @@ namespace Maths {
     }
 
     mat4x4 mat4x4::transform(const fvec3& translate, const fvec3& scale, const fvec3& rotate) {
-        return translate_mat(translate) * rotate_mat(rotate) * scale_mat(scale);
+        return translate_mat(translate) * rotate_identity(rotate) * scale_mat(scale);
     }
 
     // * warning! LOTS OF MACROS AHEAD!
@@ -171,7 +171,7 @@ namespace Maths {
 #undef EXPAND
 
     mat4x4 mat4x4::unit_axis(Direction3D xd, Direction3D yd, Direction3D zd) {
-        return { fvec4 { xd, 0 }, fvec4 { yd, 0 }, fvec4 { zd, 0 } };
+        return { fvec3(xd).with_w(0), fvec3(yd).with_w(0), fvec3(zd).with_w(0),};
     }
 
 #define VECADD(U) x.U * v.x + y.U * v.y + z.U * v.z + w.U /* NOLINT(bugprone-macro-parentheses) */
@@ -188,7 +188,7 @@ namespace Maths {
 #undef VECADD
     
     mat4x4 mat4x4::operator*(const mat4x4& m) const {
-        return { m * x, m * y, m * z, m * w };
+        return { *this * m.x, *this * m.y, *this * m.z, *this * m.w };
     }
 
     mat4x4 mat4x4::operator*(float s) const {

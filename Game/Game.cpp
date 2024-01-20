@@ -2,6 +2,8 @@
 #include "test/TestingFramework.h"
 #include "Mesh.h"
 #include "imgui.h"
+#include "Keyboard.h"
+#include "Mouse.h"
 
 int main() {
     Graphics::GraphicsDevice GraphicsDevice = Graphics::GraphicsDevice::Initialize();
@@ -19,26 +21,55 @@ int main() {
     //     GraphicsDevice.EndRender();
     // }
     // testm.OnDestroy(GraphicsDevice);
-    Maths::fvec3 trans = { 0, 0, -2 }, scale = 1, rot;
-    Graphics::Mesh<VertexColor3D> cube = Graphics::MeshUtils::CubeMesh(0, 1, 1, 1);
-    stdu::ref render = GraphicsDevice.CreateNewRender<VertexColor3D>(); 
-    render->BindMeshes(&cube, 1);
+    using namespace Maths;
+    using namespace IO;
+    fvec3 trans = { 0, 0, -2 }, scale = 1, rot;
+    float speed = 0.01f, sensitivity = 0.01f;
+    bool isLocked = true;
+
+    Mouse.Lock();
     
-    render->SetProjection(Maths::mat3D::perspective_fov(90.0f, 4.0f / 3, 0.1f, 100));
-    render->UseShaderFromFile("basic_tex.glsl");
+    Graphics::Mesh<VertexColor3D> cube = Graphics::MeshUtils::CubeMesh(0, 1, 1, 1);
+    Graphics::RenderObject render = GraphicsDevice.CreateNewRender<VertexColor3D>(); 
+    render.BindMeshes(&cube, 1);
+    
+    render.SetProjection(mat3D::perspective_fov(90.0f, 4.0f / 3, 0.1f, 100));
+    render.UseShaderFromFile("basic_tex.glsl");
     // GraphicsDevice->RegisterMeshes();
     // * Loop until the user closes the window */
     while (GraphicsDevice.WindowIsOpen()) {
         GraphicsDevice.BeginRender();
+
+        mat3D rotation = mat3D::rotate_identity({ 0, rot.y, 0 });
+        if (Keyboard.KeyPressed(Key::W))      trans += rotation * fvec3::FRONT() * -speed;
+        if (Keyboard.KeyPressed(Key::S))      trans += rotation * fvec3::BACK()  * -speed;
+        if (Keyboard.KeyPressed(Key::D))      trans += rotation * fvec3::LEFT()  *  speed;
+        if (Keyboard.KeyPressed(Key::A))      trans += rotation * fvec3::RIGHT() *  speed;
+        if (Keyboard.KeyPressed(Key::SPACE))  trans += fvec3::UP()    * -speed;
+        if (Keyboard.KeyPressed(Key::LSHIFT)) trans += fvec3::DOWN()  * -speed;
+
+        if(Keyboard.KeyOnPress(Key::ESCAPE)) {
+            isLocked ^= true;
+            if (isLocked)
+                Mouse.Lock();
+            else
+                Mouse.Show();
+        }
+
+        if (isLocked) {
+            rot = Mouse.GetMousePosPx().perpend() * -sensitivity;
+        }
     
-        render->ResetData<VertexColor3D>();
-        render->Render();
+        render.ResetData();
+        render.Render();
     
-        Maths::mat3D mat = Maths::mat3D::transform(trans, scale, rot);
-        render->SetCamera(mat.inv());
-        ImGui::SliderFloat3("Rot", &rot.x,   -3.14f, 3.14f);
-        ImGui::SliderFloat3("Sca", &scale.x,  0,     3    );
-        ImGui::SliderFloat3("Tra", &trans.x, -10,    10   );
+        mat3D mat = mat3D::transform(trans, scale, rot);
+        render.SetCamera(mat.inv());
+        ImGui::SliderFloat3("Rot", rot.begin(),   -3.14f, 3.14f);
+        ImGui::SliderFloat3("Sca", scale.begin(),  0,     3    );
+        ImGui::SliderFloat3("Tra", trans.begin(), -10,    10   );
+        ImGui::SliderFloat("Speed", &speed, 0, 1);
+        ImGui::SliderFloat("Sensitivity", &sensitivity, 0, 1);
     
         GraphicsDevice.DebugMenu();
     

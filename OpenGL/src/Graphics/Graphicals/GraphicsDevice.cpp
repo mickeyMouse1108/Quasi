@@ -49,7 +49,7 @@ namespace Graphics {
 
         SetRenderWireframe(useWireRender);
 
-        IO::Mouse.Update();
+        IO::Update();
     }
 
     void GraphicsDevice::EndRender() {

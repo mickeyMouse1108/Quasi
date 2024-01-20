@@ -6,7 +6,7 @@
 namespace Test {
     class TestBatchedColored : public Test {
     private:
-        stdu::ref<Graphics::RenderData> render;
+        Graphics::RenderObject<VertexColor3D> render;
         Graphics::Mesh<VertexColor3D> mesh;
 
         Maths::mat3D projection = Maths::mat3D::ortho_projection(-320.0f, 320.0f, -240.0f, 240.0f, -1.0f, 1.0f);

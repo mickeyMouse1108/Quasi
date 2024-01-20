@@ -6,8 +6,8 @@ namespace Test {
     void TestTexturedSquare::OnInit(Graphics::GraphicsDevice& gdevice) {
         render = gdevice.CreateNewRender<VertexColorTexture3D>(4, 2);
 
-        render->UseShader(Graphics::Shader::StdTextured);
-        render->SetProjection(projection);
+        render.UseShader(Graphics::Shader::StdTextured);
+        render.SetProjection(projection);
 
 #pragma region Texture Define
         // see testbatchedtextured.cpp
@@ -78,10 +78,10 @@ namespace Test {
         texture.Bind(0);
 
         VertexColorTexture3D vertices[] = { 
-            { { -50.0f, -50.0f }, 1, { 0.0f, 0.0f }, 0 },
-            { { +50.0f, -50.0f }, 1, { 1.0f, 0.0f }, 0 },
-            { { +50.0f, +50.0f }, 1, { 1.0f, 1.0f }, 0 },
-            { { -50.0f, +50.0f }, 1, { 0.0f, 1.0f }, 0 },
+            { { -50.0f, -50.0f, 0 }, 1, { 0.0f, 0.0f }, 0 },
+            { { +50.0f, -50.0f, 0 }, 1, { 1.0f, 0.0f }, 0 },
+            { { +50.0f, +50.0f, 0 }, 1, { 1.0f, 1.0f }, 0 },
+            { { -50.0f, +50.0f, 0 }, 1, { 0.0f, 1.0f }, 0 },
         };
 
         Graphics::TriIndices indices[6] = {
@@ -94,7 +94,7 @@ namespace Test {
             std::vector(indices, indices + 2)
         );
 
-        render->BindMeshes(&mesh, 1);
+        render.BindMeshes(&mesh, 1);
     }
 
     void TestTexturedSquare::OnRender(Graphics::GraphicsDevice& gdevice) {
@@ -102,24 +102,24 @@ namespace Test {
         Maths::mat3D mat = Maths::mat3D::transform(modelTranslation,
                                                    modelScale,
                                                    modelRotation);
-        render->SetCamera(mat);
+        render.SetCamera(mat);
         mesh.ApplyMaterial(&VertexColorTexture3D::Color, color);
         //LOG(mat);
-        render->ResetData<VertexColorTexture3D>();
-        render->Render();
+        render.ResetData();
+        render.Render();
     }
 
     void TestTexturedSquare::OnImGuiRender(Graphics::GraphicsDevice& gdevice) {
         Test::OnImGuiRender(gdevice);
 
-        ImGui::ColorEdit4("Texture Color", &color.r);
-        ImGui::DragFloat3("Translation", &modelTranslation.x);
-        ImGui::DragFloat3("Scale",       &modelScale.x, 0.1f);
-        ImGui::DragFloat3("Rotation",    &modelRotation.x, 0.03f);
+        ImGui::ColorEdit4("Texture Color", color.begin());
+        ImGui::DragFloat3("Translation", modelTranslation.begin());
+        ImGui::DragFloat3("Scale",       modelScale.begin(), 0.1f);
+        ImGui::DragFloat3("Rotation",    modelRotation.begin(), 0.03f);
     }
 
     void TestTexturedSquare::OnDestroy(Graphics::GraphicsDevice& gdevice) {
         Test::OnDestroy(gdevice);
-        render->Destroy();
+        render.Destroy();
     }
 }

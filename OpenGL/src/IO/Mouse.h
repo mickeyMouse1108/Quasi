@@ -12,7 +12,7 @@ namespace Graphics {
 
 namespace IO {
     struct MouseT;
-    extern MouseT Mouse;
+    OPENGL_API extern MouseT Mouse;
     
     // TODO: USE INTERFERE INSTEAD OF POLLING WITH GLFWMOSUECALLBACK
     struct MouseT {
@@ -30,6 +30,10 @@ namespace IO {
         explicit MouseT(std::nullptr_t) {}
 
         OPENGL_API void Update();
+
+        OPENGL_API void Lock();
+        OPENGL_API void Hide();
+        OPENGL_API void Show(); // will also unlock the cursor
 
         OPENGL_API Maths::dvec2 GetMousePosPx();
         OPENGL_API Maths::dvec2 GetMousePos();

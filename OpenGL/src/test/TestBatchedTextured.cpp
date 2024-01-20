@@ -59,15 +59,15 @@ namespace Test {
         gdevice.BindTexture(textures[1], 1);
 
         VertexColorTexture3D vertices[] = {
-            { { -240.0f, -80.0f }, 1, { 0.0f, 0.0f }, 0 },
-            { { -80.00f, -80.0f }, 1, { 1.0f, 0.0f }, 0 },
-            { { -80.00f, +80.0f }, 1, { 1.0f, 1.0f }, 0 },
-            { { -240.0f, +80.0f }, 1, { 0.0f, 1.0f }, 0 },
+            { { -240.0f, -80.0f, 0 }, 1, { 0.0f, 0.0f }, 0 },
+            { { -80.00f, -80.0f, 0 }, 1, { 1.0f, 0.0f }, 0 },
+            { { -80.00f, +80.0f, 0 }, 1, { 1.0f, 1.0f }, 0 },
+            { { -240.0f, +80.0f, 0 }, 1, { 0.0f, 1.0f }, 0 },
 
-            { { +80.00f, -80.0f }, 1, { 0.0f, 0.0f }, 1 },
-            { { +240.0f, -80.0f }, 1, { 1.0f, 0.0f }, 1 },
-            { { +240.0f, +80.0f }, 1, { 1.0f, 1.0f }, 1 },
-            { { +80.00f, +80.0f }, 1, { 0.0f, 1.0f }, 1 },
+            { { +80.00f, -80.0f, 0 }, 1, { 0.0f, 0.0f }, 1 },
+            { { +240.0f, -80.0f, 0 }, 1, { 1.0f, 0.0f }, 1 },
+            { { +240.0f, +80.0f, 0 }, 1, { 1.0f, 1.0f }, 1 },
+            { { +80.00f, +80.0f, 0 }, 1, { 0.0f, 1.0f }, 1 },
         };
 
         Graphics::TriIndices indices[] = {
@@ -80,10 +80,10 @@ namespace Test {
             std::vector(indices, indices + 4)
         );
 
-        render->BindMeshes(&mesh, 1);
-        render->SetProjection(projection);
+        render.BindMeshes(&mesh, 1);
+        render.SetProjection(projection);
 
-        render->UseShader(Graphics::Shader::StdTextured);
+        render.UseShader(Graphics::Shader::StdTextured);
     }
 
     void TestBatchedTextured::OnRender(Graphics::GraphicsDevice& gdevice) {
@@ -92,22 +92,22 @@ namespace Test {
         Maths::mat3D mat = Maths::mat3D::transform(modelTranslation,
                                                          modelScale,
                                                          modelRotation);
-        render->SetCamera(mat);
+        render.SetCamera(mat);
 
-        render->ResetData<VertexColorTexture3D>();
-        render->Render();
+        render.ResetData();
+        render.Render();
     }
 
     void TestBatchedTextured::OnImGuiRender(Graphics::GraphicsDevice& gdevice) {
         Test::OnImGuiRender(gdevice);
         
-        ImGui::DragFloat3("Translation", &modelTranslation.x);
-        ImGui::DragFloat3("Scale",       &modelScale.x, 0.1f);
-        ImGui::DragFloat3("Rotation",    &modelRotation.x, 0.03f);
+        ImGui::DragFloat3("Translation", modelTranslation.begin());
+        ImGui::DragFloat3("Scale",       modelScale.begin(), 0.1f);
+        ImGui::DragFloat3("Rotation",    modelRotation.begin(), 0.03f);
     }
 
     void TestBatchedTextured::OnDestroy(Graphics::GraphicsDevice& gdevice) {
         Test::OnDestroy(gdevice);
-        render->Destroy();
+        render.Destroy();
     }
 }

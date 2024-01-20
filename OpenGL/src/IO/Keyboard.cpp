@@ -132,10 +132,10 @@
 */
 
 namespace IO {
-    KeyboardT Keyboard { nullptr };
+    OPENGL_API KeyboardT Keyboard { nullptr };
     
-    auto* KeyboardT::inputWindow() { return graphicsDevice->GetWindow(); }
-    const auto* KeyboardT::inputWindow() const { return graphicsDevice->GetWindow(); }
+    GLFWwindow* KeyboardT::inputWindow() { return graphicsDevice->GetWindow(); }
+    const GLFWwindow* KeyboardT::inputWindow() const { return graphicsDevice->GetWindow(); }
     
     KeyboardT::KeyboardT(Graphics::GraphicsDevice& gd) : graphicsDevice(gd) {
         glfwSetKeyCallback(inputWindow(),
@@ -145,14 +145,16 @@ namespace IO {
 
     void KeyboardT::Update() {
         prevKeySet = currKeySet;
+        for (KeyIndex ki : unadded) setKeyStatusOf(currKeySet, ki & 127, ki & 128);
+        unadded.clear();
     }
 
-    bool KeyboardT::getKeyStatusOf(const Keyset& ks, KeyIndex ki)           { return ks[ki / 64ULL] & 1ULL << (ki & 63); }
+    bool KeyboardT::getKeyStatusOf(const Keyset& ks, KeyIndex ki)     { return ks[ki / 64ULL] & 1ULL << (ki & 63); }
     void KeyboardT::setKeyStatusOf(Keyset& ks, KeyIndex ki, bool val) { ks[ki / 64ULL] = (ks[ki / 64ULL] & ~(1ULL << (ki & 63))) | (uint64)val << (ki & 63); }
 
     void KeyboardT::OnGlfwKeyCallback(GLFWwindow* window, int key, int positionCode, int action, int modifierBits) {
         const bool isPress = action != GLFW_RELEASE;
-        setKeyStatusOf(currKeySet, ToKeyIndex((Key)key), isPress);
+        unadded.push_back((uchar)((isPress << 7) | ToKeyIndex((Key)key)));
     }
 
     bool KeyboardT::KeyPressed(Key key)   const { return getCurrKeyStatus(key); }
@@ -163,9 +165,9 @@ namespace IO {
     
     std::vector<Key> KeyboardT::KeysPressed() const {
         std::vector<Key> keys = {};
-        int chunki = 0;
+        uchar chunki = 0;
         for (const auto chunk64 : currKeySet) {
-            for (int i = 0; i < 64; ++i) {
+            for (uchar i = 0; i < 64; ++i) {
                 if (chunk64 & 1ULL << i) keys.push_back(FromKeyIndex(i + chunki * 64));
             }
             ++chunki;
@@ -174,7 +176,7 @@ namespace IO {
     }
 
     bool KeyboardT::IsValidKey(Key key) {
-        return ToKeyIndex(key) != -1;
+        return ToKeyIndex(key) != 255;
         // idk man prob not the best but whatev
     }
 
@@ -211,7 +213,7 @@ namespace IO {
         // non us
         RANGE_MATCH(NON_US_1, NON_US_2);
         
-        return -1;
+        return 255;
     }
 #undef RANGE_MATCH
 

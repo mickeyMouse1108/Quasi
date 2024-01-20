@@ -2,7 +2,7 @@
 #include <vector>
 #include <algorithm>
 
-#include "RenderData.h"
+#include "RenderObject.h"
 #include "VertexElement.h"
 #include "TriIndices.h"
 
@@ -30,11 +30,11 @@ namespace Graphics {
 
         ~Mesh() { Unbind(); }
 
-        OPENGL_API static void Clone(Mesh& dest, const Mesh& from);
+        static void Clone(Mesh& dest, const Mesh& from);
         Mesh(const Mesh& mesh) { Clone(*this, mesh); }
         Mesh& operator=(const Mesh& mesh) { Clone(*this, mesh); return *this; } // NOLINT(bugprone-unhandled-self-assignment) idk why it thinks this is bad
 
-        OPENGL_API static void Transfer(Mesh& dest, Mesh&& from);
+        static void Transfer(Mesh& dest, Mesh&& from);
         Mesh(Mesh&& mesh) noexcept { Transfer(*this, std::move(mesh)); }
         Mesh& operator=(Mesh&& mesh) noexcept { Transfer(*this, std::move(mesh)); return *this; }
 
@@ -53,6 +53,7 @@ namespace Graphics {
         [[nodiscard]] bool IsBound() const { return render; }
 
         void Bind(RenderData& render);
+        void Bind(RenderObject<T>& render);
         void Unbind();
 
         std::vector<Vertex>& GetVertices() { return vertices; }
@@ -118,6 +119,11 @@ namespace Graphics {
         deviceIndex = render.GetMeshes().size();
         render.GetMeshes().push_back(this);
         this->render = &render;
+    }
+
+    template <class T>
+    void Mesh<T>::Bind(RenderObject<T>& render) { 
+        Bind(render.GetRenderData());
     }
 
     template <class T>

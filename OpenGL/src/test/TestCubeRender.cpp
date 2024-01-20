@@ -32,9 +32,9 @@ namespace Test {
                 }
             );
 
-        render->BindMeshes(&cube, 1);
+        render.BindMeshes(&cube, 1);
 
-        render->UseShader(
+        render.UseShader(
             "#shader vertex\n"
             "#version 330 core\n"
             "layout(location = 0) in vec4 position;\n"
@@ -59,7 +59,7 @@ namespace Test {
             "    color.a = v_alpha;\n"
             "}"
         );
-        render->SetProjection(projection);
+        render.SetProjection(projection);
     }
 
     void TestCubeRender::OnRender(Graphics::GraphicsDevice& gdevice) {
@@ -69,25 +69,25 @@ namespace Test {
         
         // std::sort(faceOrder, faceOrder + 6,
         // [&](unsigned int face1, unsigned int face2){ return (mat * faceAxis[face1]).z < (mat * faceAxis[face2]).z; });
-        render->SetCamera(mat);
-        render->GetShader().Bind();
-        render->GetShader().SetUniform1F("u_alpha", alpha);
+        render.SetCamera(mat);
+        render.GetShader().Bind();
+        render.GetShader().SetUniform1F("u_alpha", alpha);
 
-        render->ResetData<VertexColor3D>();
-        render->Render();
+        render.ResetData();
+        render.Render();
     }
 
     void TestCubeRender::OnImGuiRender(Graphics::GraphicsDevice& gdevice) {
         Test::OnImGuiRender(gdevice);
 
-        ImGui::DragFloat3("Translation" , &modelTranslation.x, 0.01f);
-        ImGui::DragFloat3("Scale"       , &modelScale.x,       0.01f);
-        ImGui::DragFloat3("Rotation"    , &modelRotation.x,    0.01f);
-        ImGui::DragFloat ("Transparency", &alpha,              0.01f);
+        ImGui::DragFloat3("Translation" , modelTranslation.begin(), 0.01f);
+        ImGui::DragFloat3("Scale"       , modelScale.begin(),       0.01f);
+        ImGui::DragFloat3("Rotation"    , modelRotation.begin(),    0.01f);
+        ImGui::DragFloat ("Transparency", &alpha,                   0.01f);
     }
 
     void TestCubeRender::OnDestroy(Graphics::GraphicsDevice& gdevice) {
         Test::OnDestroy(gdevice);
-        render->Destroy();
+        render.Destroy();
     }
 }

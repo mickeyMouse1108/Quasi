@@ -45,12 +45,6 @@ namespace Maths {
 
     template <class V>
     concept vec_t = is_vec_t<V>::value;
-    
-    template <class TBase, class TVec>
-    concept vec_lt_t = vec_t<TVec> && vec_t<TBase> && TVec::dimension < TBase::dimension;
-
-    template <class TBase, class TVec>
-    concept vec_gt_t = vec_t<TVec> && vec_t<TBase> && TVec::dimension > TBase::dimension;
 
     using fvec2 = vec2<float>;
     using fvec3 = vec3<float>;
@@ -167,6 +161,11 @@ namespace Maths {
         typename vecn<S.N, SCALAR>::type get() { return swizzle_impl<SCALAR, 2, params, S>((SCALAR*)this); } \
         ) \
         \
+        SCALAR* begin() { return &_X; } \
+        const SCALAR* begin() const { return &_X; } \
+        SCALAR* end() { return begin() + 2; } \
+        const SCALAR* end() const { return begin() + 2; } \
+        \
         std::string str() const { return std::format("("#_X": {}, "#_Y": {})", _X, _Y); } \
         \
         __VA_ARGS__ /* extra declarations */ \
@@ -212,6 +211,11 @@ namespace Maths {
         template <swizzle<3, params> S> \
         IF(CEXPR, constexpr) typename vecn<S.N, SCALAR>::type get() { return swizzle_impl<SCALAR, 3, params, S>((SCALAR*)this); } \
         ) \
+        \
+        SCALAR* begin() { return &_X; } \
+        const SCALAR* begin() const { return &_X; } \
+        SCALAR* end() { return begin() + 3; } \
+        const SCALAR* end() const { return begin() + 3; } \
         \
         std::string str() const { return std::format("("#_X": {}, "#_Y": {}, "#_Z": {})", _X, _Y, _Z); } \
         \
@@ -260,6 +264,11 @@ namespace Maths {
         IF(CEXPR, constexpr) typename vecn<S.N, SCALAR>::type get() { return swizzle_impl<SCALAR, 4, params, S>((SCALAR*)this); } \
         ) \
         \
+        SCALAR* begin() { return &_X; } \
+        const SCALAR* begin() const { return &_X; } \
+        SCALAR* end() { return begin() + 4; } \
+        const SCALAR* end() const { return begin() + 4; } \
+        \
         std::string str() const { return std::format("("#_X": {}, "#_Y": {}, "#_Z": {}, "#_W": {})", _X, _Y, _Z, _W); } \
         \
         __VA_ARGS__ /* extra declarations */ \
@@ -297,14 +306,13 @@ namespace Maths {
 #pragma region Vec2
     template <class T>
     VEC2DEF(vec2, T, x, y, 1, 1, 1, \
-        vec2(const vec3<T>& xy); \
-        vec2(const vec4<T>& xy); \
         vec2(Direction2D dir, T scale = 1); \
         vec2(Corner2D dir,    T scale = 1); \
         \
-        template <vec_t V>          operator V() const { return { (SCALAR_T(V))x, (SCALAR_T(V))y }; } \
-        template <vec_lt_t<vec2> V> operator V() const { return V { *this }; } \
-        template <vec_gt_t<vec2> V> operator V() const { return V { x, y }; } \
+        template <vec_t V> requires (V::dimension == dimension) \
+        operator V() const { return { (SCALAR_T(V))x, (SCALAR_T(V))y }; } \
+        template <class U> operator vec3<U>() const { return { (U)x, (U)y, 0 }; } \
+        template <class U> operator vec4<U>() const { return { (U)x, (U)y, 0, 0 }; } \
         template <class U> vec2<U> as() { return vec2<U>(*this); } \
         \
         static constexpr vec2           RIGHT() { return {  1,  0 }; } /* constexpr vars dont work with templates */ \
@@ -334,19 +342,20 @@ namespace Maths {
         F_ONLY(vec2&) reflect(const vec2& normal); \
         F_ONLY(vec2 ) reflected_uc(const vec2& normal) const; \
         F_ONLY(vec2&) reflect_uc(const vec2& normal); \
+        \
+        vec3<T> with_z(T z) const; \
     );
 #pragma endregion // vec2
 #pragma region Vec3
     template <class T>
     VEC3DEF(vec3, T, x, y, z, 1, 1, 1,
-        vec3(const vec2<T>& xy, T z); \
-        vec3(const vec4<T>& xyz); \
         vec3(Direction3D dir, T scale = 1); \
         vec3(Corner3D dir,    T scale = 1); \
         \
-        template <vec_t V>          operator V() const { return { (SCALAR_T(V))x, (SCALAR_T(V))y, (SCALAR_T(V))z }; } \
-        template <vec_lt_t<vec3> V> operator V() const { return V { *this }; } \
-        template <vec_gt_t<vec3> V> operator V() const { return V { x, y, z }; } \
+        template <vec_t V> requires (V::dimension == dimension) \
+        operator V() const { return { (SCALAR_T(V))x, (SCALAR_T(V))y, (SCALAR_T(V))z }; } \
+        template <class U> operator vec2<U>() const { return { (U)x, (U)y }; } \
+        template <class U> operator vec4<U>() const { return { (U)x, (U)y, (U)z, 0 }; } \
         template <class U> vec3<U> as() { return vec3<U>(*this); } \
         \
         static constexpr vec3           RIGHT() { return {  1,  0,  0 }; }
@@ -387,15 +396,13 @@ namespace Maths {
 #pragma region Vec4
     template <class T>
     VEC4DEF(vec4, T, x, y, z, w, 1, 1, 1, 1,
-        vec4(const vec2<T>& xy, T z, T w = 1); \
-        vec4(const vec2<T>& xy, const vec2<T>& zw = { 0, 1 }); \
-        vec4(const vec3<T>& xyz, T w = 1); \
         vec4(Direction4D dir, T scale = 1); \
         vec4(Corner4D    cor, T scale = 1); \
         \
-        template <vec_t V>          operator V() const { return { (SCALAR_T(V))x, (SCALAR_T(V))y, (SCALAR_T(V))z, (SCALAR_T(V))w }; } \
-        template <vec_lt_t<vec4> V> operator V() const { return V { *this }; } \
-        template <vec_gt_t<vec4> V> operator V() const { return V { x, y, z, w }; } \
+        template <vec_t V> requires (V::dimension == dimension) \
+        operator V() const { return { (SCALAR_T(V))x, (SCALAR_T(V))y, (SCALAR_T(V))z, (SCALAR_T(V))w }; } \
+        template <class U> operator vec2<U>() const { return { (U)x, (U)y }; } \
+        template <class U> operator vec3<U>() const { return { (U)x, (U)y, (U)z }; } \
         template <class U> vec4<U> as() { return vec4<U>(*this); } \
         \
         static constexpr vec4           RIGHT() { return {  1,  0,  0,  0 }; }
@@ -540,9 +547,6 @@ namespace Maths {
 #define GENERIC_T template <class T>
 #define VEC2_IMPL(R, N, FF) GENERIC_T IF(FF,F_ONLY(R)) IF(NOT(FF), R) vec2<T>::N
 #pragma region Vec2
-    VEC2_IMPL(, vec2, 0)(const vec3<T>& xy) : x(xy.x), y(xy.y) {}
-    VEC2_IMPL(, vec2, 0)(const vec4<T>& xy) : x(xy.x), y(xy.y) {}
-
     VEC2_IMPL(float,    len,      0)() const { return std::sqrtf((float)lensq()); }
     VEC2_IMPL(T,        lensq,    0)() const { return x*x + y*y; }
     VEC2_IMPL(float,    dist,     0)(const vec2& to) const { return (*this - to).len(); }
@@ -584,7 +588,9 @@ namespace Maths {
     VEC2_IMPL(vec2<T>&, reflect,      1)(const vec2& normal)       { reflect(normal.norm()); return *this; }
     VEC2_IMPL(vec2<T>,  reflected_uc, 1)(const vec2& normal) const { return *this - 2 * dot(normal) * normal; } /* this assumes normal is normalized */
     VEC2_IMPL(vec2<T>&, reflect_uc,   1)(const vec2& normal)       { *this = reflected_uc(normal); return *this; } /* this assumes normal is normalized */
-    
+
+    VEC2_IMPL(vec3<T>, with_z, 0)(T z) const { return { x, y, z }; }
+
 #define IMPL_VEC2_OP(OP) VEC2_IMPL(vec2<T>,  operator OP,    0)(const vec2& other) const { return { (T)(x OP other.x), (T)(y OP other.y) }; } /* NOLINT(bugprone-macro-parentheses) */ \
                          VEC2_IMPL(vec2<T>,  operator OP,    0)(T other)           const { return { (T)(x OP other),   (T)(y OP other)   }; } /* NOLINT(bugprone-macro-parentheses) */ \
                          VEC2_IMPL(vec2<T>&, operator OP##=, 0)(const vec2& other) { (T)(x OP##= other.x); (T)(y OP##= other.y); return *this; } \
@@ -622,9 +628,6 @@ namespace Maths {
 #pragma endregion // vec2
 #pragma region Vec3
 #define VEC3_IMPL(R, N, FF) GENERIC_T IF(FF, F_ONLY(R)) IF(NOT(FF), R) vec3<T>::N
-    VEC3_IMPL(, vec3, 0)(const vec2<T>& xy, T z) : x(xy.x), y(xy.y), z(z) {}
-    VEC3_IMPL(, vec3, 0)(const vec4<T>& xyz) : x(xyz.x), y(xyz.y), z(xyz.z) {}
-    
     VEC3_IMPL(float,    len,      0)() const { return std::sqrtf((float)lensq()); }
     VEC3_IMPL(T,        lensq,    0)() const { return x*x + y*y + z*z; }
     VEC3_IMPL(float,    dist,     0)(const vec3& to) const { return (*this - to).len(); }
@@ -708,10 +711,6 @@ namespace Maths {
 #pragma endregion // vec3
 #pragma region Vec4
 #define VEC4_IMPL(R, N, FF) GENERIC_T IF(FF, F_ONLY(R)) IF(NOT(FF), R) vec4<T>::N
-    VEC4_IMPL(, vec4, 0)(const vec2<T>& xy, T z, T w) : x(xy.x), y(xy.y), z(z), w(w) {}
-    VEC4_IMPL(, vec4, 0)(const vec2<T>& xy, const vec2<T>& zw) : x(xy.x), y(xy.y), z(zw.x), w(zw.y) {}
-    VEC4_IMPL(, vec4, 0)(const vec3<T>& xyz, T w) : x(xyz.x), y(xyz.y), z(xyz.z), w(w) {}
-    
     VEC4_IMPL(float,    len,      0)() const { return std::sqrtf((float)lensq()); }
     VEC4_IMPL(T,        lensq,    0)() const { return x*x + y*y + z*z + w*w; }
     VEC4_IMPL(float,    dist,     0)(const vec4& to) const { return (*this - to).len(); }

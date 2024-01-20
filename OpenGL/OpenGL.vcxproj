@@ -224,6 +224,7 @@
     <ClInclude Include="src\Graphics\GLs\VertexElement.h" />
     <ClInclude Include="src\Graphics\Graphicals\GraphicsDevice.h" />
     <ClInclude Include="src\Graphics\Graphicals\Mesh.h" />
+    <ClInclude Include="src\Graphics\Graphicals\RenderObject.h" />
     <ClInclude Include="src\Graphics\Graphicals\TriIndices.h" />
     <ClInclude Include="src\Graphics\Primitives\Quad.h" />
     <ClInclude Include="src\Graphics\Primitives\Tri.h" />

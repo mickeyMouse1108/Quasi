@@ -8,6 +8,8 @@
 #include "stdu/enum_utils.h"
 #include "stdu/ref.h"
 
+struct GLFWwindow;
+
 namespace IO {
     #define KEY_IMPL_GLFW(K, NAME_PRE, GLFW_PRE) NAME_PRE##K = GLFW_KEY_##GLFW_PRE##K
     // DO NOT CHANGE ORDER!
@@ -93,10 +95,11 @@ namespace IO {
     //     OTHER     = 64, // other
     // };
 
-    using KeyIndex = int;
+    using KeyIndex = uchar;
 
     struct KeyboardT;
-    extern KeyboardT Keyboard;
+    OPENGL_API extern KeyboardT Keyboard;
+
 
     struct KeyboardT {
         OPENGL_API explicit KeyboardT(Graphics::GraphicsDevice& gd);
@@ -131,9 +134,10 @@ namespace IO {
         using Keyset = std::array<uint64, KEYSET_SIZE>;
         Keyset currKeySet = {};
         Keyset prevKeySet = {};
+        std::vector<KeyIndex> unadded = {};
 
-        OPENGL_API auto* inputWindow();
-        OPENGL_API [[nodiscard]] const auto* inputWindow() const;
+        OPENGL_API GLFWwindow* inputWindow();
+        OPENGL_API [[nodiscard]] const GLFWwindow* inputWindow() const;
 
         [[nodiscard]] bool getCurrKeyStatus(KeyIndex i) const { return getKeyStatusOf(currKeySet, i); }
         [[nodiscard]] bool getPrevKeyStatus(KeyIndex i) const { return getKeyStatusOf(prevKeySet, i); }

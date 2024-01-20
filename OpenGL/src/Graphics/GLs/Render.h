@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "IndexBuffer.h"
 #include "Shader.h"
-#include "RenderData.h"
+#include "RenderObject.h"
 
 namespace Graphics::Render {
     OPENGL_API void Clear();

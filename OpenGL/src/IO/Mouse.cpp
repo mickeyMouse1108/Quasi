@@ -3,7 +3,7 @@
 #include "Mouse.h"
 
 namespace IO {
-    MouseT Mouse { nullptr };
+    OPENGL_API MouseT Mouse { nullptr };
     
     GLFWwindow* MouseT::inputWindow() { return graphicsDevice->GetWindow(); }
     const GLFWwindow* MouseT::inputWindow() const { return graphicsDevice->GetWindow(); }
@@ -16,6 +16,18 @@ namespace IO {
         for (int i = 0; i <= LAST_MOUSE; ++i) {
             mouseStates |= glfwGetMouseButton(inputWindow(), i) << i;
         }
+    }
+
+    void MouseT::Lock() {
+        glfwSetInputMode(inputWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
+
+    void MouseT::Hide() {
+        glfwSetInputMode(inputWindow(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+    }
+
+    void MouseT::Show() {
+        glfwSetInputMode(inputWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 
     Maths::dvec2 MouseT::GetMousePosPx() {

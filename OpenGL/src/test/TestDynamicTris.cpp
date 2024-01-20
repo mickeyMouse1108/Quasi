@@ -16,17 +16,17 @@ namespace Test {
     };
 
     Maths::mat3D TestDynamicTris::ModelMatrix() {
-        return Maths::mat3D::transform({ modelTranslation, 0.0f }, { modelScale, 1.0f }, { 0.0f, 0.0f, modelRotation });
+        return Maths::mat3D::transform(modelTranslation, modelScale.with_z(1), { 0.0f, 0.0f, modelRotation });
     }
 
     void TestDynamicTris::OnInit(Graphics::GraphicsDevice& gdevice) {
         render = gdevice.CreateNewRender<VertexColor3D>(3 * 8, 8);
 
-        render->UseShader(Graphics::Shader::StdColored);
-        render->SetProjection(projection);
+        render.UseShader(Graphics::Shader::StdColored);
+        render.SetProjection(projection);
         
         tris.push_back(NewTri());
-        tris.back().Bind(*render);
+        tris.back().Bind(render);
     }
 
     void TestDynamicTris::OnRender(Graphics::GraphicsDevice& gdevice) {
@@ -34,15 +34,15 @@ namespace Test {
 
         tris.back().SetTransform(ModelMatrix());
         
-        render->ResetData<VertexColor3D>();
-        render->Render();
+        render.ResetData();
+        render.Render();
     }
 
     void TestDynamicTris::OnImGuiRender(Graphics::GraphicsDevice& gdevice) {
         Test::OnImGuiRender(gdevice);
 
-        ImGui::DragFloat2("Current Tri Translation", &modelTranslation.x);
-        ImGui::DragFloat2("Current Tri Scale      ", &modelScale.x, 0.10f);
+        ImGui::DragFloat2("Current Tri Translation", modelTranslation.begin());
+        ImGui::DragFloat2("Current Tri Scale      ", modelScale.begin(), 0.10f);
         ImGui::DragFloat ("Current Tri Rotation   ", &modelRotation, 0.05f);
 
         uint triCount = tris.size();
@@ -50,7 +50,7 @@ namespace Test {
         if (ImGui::Button("Add Tri") && !isMax) {
             if (triCount >= MAX_TRIS) { isMax = true; } else {
                 tris.push_back(NewTri());
-                tris.back().Bind(*render);
+                tris.back().Bind(render);
                 // Graphics::Mesh(vc3, { { 0, 1, 2 } });
                 modelTranslation = 0;
                 modelScale = 1;
@@ -79,7 +79,7 @@ namespace Test {
 
     void TestDynamicTris::OnDestroy(Graphics::GraphicsDevice& gdevice) {
         Test::OnDestroy(gdevice);
-        render->Destroy();
+        render.Destroy();
     }
 
     Graphics::Mesh<VertexColor3D> TestDynamicTris::NewTri() {

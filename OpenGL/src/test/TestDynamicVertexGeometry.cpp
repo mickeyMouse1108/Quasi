@@ -6,8 +6,8 @@ namespace Test {
     void TestDynamicVertexGeometry::OnInit(Graphics::GraphicsDevice& gdevice) {
         render = gdevice.CreateNewRender<VertexColor3D>(8, 4);
 
-        render->UseShader(Graphics::Shader::StdColored);
-        render->SetProjection(projection);
+        render.UseShader(Graphics::Shader::StdColored);
+        render.SetProjection(projection);
 
         using namespace Maths;
         VertexColor3D vertices[] = {
@@ -32,33 +32,33 @@ namespace Test {
             std::vector(indices, indices + 4)
         );
 
-        render->BindMeshes(&mesh, 1);
+        render.BindMeshes(&mesh, 1);
     }
 
     void TestDynamicVertexGeometry::OnRender(Graphics::GraphicsDevice& gdevice) {
         Test::OnRender(gdevice);
 
-        render->ResetData<VertexColor3D>();
-        render->Render();
+        render.ResetData();
+        render.Render();
     }
 
     void TestDynamicVertexGeometry::OnImGuiRender(Graphics::GraphicsDevice& gdevice) {
         Test::OnImGuiRender(gdevice);
  
         VertexColor3D* vertices = mesh.GetVertices().data();
-        ImGui::DragFloat3("Red    Vertex [0]", &vertices[0].Position.x);
-        ImGui::DragFloat3("Green  Vertex [1]", &vertices[1].Position.x);
-        ImGui::DragFloat3("Blue   Vertex [2]", &vertices[2].Position.x);
-        ImGui::DragFloat3("Gray   Vertex [3]", &vertices[3].Position.x);
+        ImGui::DragFloat3("Red    Vertex [0]", vertices[0].Position.begin());
+        ImGui::DragFloat3("Green  Vertex [1]", vertices[1].Position.begin());
+        ImGui::DragFloat3("Blue   Vertex [2]", vertices[2].Position.begin());
+        ImGui::DragFloat3("Gray   Vertex [3]", vertices[3].Position.begin());
 
-        ImGui::DragFloat3("Purple Vertex [4]", &vertices[4].Position.x);
-        ImGui::DragFloat3("Yellow Vertex [5]", &vertices[5].Position.x);
-        ImGui::DragFloat3("Cyan   Vertex [6]", &vertices[6].Position.x);
-        ImGui::DragFloat3("White  Vertex [7]", &vertices[7].Position.x);
+        ImGui::DragFloat3("Purple Vertex [4]", vertices[4].Position.begin());
+        ImGui::DragFloat3("Yellow Vertex [5]", vertices[5].Position.begin());
+        ImGui::DragFloat3("Cyan   Vertex [6]", vertices[6].Position.begin());
+        ImGui::DragFloat3("White  Vertex [7]", vertices[7].Position.begin());
     }
 
     void TestDynamicVertexGeometry::OnDestroy(Graphics::GraphicsDevice& gdevice) {
         Test::OnDestroy(gdevice);
-        render->Destroy();
+        render.Destroy();
     }
 }

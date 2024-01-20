@@ -7,6 +7,9 @@
 #include "VertexElement.h"
 
 namespace Graphics {
+    template <class>
+	class RenderObject;
+    
 	class RenderData {
 		VertexArray varray;
 		DynamicVertexBuffer vbo;
@@ -52,10 +55,10 @@ namespace Graphics {
 		void ClearVert(bool shallowClear = true) { vbo.ClearData(shallowClear); }
 		[[nodiscard]] uint GetVertLength() const { return vbo.GetLength(); }
 	    
-		template <class T> void SetInd(const T* data, uint count) { ibo.SetData(data, count); }
-		template <class T> void SetInd(const T& arr)              { ibo.SetData(arr); }
-		template <class T> void AddInd(const T* data, uint count) { ibo.AddData(data, count); }
-		template <class T> void AddInd(const T& arr)              { ibo.AddData(arr); }
+		void SetInd(const uint* data, uint count)    { ibo.SetData(data, count); }
+		template <class T> void SetInd(const T& arr) { ibo.SetData(arr); }
+		void AddInd(const uint* data, uint count)    { ibo.AddData(data, count); }
+		template <class T> void AddInd(const T& arr) { ibo.AddData(arr); }
 		void ClearInd(bool shallowClear = true) { ibo.ClearData(shallowClear); }
 		[[nodiscard]] uint GetIndLength() const { return ibo.GetLength(); }
 
@@ -93,6 +96,7 @@ namespace Graphics {
 	    void UseShaderFromFile(const std::string& file) { shader = Shader::FromFile(file); }
 	    OPENGL_API void EnableShader();
 	    OPENGL_API void DisableShader();
+
 	};
 
 	template <class T>

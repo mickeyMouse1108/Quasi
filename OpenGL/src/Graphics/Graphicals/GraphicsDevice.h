@@ -8,7 +8,6 @@
 #include "stdu/ref.h"
 
 namespace Graphics {
-    // TODO: make this changeable
     class GraphicsDevice {
         static constexpr unsigned int MAX_VERTEX_COUNT = 1000;
         static constexpr unsigned int MAX_INDEX_COUNT = 1000;
@@ -31,7 +30,7 @@ namespace Graphics {
         OPENGL_API void BeginRender();
         OPENGL_API void EndRender();
 
-        template <class T> stdu::ref<RenderData> CreateNewRender(uint vsize = MAX_VERTEX_COUNT, uint isize = MAX_INDEX_COUNT);
+        template <class T> RenderObject<T> CreateNewRender(uint vsize = MAX_VERTEX_COUNT, uint isize = MAX_INDEX_COUNT);
         OPENGL_API void BindRender(RenderData& render);
         OPENGL_API void DeleteRender(uint index);
         OPENGL_API void DeleteAllRenders();
@@ -64,7 +63,7 @@ namespace Graphics {
     };
 
     template <class T>
-    stdu::ref<RenderData> GraphicsDevice::CreateNewRender(uint vsize, uint isize) {
+    RenderObject<T> GraphicsDevice::CreateNewRender(uint vsize, uint isize) {
         renders.push_back(RenderData::Create<T>(vsize, isize));
         BindRender(renders.back());
         return renders.back();

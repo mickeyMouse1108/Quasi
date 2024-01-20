@@ -6,7 +6,7 @@
 namespace Test {
     class TestBatchedTextured : public Test {
     private:
-        stdu::ref<Graphics::RenderData> render;
+        Graphics::RenderObject<VertexColorTexture3D> render;
         Graphics::Mesh<VertexColorTexture3D> mesh;
         Graphics::Texture textures[2];
 

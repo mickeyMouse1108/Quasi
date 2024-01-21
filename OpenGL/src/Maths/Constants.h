@@ -60,6 +60,10 @@ namespace Maths {
     CONSTANT int64  MAX_64  = NUM_LIMITS(int64,  max);
     CONSTANT int64  MIN_64  = NUM_LIMITS(int64,  lowest);
     CONSTANT uint64 MAX_U64 = NUM_LIMITS(uint64, max);
+
+    inline float operator ""_deg(quadf deg) {
+        return (float)(deg * 180.0 / PI128);
+    }
 #undef MATH_CONSTANT
 #undef CONSTANT
 #undef NUM_LIMITS

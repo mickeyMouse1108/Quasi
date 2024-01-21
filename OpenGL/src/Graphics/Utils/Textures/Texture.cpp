@@ -3,27 +3,26 @@
 #include "../vendor/stb_image/stb_image.h"
 
 namespace Graphics {
-    Texture::Texture(const uchar* datpng, int len, bool useLinear)
-        : rendererID(0) {
+    Texture::Texture(const uchar* raw, int w, int h, bool useLinear, int format)
+        : rendererID(0), width(w), height(h) {
         //flips texture
-        stbi_set_flip_vertically_on_load(1);
-        uchar* localTexture = stbi_load_from_memory(datpng, len, &width, &height, &BPPixel, 4);
-        LoadTexture(localTexture, useLinear);
+        LoadTexture(raw, useLinear, format);
     }
 
     Texture::Texture(const std::string& filePath, bool useLinear)
         : rendererID(0) {
         //flips texture
         stbi_set_flip_vertically_on_load(1);
-        uchar* localTexture = stbi_load(filePath.c_str(), &width, &height, &BPPixel, 4);
+        const uchar* localTexture = stbi_load(filePath.c_str(), &width, &height, &BPPixel, 4);
         LoadTexture(localTexture, useLinear);
+        if (localTexture) stbi_image_free((void*)localTexture);
     }
 
     Texture::~Texture() {
         GLCALL(glDeleteTextures(1, &rendererID));
     }
 
-    void Texture::LoadTexture(const uchar* img, bool useLinear) {
+    void Texture::LoadTexture(const uchar* img, bool useLinear, int format) {
         GLCALL(glGenTextures(1, &rendererID));
         GLCALL(glBindTexture(GL_TEXTURE_2D, rendererID));
 
@@ -32,10 +31,8 @@ namespace Graphics {
         GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
         GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
 
-        GLCALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, img));
+        GLCALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, format, GL_UNSIGNED_BYTE, img));
         GLCALL(glBindTexture(GL_TEXTURE_2D, 0));
-
-        if (img) stbi_image_free((void*)img);
     }
 
     void Texture::Transfer(Texture& dest, Texture&& from) {
@@ -47,12 +44,23 @@ namespace Graphics {
         dest.BPPixel = from.BPPixel;
     }
 
+    Texture Texture::LoadPNGBytes(const uchar* png, int len, bool useLinear) {
+        Texture tex;
+        
+        stbi_set_flip_vertically_on_load(1);
+        const uchar* localTexture = stbi_load_from_memory(png, len, &tex.width, &tex.height, &tex.BPPixel, 4);
+        tex.LoadTexture(localTexture, useLinear);
+        if (localTexture) stbi_image_free((void*)localTexture);
+        
+        return tex;
+    }
+
     void Texture::Bind(uint slot/*default = 0*/) const {
         GLCALL(glActiveTexture(GL_TEXTURE0 + slot));
         GLCALL(glBindTexture(GL_TEXTURE_2D, rendererID));
     }
 
     void Texture::Unbind() const {
-        GLCALL(glBindTexture(GL_TEXTURE_2D, rendererID));
+        GLCALL(glBindTexture(GL_TEXTURE_2D, 0));
     }
 }

@@ -5,6 +5,7 @@
 
 #include <GLFW/glfw3.h>
 
+#include "Graphics/Utils/Fonts/FontDevice.h"
 #include "stdu/ref.h"
 
 namespace Graphics {
@@ -18,6 +19,8 @@ namespace Graphics {
         Maths::ivec2 windowSize;
         GLFWwindow* mainWindow;
         bool useWireRender = false;
+        
+        FontDevice fontDevice = {};
 
         inline static stdu::ref<GraphicsDevice> Instance = nullptr;
     public:
@@ -48,6 +51,9 @@ namespace Graphics {
         [[nodiscard]] Maths::ivec2 GetWindowSize() const { return windowSize; }
         GLFWwindow* GetWindow() { return mainWindow; }
         [[nodiscard]] const GLFWwindow* GetWindow() const { return mainWindow; }
+
+        FontDevice& GetFontDevice() { return fontDevice; }
+        [[nodiscard]] const FontDevice& GetFontDevice() const { return fontDevice; }
 
         static void SetRenderWireframe(bool usewire) { Render::SetRenderWireframe(usewire); }
 

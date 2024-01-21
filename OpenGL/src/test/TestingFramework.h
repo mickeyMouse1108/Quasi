@@ -10,6 +10,7 @@
 #include "TestDynamicQuadGeometry.h"
 #include "TestDynamicTris.h"
 #include "TestCubeRender.h"
+#include "TestFontRender.h"
 
 namespace Test {
     class TestManager : public Test {
@@ -36,6 +37,7 @@ namespace Test {
             menu->RegisterTest<TestDynamicQuadGeometry>  ("Dynamic Quad Geometry Test  ");
             menu->RegisterTest<TestDynamicTris>          ("Dynamic Tris Test           ");
             menu->RegisterTest<TestCubeRender>           ("Cube 3D Rendering Test      ");
+            menu->RegisterTest<TestFontRender>           ("Font Rendering Test         ");
         }
     }
 

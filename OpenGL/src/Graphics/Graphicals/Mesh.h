@@ -50,6 +50,8 @@ namespace Graphics {
         template <class U> Mesh& ApplyMaterial(U Vertex::* prop, U base);
         template <class U> Mesh& ApplyMaterial(std::ptrdiff_t prop, U base);
 
+        template <class U, class F> Mesh<U> Convert(F f);
+
         [[nodiscard]] bool IsBound() const { return render; }
 
         void Bind(RenderData& render);
@@ -158,6 +160,13 @@ namespace Graphics {
             *((U*)beg) = base;
         }
         return *this;
+    }
+
+    template <class T> template <class U, class F> Mesh<U> Mesh<T>::Convert(F f) {
+        std::vector<U> newVerts {};
+        newVerts.resize(vertices.size());
+        std::transform(vertices.begin(), vertices.end(), newVerts.begin(), f);
+        return Mesh<U>(newVerts, indices);
     }
 
     namespace MeshUtils {

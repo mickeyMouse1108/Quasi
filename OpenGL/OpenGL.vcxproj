@@ -92,7 +92,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;OPENGL_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>src;src\Graphics\GLs;src\Graphics\Graphicals;src\Graphics\Primitives;src\Maths;src\Graphics\Utils\Textures;src\IO;src\vendor\imgui;src\vendor;src\test;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;src\Graphics\GLs;src\Graphics\Graphicals;src\Graphics\Primitives;src\Maths;src\Graphics\Utils\Textures;src\IO;src\vendor\imgui;src\vendor\freetype;src\vendor;src\test;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ShowIncludes>false</ShowIncludes>
@@ -103,7 +103,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\GLFW\lib-vc2022\$(Platform);$(SolutionDir)Dependencies\GLEW\lib\Release\$(Platform)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32s.lib;glfw3.lib;Opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32s.lib;glfw3.lib;Opengl32.lib;$(ProjectDir)src\vendor\freetype\freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y /d "$(SolutionDir)bin\$(Platform)\$(Configuration)\*.dll" "$(SolutionDir)out\$(Configuration)\$(Platform)\out"</Command>
@@ -117,7 +117,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;OPENGL_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>src;src\Graphics\GLs;src\Graphics\Graphicals;src\Graphics\Primitives;src\Maths;src\Graphics\Utils\Textures;src\IO;src\vendor\imgui;src\vendor;src\test;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;src\Graphics\GLs;src\Graphics\Graphicals;src\Graphics\Primitives;src\Maths;src\Graphics\Utils\Textures;src\IO;src\vendor\imgui;src\vendor\freetype;src\vendor;src\test;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -135,7 +135,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;OPENGL_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>src;src\Graphics\GLs;src\Graphics\Graphicals;src\Graphics\Primitives;src\Maths;src\Graphics\Utils\Textures;src\IO;src\vendor\imgui;src\vendor;src\test;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;src\Graphics\GLs;src\Graphics\Graphicals;src\Graphics\Primitives;src\Maths;src\Graphics\Utils\Textures;src\IO;src\vendor\imgui;src\vendor\freetype;src\vendor;src\test;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -153,7 +153,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;OPENGL_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>src;src\Graphics\GLs;src\Graphics\Graphicals;src\Graphics\Primitives;src\Maths;src\Graphics\Utils\Textures;src\IO;src\vendor\imgui;src\vendor;src\test;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;src\Graphics\GLs;src\Graphics\Graphicals;src\Graphics\Primitives;src\Maths;src\Graphics\Utils\Textures;src\IO;src\vendor\imgui;src\vendor\freetype;src\vendor;src\test;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -180,6 +180,8 @@
     <ClCompile Include="src\Graphics\Graphicals\Mesh.cpp" />
     <ClCompile Include="src\Graphics\Primitives\Quad.cpp" />
     <ClCompile Include="src\Graphics\Primitives\Tri.cpp" />
+    <ClCompile Include="src\Graphics\Utils\Fonts\Font.cpp" />
+    <ClCompile Include="src\Graphics\Utils\Fonts\FontDevice.cpp" />
     <ClCompile Include="src\Graphics\Utils\Textures\Texture.cpp" />
     <ClCompile Include="src\Graphics\Utils\Textures\TextureAtlas.cpp" />
     <ClCompile Include="src\IO\IO.cpp" />
@@ -193,6 +195,7 @@
     <ClCompile Include="src\test\TestDynamicQuadGeometry.cpp" />
     <ClCompile Include="src\test\TestDynamicTris.cpp" />
     <ClCompile Include="src\test\TestDynamicVertexGeometry.cpp" />
+    <ClCompile Include="src\test\TestFontRender.cpp" />
     <ClCompile Include="src\test\TestMenu.cpp" />
     <ClCompile Include="src\test\TestTexturedSquare.cpp" />
     <ClCompile Include="src\vendor\imgui\imgui.cpp" />
@@ -228,6 +231,8 @@
     <ClInclude Include="src\Graphics\Graphicals\TriIndices.h" />
     <ClInclude Include="src\Graphics\Primitives\Quad.h" />
     <ClInclude Include="src\Graphics\Primitives\Tri.h" />
+    <ClInclude Include="src\Graphics\Utils\Fonts\Font.h" />
+    <ClInclude Include="src\Graphics\Utils\Fonts\FontDevice.h" />
     <ClInclude Include="src\Graphics\Utils\Textures\Texture.h" />
     <ClInclude Include="src\Graphics\Utils\Textures\TextureAtlas.h" />
     <ClInclude Include="src\IO\IO.h" />
@@ -251,10 +256,103 @@
     <ClInclude Include="src\test\TestDynamicQuadGeometry.h" />
     <ClInclude Include="src\test\TestDynamicTris.h" />
     <ClInclude Include="src\test\TestDynamicVertexGeometry.h" />
+    <ClInclude Include="src\test\TestFontRender.h" />
     <ClInclude Include="src\test\TestingFramework.h" />
     <ClInclude Include="src\test\TestTexturedSquare.h" />
     <ClInclude Include="src\stdu\sorted_vector.h" />
     <ClInclude Include="src\stdu\func.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\config\ftconfig.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\config\ftheader.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\config\ftmodule.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\config\ftoption.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\config\ftstdlib.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\freetype.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftadvanc.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftbbox.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftbdf.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftbitmap.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftbzip2.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftcache.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftchapters.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftcid.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftcolor.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftdriver.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\fterrdef.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\fterrors.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftfntfmt.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftgasp.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftglyph.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftgxval.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftgzip.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftimage.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftincrem.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftlcdfil.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftlist.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftlzw.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftmac.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftmm.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftmodapi.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftmoderr.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftotval.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftoutln.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftparams.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftpfr.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftrender.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftsizes.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftsnames.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftstroke.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftsynth.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftsystem.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\fttrigon.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\fttypes.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ftwinfnt.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\autohint.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\cffotypes.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\cfftypes.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\ftcalc.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\ftdebug.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\ftdrv.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\ftgloadr.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\fthash.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\ftmemory.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\ftobjs.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\ftpsprop.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\ftrfork.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\ftserv.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\ftstream.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\fttrace.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\ftvalid.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\internal.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\psaux.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\pshints.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\services\svbdf.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\services\svcfftl.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\services\svcid.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\services\svfntfmt.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\services\svgldict.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\services\svgxval.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\services\svkern.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\services\svmetric.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\services\svmm.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\services\svotval.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\services\svpfr.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\services\svpostnm.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\services\svprop.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\services\svpscmap.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\services\svpsinfo.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\services\svsfnt.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\services\svttcmap.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\services\svtteng.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\services\svttglyf.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\services\svwinfnt.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\sfnt.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\t1types.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\internal\tttypes.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\t1tables.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\ttnameid.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\tttables.h" />
+    <ClInclude Include="src\vendor\freetype\freetype\tttags.h" />
+    <ClInclude Include="src\vendor\freetype\ft2build.h" />
     <ClInclude Include="src\vendor\imgui\imconfig.h" />
     <ClInclude Include="src\vendor\imgui\imgui.h" />
     <ClInclude Include="src\vendor\imgui\imgui_impl_glfw.h" />
@@ -282,9 +380,6 @@
     <Content Include="src\vendor\imgui\.editorconfig" />
     <Content Include="src\vendor\imgui\.gitattributes" />
     <Content Include="src\vendor\imgui\.gitignore" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="src\Graphics\Utils" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

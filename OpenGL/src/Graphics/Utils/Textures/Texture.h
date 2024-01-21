@@ -10,10 +10,10 @@ namespace Graphics {
         glID rendererID = GL_NULL;
         int width = 0, height = 0, BPPixel = 0; //stands for bits per pixel
 
-        OPENGL_API void LoadTexture(const uchar* img, bool useLinear = true);
+        OPENGL_API void LoadTexture(const uchar* img, bool useLinear = true, int format = 0x1908);
      public:
         OPENGL_API Texture() = default;
-        OPENGL_API explicit Texture(const uchar* dat, int len, bool useLinear = true);
+        OPENGL_API explicit Texture(const uchar* raw, int w, int h, bool useLinear = true, int format = 0x1908 /* GL_RGBA */);
         OPENGL_API explicit Texture(const std::string& filePath, bool useLinear = true);
         OPENGL_API ~Texture();
 
@@ -22,6 +22,8 @@ namespace Graphics {
         OPENGL_API static void Transfer(Texture& dest, Texture&& from);
         Texture(Texture&& tex) noexcept { Transfer(*this, std::move(tex)); }
         Texture& operator=(Texture&& tex) noexcept { Transfer(*this, std::move(tex)); return *this; }
+
+        OPENGL_API static Texture LoadPNGBytes(const uchar* png, int len, bool useLinear = true);
 
         OPENGL_API void Bind(uint slot = 0) const;
         OPENGL_API void Unbind() const;

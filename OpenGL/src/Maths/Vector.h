@@ -313,7 +313,7 @@ namespace Maths {
         operator V() const { return { (SCALAR_T(V))x, (SCALAR_T(V))y }; } \
         template <class U> operator vec3<U>() const { return { (U)x, (U)y, 0 }; } \
         template <class U> operator vec4<U>() const { return { (U)x, (U)y, 0, 0 }; } \
-        template <class U> vec2<U> as() { return vec2<U>(*this); } \
+        template <class U> vec2<U> as() const { return vec2<U>(*this); } \
         \
         static constexpr vec2           RIGHT() { return {  1,  0 }; } /* constexpr vars dont work with templates */ \
         static constexpr S_ONLY_U(vec2) LEFT()  { return { -1,  0 }; } \
@@ -356,7 +356,7 @@ namespace Maths {
         operator V() const { return { (SCALAR_T(V))x, (SCALAR_T(V))y, (SCALAR_T(V))z }; } \
         template <class U> operator vec2<U>() const { return { (U)x, (U)y }; } \
         template <class U> operator vec4<U>() const { return { (U)x, (U)y, (U)z, 0 }; } \
-        template <class U> vec3<U> as() { return vec3<U>(*this); } \
+        template <class U> vec3<U> as() const { return vec3<U>(*this); } \
         \
         static constexpr vec3           RIGHT() { return {  1,  0,  0 }; }
         static constexpr S_ONLY_U(vec3) LEFT()  { return { -1,  0,  0 }; }
@@ -403,7 +403,7 @@ namespace Maths {
         operator V() const { return { (SCALAR_T(V))x, (SCALAR_T(V))y, (SCALAR_T(V))z, (SCALAR_T(V))w }; } \
         template <class U> operator vec2<U>() const { return { (U)x, (U)y }; } \
         template <class U> operator vec3<U>() const { return { (U)x, (U)y, (U)z }; } \
-        template <class U> vec4<U> as() { return vec4<U>(*this); } \
+        template <class U> vec4<U> as() const { return vec4<U>(*this); } \
         \
         static constexpr vec4           RIGHT() { return {  1,  0,  0,  0 }; }
         static constexpr S_ONLY_U(vec4) LEFT()  { return { -1,  0,  0,  0 }; }

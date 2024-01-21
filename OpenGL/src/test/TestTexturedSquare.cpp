@@ -74,7 +74,7 @@ namespace Test {
         };
 #pragma endregion
         
-        texture = Graphics::Texture(tex, sizeof(tex) / sizeof(uchar), false);
+        texture = Graphics::Texture::LoadPNGBytes(tex, sizeof(tex) / sizeof(uchar), false);
         texture.Bind(0);
 
         VertexColorTexture3D vertices[] = { 
@@ -84,7 +84,7 @@ namespace Test {
             { { -50.0f, +50.0f, 0 }, 1, { 0.0f, 1.0f }, 0 },
         };
 
-        Graphics::TriIndices indices[6] = {
+        Graphics::TriIndices indices[] = {
             { 0, 1, 2 },
             { 2, 3, 0 }
         };

@@ -10,8 +10,7 @@ flat out int v_index;
 
 uniform mat4 u_MVP;
 
-void main()
-{
+void main() {
     gl_Position = u_MVP * position;
     v_TexCoord = texCoord;
     v_index = int(textureID);
@@ -27,8 +26,7 @@ flat in int v_index;
 
 uniform sampler2D u_Texture[2];
 
-void main()
-{
+void main() {
     vec4 texColor = texture(u_Texture[v_index], v_TexCoord);
     color = texColor;
 }
